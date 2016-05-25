@@ -21,7 +21,7 @@ bool GoldMine::install( const Coord& pos, unsigned char value ) {
 }
 
 int GoldMine::getGold( int power ) {
-	if ( emptyGold( ) ) {
+	if ( isExist( ) ) {
 		return 0;
 	}
 	int result = power;
@@ -33,7 +33,7 @@ int GoldMine::getGold( int power ) {
 	return result;
 }
 
-bool GoldMine::emptyGold( ) {
+bool GoldMine::isExist( ) {
 	bool result = ( _gold == 0 );
 	return result;
 }

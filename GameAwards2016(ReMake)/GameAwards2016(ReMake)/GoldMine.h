@@ -12,7 +12,7 @@ public:
 	void update( );
 	bool install( const Coord& pos, unsigned char value );
 	int getGold( int power );
-	bool emptyGold( );
+	bool isExist( );
 	bool isTarget( );
 	void setTargetFlag( bool info );
 private:

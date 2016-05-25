@@ -34,8 +34,8 @@ void App::initialize( ) {
 	_pioneers_factorys->install( Coord( 5, 5 ) );
 	_gold_mines->install( Coord( 10, 5 ) );
 	_gold_mines->install( Coord( 15, 5 ) );
-	_miners_factorys->install( Coord( 18, 10 ) );
 	_miners_factorys->install( Coord( 10, 10 ) );
+	_miners_factorys->install( Coord( 18, 10 ) );
 }
 
 void App::update( ) {
