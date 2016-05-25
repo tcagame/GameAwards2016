@@ -2,6 +2,7 @@
 #include "Pioneer.h"
 
 Pioneers::Pioneers( ) {
+	_idx = 0;
 }
 
 Pioneers::~Pioneers( ) {

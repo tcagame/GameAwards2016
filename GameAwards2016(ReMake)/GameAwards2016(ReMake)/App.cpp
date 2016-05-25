@@ -4,6 +4,7 @@
 #include "Miners.h"
 #include "Pioneers.h"
 #include "MinersFactorys.h"
+#include "PioneersFactorys.h"
 #include "GoldMines.h"
 #include "Forests.h"
 
@@ -25,15 +26,19 @@ void App::initialize( ) {
 	_miners = MinersPtr( new Miners );
 	_pioneers = PioneersPtr( new Pioneers );
 	_gold_mines = GoldMinesPtr( new GoldMines( _map ) );
-	_miners_factorys = MinersFactorysPtr( new MinersFactorys( _map ) );
 	_forests = ForestsPtr( new Forests( _map ) );
+	_miners_factorys = MinersFactorysPtr( new MinersFactorys( _map ) );
+	_pioneers_factorys = PioneersFactorysPtr( new PioneersFactorys( _map ) );
 
-	_forests->install( Coord( 4, 9 ) );
+	_forests->install( Coord( 10, 10 ) );
+	_pioneers_factorys->install( Coord( 5, 5 ) );
 }
 
 void App::update( ) {
 	_miners_factorys->update( );
+	_pioneers_factorys->update( );
 	_miners->update( );
+	_pioneers->update( );
 }
 
 MapConstPtr App::getMap( ) const{
@@ -58,6 +63,10 @@ GoldMinesPtr App::getGoldMines( ) {
 
 MinersFactorysPtr App::getMinersFactorys( ) {
 	return _miners_factorys;
+}
+
+PioneersFactorysPtr App::getPioneersFactorys( ) {
+	return _pioneers_factorys;
 }
 
 void App::addGold( int gold ) {

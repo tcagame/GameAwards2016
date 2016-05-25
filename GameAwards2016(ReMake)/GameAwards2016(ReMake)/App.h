@@ -7,6 +7,7 @@ PTR( Map );
 PTR( Miners );
 PTR( Pioneers );
 PTR( MinersFactorys );
+PTR( PioneersFactorys );
 PTR( GoldMines );
 PTR( Forests );
 
@@ -25,6 +26,7 @@ public:
 	MinersPtr getMiners( );
 	PioneersPtr getPioneers( );
 	MinersFactorysPtr getMinersFactorys( );
+	PioneersFactorysPtr getPioneersFactorys( );
 	GoldMinesPtr getGoldMines( );
 	ForestsPtr getForests( );
 	void addGold( int gold );
@@ -34,6 +36,7 @@ public:
 	MinersPtr _miners;
 	PioneersPtr _pioneers;
 	MinersFactorysPtr _miners_factorys;
+	PioneersFactorysPtr _pioneers_factorys;
 	GoldMinesPtr _gold_mines;
 	ForestsPtr _forests;
 };

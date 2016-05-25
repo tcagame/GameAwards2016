@@ -1,4 +1,4 @@
-#include "PioneerFactory.h"
+#include "PioneersFactory.h"
 #include "App.h"
 #include "Map.h"
 #include "Pioneers.h"
@@ -10,16 +10,16 @@ static const int WIDTH = 4;
 static const int HEIGHT = 3;
 static const int SEARCH_RANGE = 200;
 
-PioneerFactory::PioneerFactory( MapPtr map ) :
+PioneersFactory::PioneersFactory( MapPtr map ) :
 Facility( map, WIDTH, HEIGHT ) {
 	_max = 1;
 	_num = 0;
 }
 
-PioneerFactory::~PioneerFactory() {
+PioneersFactory::~PioneersFactory() {
 }
 
-void PioneerFactory::update( ) {
+void PioneersFactory::update( ) {
 	AppPtr app = App::getTask( );
 	PioneersPtr pioneers = app->getPioneers( );
 	if ( _max > _num ) {
@@ -28,7 +28,7 @@ void PioneerFactory::update( ) {
 	}
 }
 
-bool PioneerFactory::install( const Coord& coord, unsigned char value ) {
+bool PioneersFactory::install( const Coord& coord, unsigned char value ) {
 	bool result = Facility::install( coord, CHIP_TYPE_PIONEER, value );
 	if ( result ) {
 		_root = searchRoot( );
@@ -38,7 +38,7 @@ bool PioneerFactory::install( const Coord& coord, unsigned char value ) {
 }
 
 
-std::vector< Coord > PioneerFactory::searchRoot( ) {
+std::vector< Coord > PioneersFactory::searchRoot( ) {
 	std::vector< Coord > root;
 	root.push_back( getPos( ) );
 
@@ -159,11 +159,11 @@ std::vector< Coord > PioneerFactory::searchRoot( ) {
 }
 
 
-Coord PioneerFactory::getPos( ) const {
+Coord PioneersFactory::getPos( ) const {
 	return Coord( getCoord( ).x + 1, getCoord( ).y + 3 );
 }
 
-void PioneerFactory::rootInstall( unsigned char value ) {
+void PioneersFactory::rootInstall( unsigned char value ) {
 	AppPtr app = App::getTask( );
 	MapPtr map = app->getMap( );
 	Map::Chip chip;
@@ -174,6 +174,6 @@ void PioneerFactory::rootInstall( unsigned char value ) {
 	}
 }
 
-std::vector< Coord > PioneerFactory::getRoot( ) const {
+std::vector< Coord > PioneersFactory::getRoot( ) const {
 	return _root;
 }

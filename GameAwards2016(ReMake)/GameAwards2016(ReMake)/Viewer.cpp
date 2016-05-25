@@ -3,12 +3,16 @@
 #include "App.h"
 #include "GoldMines.h"
 #include "GoldMine.h"
-#include "MinersFactorys.h"
-#include "MinersFactory.h"
-#include "Miners.h"
-#include "Miner.h"
 #include "Forests.h"
 #include "Forest.h"
+#include "MinersFactorys.h"
+#include "MinersFactory.h"
+#include "PioneersFactorys.h"
+#include "PioneersFactory.h"
+#include "Miners.h"
+#include "Miner.h"
+#include "Pioneers.h"
+#include "Pioneer.h"
 #include "Coord.h"
 #include <vector>
 
@@ -19,7 +23,9 @@ enum RES {
 	RES_GROUND,
 	RES_GOLD_MINE,
 	RES_MINERS_FACTORY,
+	RES_PIONEERS_FACTORY,
 	RES_MINER,
+	RES_PIONEER,
 	RES_ROOT,
 	RES_FOREST,
 	MAX_RES,
@@ -36,7 +42,9 @@ void Viewer::initialize( ) {
 	drawer->load( RES_GROUND, "resource/Graph/ground.png" );
 	drawer->load( RES_GOLD_MINE, "resource/Graph/GoldMine.png" );
 	drawer->load( RES_MINERS_FACTORY, "resource/Graph/MinersFactory.png" );
+	drawer->load( RES_PIONEERS_FACTORY, "resource/Graph/PioneersFactory.png" );
 	drawer->load( RES_MINER, "resource/Graph/Miner.png" );
+	drawer->load( RES_PIONEER, "resource/Graph/Pioneer.png" );
 	drawer->load( RES_ROOT, "resource/Graph/root.png" );
 	drawer->load( RES_FOREST, "resource/Graph/forest.png" );
 }
@@ -46,7 +54,9 @@ void Viewer::update( ) {
 	drawRoot( );
 	drawGoldMine( );
 	drawMinersFactorys( );
+	drawPioneersFactorys( );
 	drawMiner( );
+	drawPioneer( );
 	drawForest( );
 }
 
@@ -92,6 +102,22 @@ void Viewer::drawMinersFactorys( ) {
 	}
 }
 
+void Viewer::drawPioneersFactorys( ) {
+	AppPtr app = App::getTask( );
+	if ( !app ) {
+		return;
+	}
+	PioneersFactorysPtr pioneers_factorys = app->getPioneersFactorys( );
+	const int size = pioneers_factorys->getSize( );
+	for ( int i = 0; i < size; i++ ) {
+		PioneersFactoryPtr pioneers_factory = pioneers_factorys->get( i );
+		int sx = pioneers_factory->getCoord( ).x * CHIP_SIZE;
+		int sy = pioneers_factory->getCoord( ).y * CHIP_SIZE;
+		DrawerPtr drawer = Drawer::getTask( );
+		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_PIONEERS_FACTORY ) );
+	}
+}
+
 void Viewer::drawMiner( ) {
 	AppPtr app = App::getTask( );
 	if ( !app ) {
@@ -105,6 +131,22 @@ void Viewer::drawMiner( ) {
 		int sy = miner->getCoord( ).y * CHIP_SIZE;
 		DrawerPtr drawer = Drawer::getTask( );
 		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_MINER ) );
+	}
+}
+
+void Viewer::drawPioneer( ) {
+	AppPtr app = App::getTask( );
+	if ( !app ) {
+		return;
+	}
+	PioneersPtr pioneers = app->getPioneers( );
+	const int size = pioneers->getSize( );
+	for ( int i = 0; i < size; i++ ) {
+		PioneerPtr pioneer = pioneers->get( i );
+		int sx = pioneer->getCoord( ).x * CHIP_SIZE;
+		int sy = pioneer->getCoord( ).y * CHIP_SIZE;
+		DrawerPtr drawer = Drawer::getTask( );
+		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_PIONEER ) );
 	}
 }
 

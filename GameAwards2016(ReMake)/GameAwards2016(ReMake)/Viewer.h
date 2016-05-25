@@ -17,7 +17,9 @@ public:
 	void drawGround( );
 	void drawGoldMine( );
 	void drawMinersFactorys( );
+	void drawPioneersFactorys( );
 	void drawMiner( );
+	void drawPioneer( );
 	void drawRoot( );
 	void drawForest( );
 };

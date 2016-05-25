@@ -100,8 +100,8 @@
     <ClCompile Include="MinersFactorys.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Pioneer.cpp" />
-    <ClCompile Include="PioneerFactory.cpp" />
-    <ClCompile Include="PioneerFactorys.cpp" />
+    <ClCompile Include="PioneersFactory.cpp" />
+    <ClCompile Include="PioneersFactorys.cpp" />
     <ClCompile Include="Pioneers.cpp" />
     <ClCompile Include="Viewer.cpp" />
   </ItemGroup>
@@ -128,8 +128,8 @@
     <ClInclude Include="MinersFactorys.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Pioneer.h" />
-    <ClInclude Include="PioneerFactory.h" />
-    <ClInclude Include="PioneerFactorys.h" />
+    <ClInclude Include="PioneersFactory.h" />
+    <ClInclude Include="PioneersFactorys.h" />
     <ClInclude Include="Pioneers.h" />
     <ClInclude Include="Viewer.h" />
   </ItemGroup>
