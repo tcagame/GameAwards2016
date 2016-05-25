@@ -10,7 +10,13 @@ public:
 	bool install( const Coord& pos, unsigned char value );
 	bool isTarget( );
 	void setTargetFlag( bool info );
+	void attack( int damage );
+	bool isExist( );
+private:
+	void erase( );
 private:
 	bool _target_flag;
+	bool erased;
+	int _hp;
 };
 

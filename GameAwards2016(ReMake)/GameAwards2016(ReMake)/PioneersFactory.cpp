@@ -170,7 +170,10 @@ void PioneersFactory::rootInstall( unsigned char value ) {
 	chip.type = CHIP_TYPE_ROOT;
 	chip.value = value;
 	for ( int i = 0; i < ( int )_root.size( ); i++ ) {
-		map->setChip( _root[ i ], chip );
+		Map::Chip after = map->getChip( _root[ i ] );
+		if ( after.type == CHIP_TYPE_NONE ) {
+			map->setChip( _root[ i ], chip );
+		}
 	}
 }
 

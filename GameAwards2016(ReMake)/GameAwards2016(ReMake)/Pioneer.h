@@ -11,6 +11,7 @@ public:
 	virtual ~Pioneer( );
 private:
 	void action( );
+	bool _is_attack;
 	Coord _pop_point;
 };
 

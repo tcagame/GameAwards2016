@@ -155,16 +155,35 @@ void Viewer::drawRoot( ) {
 	if ( !app ) {
 		return;
 	}
-	MinersFactorysPtr miners_factorys = app->getMinersFactorys( );
-	const int size = miners_factorys->getSize( );
-	for ( int i = 0; i < size; i++ ) {
-		MinersFactoryPtr miners_factory = miners_factorys->get( i );
-		std::vector<Coord> root = miners_factory->getRoot( ); 
-		for ( int j = 0; j < ( int )root.size( ); j++ ) {
-			int sx = root[ j ].x * CHIP_SIZE;
-			int sy = root[ j ].y * CHIP_SIZE;
-			DrawerPtr drawer = Drawer::getTask( );
-			drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_ROOT, Drawer::BLEND_ALPHA, 0.5 ) );
+	
+	{//マイナールート
+		MinersFactorysPtr miners_factorys = app->getMinersFactorys( );
+		const int size = miners_factorys->getSize( );
+		for ( int i = 0; i < size; i++ ) {
+			MinersFactoryPtr miners_factory = miners_factorys->get( i );
+			std::vector<Coord> root = miners_factory->getRoot( ); 
+			for ( int j = 0; j < ( int )root.size( ); j++ ) {
+				int sx = root[ j ].x * CHIP_SIZE;
+				int sy = root[ j ].y * CHIP_SIZE;
+				DrawerPtr drawer = Drawer::getTask( );
+				drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_ROOT, Drawer::BLEND_ALPHA, 0.5 ) );
+			}
+		}
+	}
+
+	{//パイオニアルート
+		PioneersFactorysPtr pioneers_factorys = app->getPioneersFactorys( );
+		const int size = pioneers_factorys->getSize( );
+		for ( int i = 0; i < size; i++ ) {
+			PioneersFactoryPtr pioneers_factory = pioneers_factorys->get( i );
+			std::vector<Coord> root = pioneers_factory->getRoot( ); 
+			for ( int j = 0; j < ( int )root.size( ); j++ ) {
+				int sx = root[ j ].x * CHIP_SIZE;
+				int sy = root[ j ].y * CHIP_SIZE;
+				DrawerPtr drawer = Drawer::getTask( );
+				drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_ROOT, Drawer::BLEND_ALPHA, 0.5 ) );
+			}
+	
 		}
 	}
 }
@@ -178,9 +197,11 @@ void Viewer::drawForest( ) {
 	const int size = forests->getSize( );
 	for ( int i = 0; i < size; i++ ) {
 		ForestPtr forest = forests->get( i );
-		int sx = forest->getCoord( ).x * CHIP_SIZE;
-		int sy = forest->getCoord( ).y * CHIP_SIZE;
-		DrawerPtr drawer = Drawer::getTask( );
-		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_FOREST ) );
+		if ( forest->isExist( ) ) {
+			int sx = forest->getCoord( ).x * CHIP_SIZE;
+			int sy = forest->getCoord( ).y * CHIP_SIZE;
+			DrawerPtr drawer = Drawer::getTask( );
+			drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_FOREST ) );
+		}
 	}
 }
