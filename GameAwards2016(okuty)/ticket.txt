@@ -21,3 +21,42 @@
 ・パケットの実装
 ・電力消費・充電の実装
 ・Facilityの再配置の実装		完了…5/18
+
+統合作業チケット
+・Materialクラスを追加する。
+・GoldMineクラスを追加する。
+・GoldMinesクラスを追加する。
+・GoldMinesPtr _gold_minesをAppで宣言する。
+・AppでgetGoldMinesを宣言する。
+・_gold_minesを受け取れるようにする。
+・Forestクラスを追加する。
+・Forestsクラスを追加する。
+・ForestsPtr _forestsをAppで宣言する。
+・AppでgetForestsを宣言する。
+・_forestsを受け取れるようにする。
+・Characetrクラスを追加する
+・Minerクラスを追加する。
+・Minersクラスを追加する。
+・MinersPtr _minersをAppで宣言する。
+・AppでgetMinersを宣言する。
+・_minersを受け取れるようにする。
+・updateに_miners->update(　)を追加する。
+・Pioneerクラスを追加する。
+・Pioneersクラスを追加する。
+・PioneersPtr _pioneersをAppで宣言する。
+・AppでgetPioneersを宣言する。
+・_pioneersを受け取れるようにする。
+・updateに_pioneers->update(　)を追加する。
+・MinersFactoryクラスを追加する。
+・MinersFactorysクラスを追加する。
+・MinersFactorysPtr _miners_factorysをAppで宣言する。
+・AppでgetMinersFactorysを宣言する。
+・_miners_factorysを受け取れるようにする。
+・updateに_miners_factorys->update(　)を追加する。
+・PioneersFactoryクラスを追加する。
+・PioneersFactorysクラスを追加する。
+・PioneersFactorysPtr _pioneers_factorysをAppで宣言する。
+・AppでgetPioneersFactorysを宣言する。
+・_pioneers_factorysを受け取れるようにする。
+・updateに_pioneers_factorys->update(　)を追加する。
+
