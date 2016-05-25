@@ -30,8 +30,12 @@ void App::initialize( ) {
 	_miners_factorys = MinersFactorysPtr( new MinersFactorys( _map ) );
 	_pioneers_factorys = PioneersFactorysPtr( new PioneersFactorys( _map ) );
 
-	_forests->install( Coord( 10, 10 ) );
+	_forests->install( Coord( 5, 10 ) );
 	_pioneers_factorys->install( Coord( 5, 5 ) );
+	_gold_mines->install( Coord( 10, 5 ) );
+	_gold_mines->install( Coord( 15, 5 ) );
+	_miners_factorys->install( Coord( 18, 10 ) );
+	_miners_factorys->install( Coord( 10, 10 ) );
 }
 
 void App::update( ) {
