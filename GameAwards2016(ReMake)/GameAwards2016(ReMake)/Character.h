@@ -25,6 +25,7 @@ private:
 	Vector _target;
 	int _target_key;
 	Coord _target_pos;
+
 	int _time;
 };
 

@@ -182,6 +182,7 @@ void MinersFactory::installRoot( unsigned char value ) {
 }
 
 void MinersFactory::deleteRoot( ) {
+	_root.clear( );
 	AppPtr app = App::getTask( );
 	MapPtr map = app->getMap( );
 	Map::Chip chip;

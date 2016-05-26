@@ -3,6 +3,7 @@
 #include "Map.h"
 #include "Miners.h"
 #include "Pioneers.h"
+#include "Enemies.h"
 #include "MinersFactorys.h"
 #include "PioneersFactorys.h"
 #include "GoldMines.h"
@@ -25,6 +26,7 @@ void App::initialize( ) {
 	_map = MapPtr( new Map );
 	_miners = MinersPtr( new Miners );
 	_pioneers = PioneersPtr( new Pioneers );
+	_enemies = EnemiesPtr( new Enemies );
 	_gold_mines = GoldMinesPtr( new GoldMines( _map ) );
 	_forests = ForestsPtr( new Forests( _map ) );
 	_miners_factorys = MinersFactorysPtr( new MinersFactorys( _map ) );
@@ -43,6 +45,7 @@ void App::update( ) {
 	_pioneers_factorys->update( );
 	_miners->update( );
 	_pioneers->update( );
+	_enemies->update( );
 }
 
 MapConstPtr App::getMap( ) const{
@@ -60,6 +63,10 @@ MinersPtr App::getMiners( ) {
 PioneersPtr App::getPioneers( ) {
 	return _pioneers;
 }
+
+EnemiesPtr App::getEnemies( ) {
+	return _enemies;
+}	
 
 GoldMinesPtr App::getGoldMines( ) {
 	return _gold_mines;

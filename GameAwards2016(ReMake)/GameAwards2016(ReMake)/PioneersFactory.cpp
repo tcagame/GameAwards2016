@@ -181,6 +181,7 @@ void PioneersFactory::installRoot( unsigned char value ) {
 }
 
 void PioneersFactory::deleteRoot( ) {
+	_root.clear( );
 	AppPtr app = App::getTask( );
 	MapPtr map = app->getMap( );
 	Map::Chip chip;

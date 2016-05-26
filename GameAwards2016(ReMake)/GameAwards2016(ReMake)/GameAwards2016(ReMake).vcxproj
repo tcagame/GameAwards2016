@@ -86,6 +86,8 @@
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="Enemies.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Facility.cpp" />
     <ClCompile Include="Forest.cpp" />
     <ClCompile Include="Forests.cpp" />
@@ -115,6 +117,8 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="Chip.h" />
     <ClInclude Include="Coord.h" />
+    <ClInclude Include="Enemies.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Facility.h" />
     <ClInclude Include="Forest.h" />
     <ClInclude Include="Forests.h" />

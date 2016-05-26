@@ -10,6 +10,7 @@ PTR( MinersFactorys );
 PTR( PioneersFactorys );
 PTR( GoldMines );
 PTR( Forests );
+PTR( Enemies );
 
 class App : public Task {
 public:
@@ -25,6 +26,7 @@ public:
 	MapPtr getMap( );
 	MinersPtr getMiners( );
 	PioneersPtr getPioneers( );
+	EnemiesPtr getEnemies( );
 	MinersFactorysPtr getMinersFactorys( );
 	PioneersFactorysPtr getPioneersFactorys( );
 	GoldMinesPtr getGoldMines( );
@@ -35,6 +37,7 @@ public:
 	MapPtr _map;
 	MinersPtr _miners;
 	PioneersPtr _pioneers;
+	EnemiesPtr _enemies;
 	MinersFactorysPtr _miners_factorys;
 	PioneersFactorysPtr _pioneers_factorys;
 	GoldMinesPtr _gold_mines;
