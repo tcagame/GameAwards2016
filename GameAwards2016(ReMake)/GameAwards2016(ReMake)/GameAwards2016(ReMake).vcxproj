@@ -93,6 +93,7 @@
     <ClCompile Include="Forests.cpp" />
     <ClCompile Include="GoldMine.cpp" />
     <ClCompile Include="GoldMines.cpp" />
+    <ClCompile Include="GuardianFactory.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Material.cpp" />
@@ -124,6 +125,7 @@
     <ClInclude Include="Forests.h" />
     <ClInclude Include="GoldMine.h" />
     <ClInclude Include="GoldMines.h" />
+    <ClInclude Include="GuardianFactory.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Miner.h" />

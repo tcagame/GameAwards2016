@@ -20,6 +20,7 @@ public:
 	void drawPioneersFactorys( );
 	void drawMiner( );
 	void drawPioneer( );
+	void drawEnemy( );
 	void drawRoot( );
 	void drawForest( );
 };

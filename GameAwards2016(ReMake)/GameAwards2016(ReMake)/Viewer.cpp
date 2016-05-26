@@ -13,6 +13,8 @@
 #include "Miner.h"
 #include "Pioneers.h"
 #include "Pioneer.h"
+#include "Enemies.h"
+#include "Enemy.h"
 #include "Coord.h"
 #include <vector>
 
@@ -26,6 +28,7 @@ enum RES {
 	RES_PIONEERS_FACTORY,
 	RES_MINER,
 	RES_PIONEER,
+	RES_ENEMY,
 	RES_ROOT,
 	RES_FOREST,
 	MAX_RES,
@@ -47,6 +50,7 @@ void Viewer::initialize( ) {
 	drawer->load( RES_PIONEER, "resource/Graph/Pioneer.png" );
 	drawer->load( RES_ROOT, "resource/Graph/root.png" );
 	drawer->load( RES_FOREST, "resource/Graph/forest.png" );
+	drawer->load( RES_ENEMY, "resource/Graph/Enemy.png" );
 }
 
 void Viewer::update( ) {
@@ -57,6 +61,7 @@ void Viewer::update( ) {
 	drawPioneersFactorys( );
 	drawMiner( );
 	drawPioneer( );
+	drawEnemy( );
 	drawForest( );
 }
 
@@ -147,6 +152,22 @@ void Viewer::drawPioneer( ) {
 		int sy = pioneer->getCoord( ).y * CHIP_SIZE;
 		DrawerPtr drawer = Drawer::getTask( );
 		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_PIONEER ) );
+	}
+}
+
+void Viewer::drawEnemy( ) {
+	AppPtr app = App::getTask( );
+	if ( !app ) {
+		return;
+	}
+	EnemiesPtr enemies = app->getEnemies( );
+	const int size = enemies->getSize( );
+	for ( int i = 0; i < size; i++ ) {
+		EnemyPtr enemy = enemies->get( i );
+		int sx = enemy->getCoord( ).x * CHIP_SIZE;
+		int sy = enemy->getCoord( ).y * CHIP_SIZE;
+		DrawerPtr drawer = Drawer::getTask( );
+		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_ENEMY ) );
 	}
 }
 

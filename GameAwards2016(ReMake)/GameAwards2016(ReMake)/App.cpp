@@ -38,6 +38,7 @@ void App::initialize( ) {
 	_gold_mines->install( Coord( 15, 5 ) );
 	_miners_factorys->install( Coord( 10, 10 ) );
 	_miners_factorys->install( Coord( 18, 10 ) );
+	_enemies->create( Coord( 0, 0 ) );
 }
 
 void App::update( ) {
