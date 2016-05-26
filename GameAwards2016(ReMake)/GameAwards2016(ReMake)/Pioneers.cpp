@@ -18,9 +18,9 @@ int Pioneers::getSize( ) {
 	return _idx;
 }
 
-bool Pioneers::create( const Coord& pos, const std::vector< Coord >& root ) {
+bool Pioneers::create( const std::vector< Coord >& root, const Coord& target_pos ) {
 	if ( _idx < NUM ) {
-		_array[ _idx ] = PioneerPtr( new Pioneer( pos, root ) );
+		_array[ _idx ] = PioneerPtr( new Pioneer( root, target_pos ) );
 		_idx++;
 		return true;
 	}

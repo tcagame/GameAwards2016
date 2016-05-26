@@ -7,7 +7,7 @@ PTR( Pioneer );
 
 class Pioneer : public Character {
 public:
-	Pioneer( const Coord& pos, const std::vector< Coord >& root );
+	Pioneer( const std::vector< Coord >& root, const Coord& terget_pos );
 	virtual ~Pioneer( );
 private:
 	void action( );

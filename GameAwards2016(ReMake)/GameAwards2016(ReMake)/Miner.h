@@ -7,7 +7,7 @@ PTR( Miner );
 
 class Miner : public Character {
 public:
-	Miner( const Coord& pos, const std::vector< Coord >& root );
+	Miner( const std::vector< Coord >& root, const Coord& target_pos );
 	virtual ~Miner( );
 private:
 	void action( );

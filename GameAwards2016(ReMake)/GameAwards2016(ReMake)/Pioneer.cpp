@@ -8,8 +8,8 @@ static const int POWER = 1000;
 
 static const Coord FACTORY_DIFF = Coord( 1, 3 );
 
-Pioneer::Pioneer( const Coord& pos, const std::vector< Coord >& root ) :
-Character( pos, root ) {
+Pioneer::Pioneer( const std::vector< Coord >& root, const Coord& target_pos ) :
+Character( root, target_pos ) {
 	_pop_point = root.front( );
 	_is_attack = false;
 }

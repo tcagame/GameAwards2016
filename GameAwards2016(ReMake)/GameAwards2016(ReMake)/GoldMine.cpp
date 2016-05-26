@@ -2,7 +2,7 @@
 
 static const int WIDTH = 3;
 static const int HEIGHT = 3;
-static const int GOLD = 10000;
+static const int GOLD = 1000;
 
 GoldMine::GoldMine( MapPtr map ) :
 Material( map, WIDTH, HEIGHT ) {
@@ -21,7 +21,7 @@ bool GoldMine::install( const Coord& pos, unsigned char value ) {
 }
 
 int GoldMine::getGold( int power ) {
-	if ( isExist( ) ) {
+	if ( !isExist( ) ) {
 		return 0;
 	}
 	int result = power;
@@ -34,7 +34,7 @@ int GoldMine::getGold( int power ) {
 }
 
 bool GoldMine::isExist( ) {
-	bool result = ( _gold == 0 );
+	bool result = ( _gold > 0 );
 	return result;
 }
 

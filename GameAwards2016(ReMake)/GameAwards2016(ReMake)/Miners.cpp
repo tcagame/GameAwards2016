@@ -18,9 +18,9 @@ int Miners::getSize( ) {
 	return _idx;
 }
 
-bool Miners::create( const Coord& pos, const std::vector< Coord >& root ) {
+bool Miners::create( const std::vector< Coord >& root, const Coord& target_pos ) {
 	if ( _idx < NUM ) {
-		_array[ _idx ] = MinerPtr( new Miner( pos, root ) );
+		_array[ _idx ] = MinerPtr( new Miner( root, target_pos ) );
 		_idx++;
 		return true;
 	}

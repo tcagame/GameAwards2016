@@ -21,10 +21,16 @@ MinersFactory::~MinersFactory( ) {
 
 void MinersFactory::update( ) {
 	AppPtr app = App::getTask( );
-	MinersPtr miners = app->getMiners( );
+	GoldMinesPtr goldmines = app->getGoldMines( );
+	GoldMinePtr goldmine = goldmines->get( _target );
 	if ( _max > _num ) {
-		miners->create( getPos( ), _root );
+		MinersPtr miners = app->getMiners( );
+		miners->create( _root, goldmine->getCoord( ) );
 		_num++;
+	}
+
+	if ( !goldmine->isExist( ) ) {
+		deleteRoot( );
 	}
 }
 
@@ -32,7 +38,7 @@ bool MinersFactory::install( const Coord& coord, unsigned char value ) {
 	bool result = Facility::install( coord, CHIP_TYPE_MINER, value );
 	if ( result ) {
 		_root = searchRoot( );
-		rootInstall( value );
+		installRoot( value );
 	}
 	return result;
 }
@@ -161,7 +167,7 @@ Coord MinersFactory::getPos( ) const {
 	return Coord( getCoord( ).x + 1, getCoord( ).y + 3 );
 }
 
-void MinersFactory::rootInstall( unsigned char value ) {
+void MinersFactory::installRoot( unsigned char value ) {
 	AppPtr app = App::getTask( );
 	MapPtr map = app->getMap( );
 	Map::Chip chip;
@@ -170,6 +176,20 @@ void MinersFactory::rootInstall( unsigned char value ) {
 	for ( int i = 0; i < ( int )_root.size( ); i++ ) {
 		Map::Chip after = map->getChip( _root[ i ] );
 		if ( after.type == CHIP_TYPE_NONE ) {
+			map->setChip( _root[ i ], chip );
+		}
+	}
+}
+
+void MinersFactory::deleteRoot( ) {
+	AppPtr app = App::getTask( );
+	MapPtr map = app->getMap( );
+	Map::Chip chip;
+	chip.type = CHIP_TYPE_NONE;
+	chip.value = 0;
+	for ( int i = 0; i < ( int )_root.size( ); i++ ) {
+		Map::Chip after = map->getChip( _root[ i ] );
+		if ( after.type == CHIP_TYPE_ROOT ) {
 			map->setChip( _root[ i ], chip );
 		}
 	}

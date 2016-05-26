@@ -16,7 +16,8 @@ public:
 	std::vector< Coord > getRoot( ) const;
 private:
 	std::vector< Coord > searchRoot( );
-	void rootInstall( unsigned char value );
+	void installRoot( unsigned char value );
+	void deleteRoot( );
 private:
 	int _num;
 	int _max;

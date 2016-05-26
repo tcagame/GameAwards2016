@@ -13,7 +13,7 @@ public:
 	virtual ~Pioneers( );
 public:
 	void update( );
-	bool create( const Coord& pos, const std::vector< Coord >& root );
+	bool create( const std::vector< Coord >& root, const Coord& target_pos );
 	int getSize( );
 	PioneerPtr get( int idx );
 private:

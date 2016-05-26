@@ -21,10 +21,15 @@ PioneersFactory::~PioneersFactory() {
 
 void PioneersFactory::update( ) {
 	AppPtr app = App::getTask( );
-	PioneersPtr pioneers = app->getPioneers( );
+	ForestsPtr forests = app->getForests( );
+	ForestPtr forest = forests->get( _target );
 	if ( _max > _num ) {
-		pioneers->create( getPos( ), _root );
+		PioneersPtr pioneers = app->getPioneers( );
+		pioneers->create( _root, forest->getCoord( ) );
 		_num++;
+	}
+	if ( !forest->isExist( ) ) {
+		deleteRoot( );
 	}
 }
 
@@ -32,11 +37,10 @@ bool PioneersFactory::install( const Coord& coord, unsigned char value ) {
 	bool result = Facility::install( coord, CHIP_TYPE_PIONEER, value );
 	if ( result ) {
 		_root = searchRoot( );
-		rootInstall( value );
+		installRoot( value );
 	}
 	return result;
 }
-
 
 std::vector< Coord > PioneersFactory::searchRoot( ) {
 	std::vector< Coord > root;
@@ -158,20 +162,33 @@ std::vector< Coord > PioneersFactory::searchRoot( ) {
 	return root;
 }
 
-
 Coord PioneersFactory::getPos( ) const {
 	return Coord( getCoord( ).x + 1, getCoord( ).y + 3 );
 }
 
-void PioneersFactory::rootInstall( unsigned char value ) {
+void PioneersFactory::installRoot( unsigned char value ) {
 	AppPtr app = App::getTask( );
 	MapPtr map = app->getMap( );
 	Map::Chip chip;
 	chip.type = CHIP_TYPE_ROOT;
 	chip.value = value;
 	for ( int i = 0; i < ( int )_root.size( ); i++ ) {
+		Map::Chip before = map->getChip( _root[ i ] );
+		if ( before.type == CHIP_TYPE_NONE ) {
+			map->setChip( _root[ i ], chip );
+		}
+	}
+}
+
+void PioneersFactory::deleteRoot( ) {
+	AppPtr app = App::getTask( );
+	MapPtr map = app->getMap( );
+	Map::Chip chip;
+	chip.type = CHIP_TYPE_NONE;
+	chip.value = 0;
+	for ( int i = 0; i < ( int )_root.size( ); i++ ) {
 		Map::Chip after = map->getChip( _root[ i ] );
-		if ( after.type == CHIP_TYPE_NONE ) {
+		if ( after.type == CHIP_TYPE_ROOT ) {
 			map->setChip( _root[ i ], chip );
 		}
 	}
