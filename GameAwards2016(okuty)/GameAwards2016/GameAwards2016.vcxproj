@@ -93,7 +93,6 @@
     <ClCompile Include="Chargers.cpp" />
     <ClCompile Include="Facilities.cpp" />
     <ClCompile Include="Facility.cpp" />
-    <ClCompile Include="Ratio.cpp" />
     <ClCompile Include="Refineries.cpp" />
     <ClCompile Include="Refinery.cpp" />
     <ClCompile Include="Line.cpp" />
