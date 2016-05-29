@@ -18,7 +18,9 @@ public:
 	void drawGoldMine( );
 	void drawMinersFactorys( );
 	void drawPioneersFactorys( );
+	void drawGuardiansFactories( );
 	void drawMiner( );
+	void drawGuardian( );
 	void drawPioneer( );
 	void drawEnemy( );
 	void drawRoot( );

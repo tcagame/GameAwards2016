@@ -30,6 +30,7 @@ void Character::update( ) {
 void Character::getRootPoint( ) {
 	Coord pos = getCoord( );
 	if ( !existMaterial( _target_pos ) && _target_key == 0 ) {
+		_target = Vector( getCoord( ).x, getCoord( ).y );
 		return;
 	}
 
@@ -88,6 +89,7 @@ bool Character::existMaterial( Coord pos ) {
 		GoldMinePtr goldmine = goldmines->get( chip.value );
 		return goldmine->isExist( );
 	}
+	
 	if ( chip.type == CHIP_TYPE_FOREST ) {
 		ForestsPtr forests = app->getForests( );
 		ForestPtr forest = forests->get( chip.value );

@@ -6,7 +6,9 @@
 #include "Enemies.h"
 #include "MinersFactorys.h"
 #include "PioneersFactorys.h"
+#include "GuardiansFactories.h"
 #include "GoldMines.h"
+#include "Guardians.h"
 #include "Forests.h"
 
 AppPtr App::getTask( ) {
@@ -28,23 +30,22 @@ void App::initialize( ) {
 	_pioneers = PioneersPtr( new Pioneers );
 	_enemies = EnemiesPtr( new Enemies );
 	_gold_mines = GoldMinesPtr( new GoldMines( _map ) );
+	_guardians = GuardiansPtr( new Guardians );
 	_forests = ForestsPtr( new Forests( _map ) );
 	_miners_factorys = MinersFactorysPtr( new MinersFactorys( _map ) );
 	_pioneers_factorys = PioneersFactorysPtr( new PioneersFactorys( _map ) );
+	_guardians_factories = GuardiansFactoriesPtr( new GuardiansFactories( _map ) );
 
-	_forests->install( Coord( 5, 10 ) );
-	_pioneers_factorys->install( Coord( 5, 5 ) );
-	_gold_mines->install( Coord( 10, 5 ) );
-	_gold_mines->install( Coord( 15, 5 ) );
-	_miners_factorys->install( Coord( 10, 10 ) );
-	_miners_factorys->install( Coord( 18, 10 ) );
-	_enemies->create( Coord( 0, 0 ) );
+	_enemies->create( Coord( 1, 0 ) );
+	_guardians_factories->install( Coord( 5, 15 ) );
 }
 
 void App::update( ) {
 	_miners_factorys->update( );
 	_pioneers_factorys->update( );
+	_guardians_factories->update( );
 	_miners->update( );
+	_guardians->update( );
 	_pioneers->update( );
 	_enemies->update( );
 }
@@ -73,12 +74,20 @@ GoldMinesPtr App::getGoldMines( ) {
 	return _gold_mines;
 }
 
+GuardiansPtr App::getGuardians( ) {
+	return _guardians;
+}
+
 MinersFactorysPtr App::getMinersFactorys( ) {
 	return _miners_factorys;
 }
 
 PioneersFactorysPtr App::getPioneersFactorys( ) {
 	return _pioneers_factorys;
+}
+
+GuardiansFactoriesPtr App::getGuardiansFactories( ) {
+	return _guardians_factories;
 }
 
 void App::addGold( int gold ) {

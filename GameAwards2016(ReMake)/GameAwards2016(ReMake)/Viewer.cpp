@@ -9,12 +9,16 @@
 #include "MinersFactory.h"
 #include "PioneersFactorys.h"
 #include "PioneersFactory.h"
+#include "GuardiansFactories.h"
+#include "GuardiansFactory.h"
 #include "Miners.h"
 #include "Miner.h"
 #include "Pioneers.h"
 #include "Pioneer.h"
 #include "Enemies.h"
 #include "Enemy.h"
+#include "Guardians.h"
+#include "Guardian.h"
 #include "Coord.h"
 #include <vector>
 
@@ -26,8 +30,10 @@ enum RES {
 	RES_GOLD_MINE,
 	RES_MINERS_FACTORY,
 	RES_PIONEERS_FACTORY,
+	RES_GUARDIAN_FACTORY,
 	RES_MINER,
 	RES_PIONEER,
+	RES_GUARDIAN,
 	RES_ENEMY,
 	RES_ROOT,
 	RES_FOREST,
@@ -46,8 +52,10 @@ void Viewer::initialize( ) {
 	drawer->load( RES_GOLD_MINE, "resource/Graph/GoldMine.png" );
 	drawer->load( RES_MINERS_FACTORY, "resource/Graph/MinersFactory.png" );
 	drawer->load( RES_PIONEERS_FACTORY, "resource/Graph/PioneersFactory.png" );
+	drawer->load( RES_GUARDIAN_FACTORY, "resource/Graph/GuardiansFactory.png" );
 	drawer->load( RES_MINER, "resource/Graph/Miner.png" );
 	drawer->load( RES_PIONEER, "resource/Graph/Pioneer.png" );
+	drawer->load( RES_GUARDIAN, "resource/Graph/Guardian.png" );
 	drawer->load( RES_ROOT, "resource/Graph/root.png" );
 	drawer->load( RES_FOREST, "resource/Graph/forest.png" );
 	drawer->load( RES_ENEMY, "resource/Graph/Enemy.png" );
@@ -59,9 +67,11 @@ void Viewer::update( ) {
 	drawGoldMine( );
 	drawMinersFactorys( );
 	drawPioneersFactorys( );
+	drawGuardiansFactories( );
 	drawMiner( );
 	drawPioneer( );
 	drawEnemy( );
+	drawGuardian( );
 	drawForest( );
 }
 
@@ -123,6 +133,22 @@ void Viewer::drawPioneersFactorys( ) {
 	}
 }
 
+void Viewer::drawGuardiansFactories( ) {
+	AppPtr app = App::getTask( );
+	if ( !app ) {
+		return;
+	}
+	GuardiansFactoriesPtr guardians_factories = app->getGuardiansFactories( );
+	const int size = guardians_factories->getSize( );
+	for ( int i = 0; i < size; i++ ) {
+		GuardiansFactoryPtr guardians_factory = guardians_factories->get( i );
+		int sx = guardians_factory->getCoord( ).x * CHIP_SIZE;
+		int sy = guardians_factory->getCoord( ).y * CHIP_SIZE;
+		DrawerPtr drawer = Drawer::getTask( );
+		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_GUARDIAN_FACTORY ) );
+	}
+}
+
 void Viewer::drawMiner( ) {
 	AppPtr app = App::getTask( );
 	if ( !app ) {
@@ -168,6 +194,22 @@ void Viewer::drawEnemy( ) {
 		int sy = enemy->getCoord( ).y * CHIP_SIZE;
 		DrawerPtr drawer = Drawer::getTask( );
 		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_ENEMY ) );
+	}
+}
+
+void Viewer::drawGuardian( ) {
+	AppPtr app = App::getTask( );
+	if ( !app ) {
+		return;
+	}
+	GuardiansPtr Guardians = app->getGuardians( );
+	const int size = Guardians->getSize( );
+	for ( int i = 0; i < size; i++ ) {
+		GuardianPtr Guardian = Guardians->get( i );
+		int sx = Guardian->getCoord( ).x * CHIP_SIZE;
+		int sy = Guardian->getCoord( ).y * CHIP_SIZE;
+		DrawerPtr drawer = Drawer::getTask( );
+		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_GUARDIAN ) );
 	}
 }
 

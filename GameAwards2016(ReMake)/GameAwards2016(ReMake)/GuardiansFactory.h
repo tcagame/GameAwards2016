@@ -2,13 +2,13 @@
 #include "Facility.h"
 #include <vector>
 
-PTR( GuardianFactory );
+PTR( GuardiansFactory );
 PTR( Map );
 
-class GuardianFactory : public Facility {
+class GuardiansFactory : public Facility {
 public:
-	GuardianFactory( MapPtr map );
-	virtual ~GuardianFactory( );
+	GuardiansFactory( MapPtr map );
+	virtual ~GuardiansFactory( );
 public:
 	void update( );
 	bool install( const Coord& coord, unsigned char value );
