@@ -30,9 +30,11 @@ public:
 	BasesConstPtr getBases( ) const;
 	RefineriesConstPtr getRefineries( ) const;
 	BulletinsConstPtr getBulletins( ) const;
+	bool isModeDeleteLine( ) const;
 private:
 	enum MODE {
 		MODE_LINE,
+		MODE_DELETE_LINE,
 		MODE_PLACEMENT,
 		MAX_MODE
 	};
@@ -49,6 +51,7 @@ private:
 	void doPlacementOperation( );
 	void doFacilityPlacementOperation( );
 	void doLinePlacementOperation( );
+	void doLineDeleteOperation( );
 	void doFacilityMoveOperation( );
 private:
 	MapPtr _map;
@@ -59,9 +62,9 @@ private:
 	RefineriesPtr _refineries;
 	BulletinsPtr _bulletins;
 	MODE _mode;
+	Coord _click_push_coord;
 	FACILITY _placement_facility;
 	bool _operating_relocation;
 	unsigned char _relocation_idx;
-	Coord _push_coord;
 	Coord _before_coord;
 };

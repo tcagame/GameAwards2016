@@ -15,6 +15,7 @@
 #include "Line.h"
 #include "Coord.h"
 #include "Chip.h"
+#include "Ratio.h"
 #include "Mouse.h"
 #include "Drawer.h"
 
@@ -23,6 +24,7 @@ static const int CHARGER_OFFSET_X = -32;
 static const int BASE_OFFSET_X = -32;
 static const int REFINERY_OFFSET_X = -32;
 static const int BULLETIN_OFFSET_X = -32;
+static const int PACKET_OFFSET = -8;
 static const int CHIP_SIZE = 32;
 
 enum RES {
@@ -36,6 +38,7 @@ enum RES {
 	RES_LINE_CIRCUIT,
 	RES_LINE_GUIDEPOINT,
 	RES_LINE_DELETE,
+	RES_PACKET,
 	RES_GROUND,
 	MAX_RES,
 };
@@ -64,6 +67,7 @@ void Viewer::initialize( ) {
 	drawer->load( RES_LINE_GUIDEPOINT, "../resource/line_guide_point.png" );
 	drawer->load( RES_GROUND         , "../resource/ground.png" );
 	drawer->load( RES_LINE_DELETE    , "../resource/line_delete.png" );
+	drawer->load( RES_PACKET		 , "../resource/star.png" );
 
 	_click_left = CLICK_NONE;
 	_click_right = CLICK_NONE;
@@ -79,9 +83,9 @@ void Viewer::update( ) {
 	drawRefineries( );
 	drawBulletins( );
 	drawLine( ); // ƒ‰ƒCƒ“‚ª‰æ–Ê‚É•\Ž¦‚³‚ê‚Ä‚¢‚È‚¢‚Ì‚Å‚±‚±‚àŠÖŒW‚È‚¢
-	drawDeleteLine( ); 
 	drawGuidFacility( );
-	drawGuidLine( ); // ‚±‚±‚ÍŠÖŒW‚È‚¢
+	drawGuideLine( );
+	drawPacketAnimation( );
 
 	reflesh( );
 }
@@ -158,7 +162,6 @@ void Viewer::drawPowerplant( ) const {
 	PowerplantConstPtr powerplant = app->getPowerplant( );
 	Coord coord = powerplant->getCoord( );
 
-	//DrawGraph( coord.x * CHIP_SIZE + POWERPLANT_OFFSET_X, coord.y * CHIP_SIZE + POWERPLANT_OFFSET_Y, _image_powerplant, TRUE );
 	int sx = coord.x * CHIP_SIZE + POWERPLANT_OFFSET_X;
 	int sy = coord.y * CHIP_SIZE;
 	Drawer::Sprite sprite( Drawer::Transform( sx, sy ), RES_POWERPLANT );
@@ -280,10 +283,10 @@ void Viewer::drawLine( ) const {
 	for ( int i = 0; i < COORD_WIDTH; i++ ) {
 		for ( int j = 0; j < COORD_HEIGHT; j++ ) {
 			Line::Data::Chip chip = data.array[ i + j * COORD_WIDTH ];
-			if ( chip.state == Line::STATE_GUIDE ) {
+			if ( chip.guide ) {
 				continue;
 			}
-			int idx = convLineTypeToIdx( chip.type );
+			int idx = convLineTypeToIdx( chip.form_dir );
 			if ( idx < 0 ) {
 				continue;
 			}
@@ -291,46 +294,16 @@ void Viewer::drawLine( ) const {
 			int sy = j * CHIP_SIZE;
 			int tx = idx % 4 * CHIP_SIZE;
 			int ty = idx / 4 * CHIP_SIZE;
-			if ( chip.state == Line::STATE_NORMAL ) {
+			if ( chip.circuit_dir == Line::DIR_NONE ) {
 				drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy, tx, ty, CHIP_SIZE, CHIP_SIZE ), RES_LINE_NORMAL ) );
-			}
-			if ( chip.state == Line::STATE_CIRCUIT ) {
+			} else {
 				drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy, tx, ty, CHIP_SIZE, CHIP_SIZE ), RES_LINE_CIRCUIT ) );
 			}
 		}
 	}
 }
 
-void Viewer::drawDeleteLine( ) const {
-	AppPtr app = App::getTask( );
-	if ( !app ) {
-		return;
-	}
-
-	LineConstPtr line = app->getLine( );
-	const Line::Data data = line->getData( );
-
-	DrawerPtr drawer = Drawer::getTask( );
-	for ( int i = 0; i < COORD_WIDTH; i++ ) {
-		for ( int j = 0; j < COORD_HEIGHT; j++ ) {
-			Line::Data::Chip chip = data.array[ i + j * COORD_WIDTH ];
-			if ( chip.state != Line::STATE_DELETE ) {
-				continue;
-			}
-			int idx = convLineTypeToIdx( chip.type );
-			if ( idx < 0 ) {
-				continue;
-			}
-			int sx = i * CHIP_SIZE;
-			int sy = j * CHIP_SIZE;
-			int tx = idx % 4 * CHIP_SIZE;
-			int ty = idx / 4 * CHIP_SIZE;
-			drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy, tx, ty, CHIP_SIZE, CHIP_SIZE ), RES_LINE_DELETE ) );
-		}
-	}
-}
-
-void Viewer::drawGuidLine( ) const {
+void Viewer::drawGuideLine( ) const {
 	AppPtr app = App::getTask( );
 	if ( !app ) {
 		return;
@@ -346,10 +319,10 @@ void Viewer::drawGuidLine( ) const {
 	for ( int i = 0; i < COORD_WIDTH; i++ ) {
 		for ( int j = 0; j < COORD_HEIGHT; j++ ) {
 			Line::Data::Chip chip = data.array[ i + j * COORD_WIDTH ];
-			if ( !( chip.state == Line::STATE_GUIDE ) ) {
+			if ( !chip.guide ) {
 				continue;
 			}
-			int idx = convLineTypeToIdx( chip.type );
+			int idx = convLineTypeToIdx( chip.form_dir );
 			if ( idx < 0 ) {
 				continue;
 			}
@@ -357,8 +330,13 @@ void Viewer::drawGuidLine( ) const {
 			int sy = j * CHIP_SIZE;
 			int tx = idx % 4 * CHIP_SIZE;
 			int ty = idx / 4 * CHIP_SIZE;
-			drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy, tx, ty, CHIP_SIZE, CHIP_SIZE ),
+			if ( app->isModeDeleteLine( ) ) {
+				drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy, tx, ty, CHIP_SIZE, CHIP_SIZE ),
+					RES_LINE_DELETE ) );
+			} else {
+				drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy, tx, ty, CHIP_SIZE, CHIP_SIZE ),
 					RES_LINE_NORMAL, Drawer::BLEND_ALPHA, 0.5 ) );
+			}
 		}
 	}
 
@@ -366,6 +344,71 @@ void Viewer::drawGuidLine( ) const {
 		int sx = _click_coord.x * CHIP_SIZE;
 		int sy = _click_coord.y * CHIP_SIZE;
 		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_LINE_GUIDEPOINT ) );
+	}
+}
+
+void Viewer::drawPacketAnimation( ) const {
+	AppPtr app = App::getTask( );
+	if ( !app ) {
+		return;
+	}
+
+	LineConstPtr line = app->getLine( );
+	const Line::Data& data = line->getData( );
+	int length = data.packet_ratio.cal( CHIP_SIZE );
+
+	DrawerPtr drawer = Drawer::getTask( );
+	for ( int i = 0; i < COORD_WIDTH; i++ ) {
+		for ( int j = 0; j < COORD_HEIGHT; j++ ) {
+			Line::Data::Chip chip = data.array[ i + j * COORD_WIDTH ];
+			if ( chip.guide || chip.circuit_dir == Line::DIR_NONE ) {
+				continue;
+			}
+
+			int offset_x = 0;
+			int offset_y = 0;
+			unsigned char start_dir = ~chip.circuit_dir & chip.form_dir;
+			switch( start_dir ) {
+			case Line::DIR_U___:
+				offset_y = PACKET_OFFSET * 3;
+				offset_x = PACKET_OFFSET;
+				break;
+			case Line::DIR__D__:
+				offset_y = -PACKET_OFFSET;
+				offset_x = PACKET_OFFSET;
+				break;
+			case Line::DIR___L_:
+				offset_x = PACKET_OFFSET * 3;
+				offset_y = PACKET_OFFSET;
+				break;
+			case Line::DIR____R:
+				offset_x = -PACKET_OFFSET;
+				offset_y = PACKET_OFFSET;
+				break;
+			default:
+				break;
+			}
+
+			int sx = i * CHIP_SIZE + offset_x;
+			int sy = j * CHIP_SIZE + offset_y;
+			int animation_sx = sx;
+			int animation_sy = sy;
+			if ( chip.circuit_dir & Line::DIR_U___ ) {
+				animation_sy = animation_sy - length;
+			}
+			if ( chip.circuit_dir & Line::DIR__D__ ) {
+				animation_sy = animation_sy + length;
+			}
+			if ( chip.circuit_dir & Line::DIR___L_ ) {
+				animation_sx = animation_sx - length;
+			}
+			if ( chip.circuit_dir & Line::DIR____R ) {
+				animation_sx = animation_sx + length;
+			}
+
+
+			drawer->set( Drawer::Sprite( Drawer::Transform( animation_sx, animation_sy ), RES_PACKET ) );
+		}
 	}
 }
 

@@ -30,3 +30,11 @@ Coord Powerplant::getLineInCoord( ) const {
 		return Facility::getLineFixationRight( );
 	}
 }
+
+Coord Powerplant::getStartCoord( ) const {
+	if (  _out_line_left ) {
+		return Coord( Facility::getLineFixationLeft( ).x - 1, Facility::getLineFixationLeft( ).y );
+	} else {
+		return Coord( Facility::getLineFixationRight( ).x + 1, Facility::getLineFixationRight( ).y );
+	}
+}

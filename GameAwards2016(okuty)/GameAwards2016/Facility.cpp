@@ -27,14 +27,16 @@ Coord Facility::getLineFixationRight( ) const {
 }
 
 
-void Facility::destroy ( const Coord& coord ) {
+void Facility::destroy( const Coord& coord ) {
+	Map::Chip chip;
+	chip.type = CHIP_TYPE_NONE;
+	chip.value = 0;
 	for ( int i = 0; i < _width; i++ ) {
 		for ( int j = 0; j < _height; j++ ) {
 			Coord install_coord = coord;
 			install_coord.x += i;
 			install_coord.y += j;
-			_map->deleteChip( install_coord );
-
+			_map->setChip( install_coord, chip );
 		}
 	}
 }

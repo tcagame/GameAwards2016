@@ -58,6 +58,7 @@ void App::update( ) {
 	// マウスでクリックしたところにラインを設定する
 	doPlacementOperation( );
 	_powerplant->update( );
+	_line->update( );
 }
 	
 
@@ -73,8 +74,12 @@ void App::doPlacementOperation( ) {
 	case MODE_PLACEMENT:
 		doFacilityPlacementOperation( );
 		break;
+	case MODE_DELETE_LINE:
+		doLineDeleteOperation( );
+		break;
 	}
 }
+
 void App::doChangePlacementOperation( ) {
 	KeyboardPtr keyboard = Keyboard::getTask( );
 	
@@ -152,6 +157,22 @@ void App::doFacilityMoveOperation( ) {
 	_before_coord = coord;
 }
 
+void App::doLineDeleteOperation( ) {
+
+	ViewerPtr viewer = Viewer::getTask( ); 
+	if ( !viewer ) {
+		return;
+	}
+	
+	Coord coord = viewer->getClickCoord( );
+	Viewer::CLICK click_left  = viewer->getClickLeft( );
+
+	if ( click_left == Viewer::CLICK_PUSH ) {
+		 _line->deleteAlongGuide( coord );
+		_mode = MODE_LINE;
+	}
+}
+
 void App::doLinePlacementOperation( ) {
 
 	ViewerPtr viewer = Viewer::getTask( ); 
@@ -163,7 +184,7 @@ void App::doLinePlacementOperation( ) {
 	Viewer::CLICK click_left  = viewer->getClickLeft( );
 
 	if ( click_left == Viewer::CLICK_PUSH ) {
-		_push_coord = coord;
+		_click_push_coord = coord;
 		_line->startGuide( coord );
 	}
 
@@ -172,10 +193,13 @@ void App::doLinePlacementOperation( ) {
 	}
 
 	if ( click_left == Viewer::CLICK_RELEASE ) {
-		if ( _push_coord.getIdx( ) == coord.getIdx( ) ) {
-			_line->deleteLine(coord);
-		}
 		_line->cancelGuide( );
+		if( _click_push_coord.getIdx( ) != coord.getIdx( ) ){
+			return;
+		}
+		if ( _line->setDeleteGuide( coord ) ) {
+			_mode = MODE_DELETE_LINE;
+		}
 	}
 	
 }
@@ -226,12 +250,12 @@ void App::doFacilityPlacementOperation( ) {
 		if ( coord.getIdx( ) != _before_coord.getIdx( ) ) {
 			FacilityConstPtr facility = facilities->get( _relocation_idx );
 			if ( facility->getLineFixationLeft( ).getIdx( ) >= 0 ) {
-				_line->deleteLine( facility->getExitCoord( facility->getLineFixationLeft( ) ) );
-				_line->deleteLine( facility->getExitCoord( facility->getLineFixationLeft( ) ) );
+				_line->setDeleteGuide( facility->getExitCoord( facility->getLineFixationLeft( ) ) );
+				_line->deleteAlongGuide( facility->getExitCoord( facility->getLineFixationLeft( ) ) );
 			}
 			if ( facility->getLineFixationRight( ).getIdx( ) >= 0 ) {
-				_line->deleteLine( facility->getExitCoord( facility->getLineFixationRight( ) ) );
-				_line->deleteLine( facility->getExitCoord( facility->getLineFixationRight( ) ) );
+				_line->setDeleteGuide( facility->getExitCoord( facility->getLineFixationRight( ) ) );
+				_line->deleteAlongGuide( facility->getExitCoord( facility->getLineFixationRight( ) ) );
 			}
 			facilities->relocation( coord, _relocation_idx );
 		}
@@ -268,6 +292,14 @@ RefineriesConstPtr App::getRefineries( ) const {
 BulletinsConstPtr App::getBulletins( ) const {
 	return _bulletins;
 }
+
 LineConstPtr App::getLine( ) const {
 	return _line;
+}
+
+bool App::isModeDeleteLine( ) const {
+	if ( _mode == MODE_DELETE_LINE ) {
+		return true;
+	}
+	return false;
 }

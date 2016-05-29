@@ -65,9 +65,9 @@ private:
 	void drawRefineries( ) const;
 	void drawBulletins( ) const;
 	void drawGuidFacility( ) const;
-	void drawGuidLine( ) const;
+	void drawGuideLine( ) const;
 	void drawLine( ) const;
-	void drawDeleteLine( ) const;
+	void drawPacketAnimation( ) const;
 	int convLineTypeToIdx( unsigned char dir ) const;
 	void reflesh( );
 private:

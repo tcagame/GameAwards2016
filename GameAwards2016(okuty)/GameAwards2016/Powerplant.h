@@ -13,6 +13,7 @@ public:
 public:
 	Coord getLineOutCoord( ) const;
 	Coord getLineInCoord( ) const;
+	Coord getStartCoord( ) const;
 private:
 	bool _out_line_left;
 };

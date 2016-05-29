@@ -13,18 +13,16 @@ Map::~Map( ) {
 }
 
 Map::Chip Map::getChip( const Coord& coord ) const {
-	int idx = coord.getIdx( ); 
+	return getChip( coord.getIdx( ) );
+}
+Map::Chip Map::getChip( int idx ) const {
 	return _data[ idx ];
 }
 
 void Map::setChip( const Coord& coord, const Chip& chip ) {
-	int idx = coord.getIdx( ); 
-	_data[ idx ] = chip;
+	setChip( coord.getIdx( ), chip );
 }
 
-
-void Map::deleteChip( const Coord& coord ) {
-	int idx = coord.getIdx( ); 
-	_data[ idx ].type = CHIP_TYPE_NONE;
-	_data[ idx ].value = 0;
+void Map::setChip( int idx, const Chip& chip ) {
+	_data[ idx ] = chip;
 }

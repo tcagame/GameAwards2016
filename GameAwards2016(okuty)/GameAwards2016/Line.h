@@ -1,5 +1,6 @@
 #pragma once
 #include "Coord.h"
+#include "Ratio.h"
 #include "Chip.h"
 #include "smart_ptr.h"
 #include <array>
@@ -18,20 +19,23 @@ class Line {
 public:
 	enum STATE {
 		STATE_NONE,
-		STATE_NORMAL,
-		STATE_GUIDE,
+		STATE_CONNECT,
 		STATE_CIRCUIT,
-		STATE_DELETE,
 		STATE_MAX,
 	};
 	struct Data {
 		struct Chip {
-			STATE state;
 			bool is_check;
-			unsigned char type; //dir
+			bool guide;
+			unsigned char form_dir; //dir
+			unsigned char circuit_dir; //dir
+			unsigned char power;
+			unsigned char view_num;
 		};
 		std::array< Chip, COORD_WIDTH * COORD_HEIGHT > array;
+		Ratio packet_ratio;
 	};
+	
 
 	static const unsigned char DIR_NONE	= 0x00;
 	static const unsigned char DIR_U___ = 0x01;
@@ -54,30 +58,37 @@ public:
 	Line( MapPtr map, PowerplantPtr powerplant, ChargersPtr chargers, BasesPtr bases, RefineriesPtr refineries, BulletinsPtr bulletins );
 	virtual ~Line( );
 public:
-	void reflesh( );
+	void update( );
+	void makeCircuit( );
 	const Data& getData( ) const;
 	bool isGuiding( ) const;
 	void startGuide( const Coord& coord );
 	void setGuide( const Coord& coord );
 	void endGuide( const Coord& coord );
 	void cancelGuide( );
-	void deleteLine( const Coord& coord );
+	bool setDeleteGuide( const Coord& coord );
+	void deleteAlongGuide( const Coord& coord );
+private:
+	struct CircuitBranchData {
+		unsigned char power;
+		unsigned char view_num;
+		Coord coord;
+	};
 private:
 	FacilityConstPtr getChipType( CHIP_TYPE chip_type, unsigned char value );
 	bool checkDelete( const Coord& coord, const Coord& old_coord );
-	void destroyLine( );
-	bool makeCircuit( const Coord& coord, const Coord& old_coord );
-	bool setConnectNew( const Coord& coord, const Coord& old_coord, STATE state );
-	void setConnectNext( const Coord& coord, unsigned char next_dir, STATE state );				//( const Coord& coord, const Coord& in_coord, unsigned char check, int dx, int dy );
+	bool makeCircuitNext( const Coord& coord, const Coord& old_coord );
+	bool setConnectNew( const Coord& coord, const Coord& old_coord );
+	bool setDeleteNew( const Coord& coord, const Coord& old_coord );
+	void setConnectNext( const Coord& coord, unsigned char next_dir );
+	void setDeleteNext( const Coord& coord, unsigned char next_dir );
 	void initGuideArray( );
-	bool checkConnectDir ( const Coord& coord, unsigned char next_dir );
 	bool checkDeleteDir ( const Coord& coord, unsigned char next_dir );
 	unsigned char getNowDir( const Coord& coord, const Coord& old_coord );
 	unsigned char reverseDir( unsigned char dir ) const;
 	bool setConnectFacility( const Coord& coord );
 	Coord getFacilityConnectCoord( const Coord& coord );
 	bool destroyLineDir( CHIP_TYPE type, const Coord& coord );
-
 private:
 	MapPtr _map;
 	PowerplantPtr _powerplant;
@@ -88,11 +99,11 @@ private:
 	Data _data;
 	Coord _old_coord;
 	bool _guide_mode;
-	unsigned char _guide_store_dir;
+	unsigned char _guide_store_from_dir;
+	unsigned char _guide_store_circuit_dir;
 	STATE _guide_store_state;
 	Coord _guide_start_coord;
 	Coord _line_start_coord;
-	bool _is_delete;
 	Coord _delete_coord_first_conecter;
 	Coord _delete_coord_second_conecter;
 

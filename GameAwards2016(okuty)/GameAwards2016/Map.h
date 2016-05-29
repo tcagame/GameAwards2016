@@ -20,8 +20,9 @@ public:
 	virtual ~Map();
 public:
 	Chip getChip( const Coord& coord ) const;
+	Chip getChip( int idx ) const;
 	void setChip( const Coord& coord, const Chip& chip );
-	void deleteChip( const Coord& coord );
+	void setChip( int idx, const Chip& chip );
 private:
 	std::array< Chip, COORD_WIDTH * COORD_HEIGHT > _data;
 };
