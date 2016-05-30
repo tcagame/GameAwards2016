@@ -393,25 +393,88 @@ void Viewer::drawPacketAnimation( ) const {
 			int sy = j * CHIP_SIZE + offset_y;
 			int animation_sx = sx;
 			int animation_sy = sy;
-			if ( chip.circuit_dir & Line::DIR_U___ ) {
-				animation_sy = animation_sy - length;
-			}
-			if ( chip.circuit_dir & Line::DIR__D__ ) {
-				animation_sy = animation_sy + length;
-			}
-			if ( chip.circuit_dir & Line::DIR___L_ ) {
-				animation_sx = animation_sx - length;
-			}
-			if ( chip.circuit_dir & Line::DIR____R ) {
-				animation_sx = animation_sx + length;
+			unsigned char advance_dir;
+			bool is_reverse = false;
+			switch( chip.form_dir ) {
+			case Line::DIR_UD__: 
+			case Line::DIR___LR:
+				advance_dir = chip.circuit_dir;
+				break;
+			case Line::DIR_U_L_: 
+			case Line::DIR_U__R: 
+			case Line::DIR__DL_: 
+			case Line::DIR__D_R:
+				advance_dir = reverseDir( start_dir );
+				is_reverse = true;
+				break;
+			default:
+				break;
 			}
 
-
+			if( ( length < CHIP_SIZE / 2 || !is_reverse ) ) {
+				if ( advance_dir & Line::DIR_U___ ) {
+					animation_sy -= length;
+				}
+				if ( advance_dir & Line::DIR__D__ ) {
+					animation_sy += length;
+				}
+				if ( advance_dir & Line::DIR___L_ ) {
+					animation_sx -= length;
+				}
+				if ( advance_dir & Line::DIR____R ) {
+					animation_sx += length;
+				}
+			} else {
+				if ( start_dir & Line::DIR_U___ ) {
+					animation_sy += CHIP_SIZE / 2;
+				}
+				if ( start_dir & Line::DIR__D__ ) {
+					animation_sy -= CHIP_SIZE / 2;
+				}
+				if ( start_dir & Line::DIR___L_ ) {
+					animation_sx += CHIP_SIZE / 2;
+				}
+				if ( start_dir & Line::DIR____R ) {
+					animation_sx -= CHIP_SIZE / 2;
+				}
+				if ( chip.circuit_dir & Line::DIR_U___ ) {
+					animation_sy -= length - CHIP_SIZE / 2;
+				}
+				if ( chip.circuit_dir & Line::DIR__D__ ) {
+					animation_sy += length - CHIP_SIZE / 2;
+				}
+				if ( chip.circuit_dir & Line::DIR___L_ ) {
+					animation_sx -= length - CHIP_SIZE / 2;
+				}
+				if ( chip.circuit_dir & Line::DIR____R ) {
+					animation_sx += length - CHIP_SIZE / 2;
+				}
+			}
+	
 			drawer->set( Drawer::Sprite( Drawer::Transform( animation_sx, animation_sy ), RES_PACKET ) );
 		}
 	}
 }
 
+unsigned char Viewer::reverseDir( unsigned char start_dir ) const {
+	switch ( start_dir ) {
+	case Line::DIR_U___:
+		return Line::DIR__D__;
+		break;
+	case Line::DIR__D__:
+		return Line::DIR_U___;
+		break;
+	case Line::DIR___L_:
+		return Line::DIR____R;
+		break;
+	case Line::DIR____R:
+		return Line::DIR___L_;
+		break;
+	default:
+		return -1;
+		break;
+	}
+}
 
 void Viewer::setGuidFacility( const Coord& coord, GUIDE guide ) {
 	_coord_guid = coord;
