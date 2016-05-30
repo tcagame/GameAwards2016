@@ -8,10 +8,10 @@
 #include "Guardian.h"
 #include <queue>
 
-static const int WIDTH = 4;
+static const int WIDTH = 3;
 static const int HEIGHT = 3;
-static const int SEARCH_RANGE = 2;
-static const int DIV = 10;
+static const int SEARCH_RANGE = 5;
+static const int DIV = SEARCH_RANGE * 8;
 
 GuardiansFactory::GuardiansFactory( MapPtr map ) :
 Facility( map, WIDTH, HEIGHT ) {
@@ -24,16 +24,13 @@ GuardiansFactory::~GuardiansFactory( ) {
 
 void GuardiansFactory::update( ) {
 	AppPtr app = App::getTask( );
-	EnemiesPtr enemies = app->getEnemies( );
-	EnemyPtr enemy = enemies->get( _target );
 	if ( _max > _num ) {
 		GuardiansPtr guardians = app->getGuardians( );
-		guardians->create( _root, enemy->getCoord( ) );
+		guardians->create( _root );
 		_num++;
 	}
-
-	if ( !enemy->isExist( ) ) {
-		deleteRoot( );
+	if ( !_enemy.expired( ) ) {
+		searchEnemy( );
 	}
 }
 
@@ -41,29 +38,36 @@ bool GuardiansFactory::install( const Coord& coord, unsigned char value ) {
 	bool result = Facility::install( coord, CHIP_TYPE_GUARDIAN, value );
 	if ( result ) {
 		_root = searchRoot( );
-		installRoot( value );
+		//installRoot( value );
 	}
 	return result;
 }
 
 std::vector< Coord > GuardiansFactory::searchRoot( ) {
 	std::vector< Coord > root;
-	//root.push_back( getPos( ) );
-	Vector pos = Vector( getCoord( ).x, getCoord( ).y );
-	Vector vec = pos + Vector( 0, SEARCH_RANGE, 0 );
-	Matrix mat = Matrix::makeTransformRotation( Vector( 0, 0, 1 ), 360 / DIV );
+	Vector pos = Vector( getPos( ).x, getPos( ).y );
+	Vector dir = Vector( 1, 0 );
+	Matrix mat = Matrix::makeTransformRotation( Vector( 0, 0, 1 ), PI2 / DIV );
 	for ( int i = 0; i < DIV; i++ ) {
-		Coord test = Coord( ( int )vec.x, ( int )vec.y );
-		if ( test.getIdx() != -1 ) {
-			root.push_back( test );
+		Vector vec = dir.normalize( ) * SEARCH_RANGE + pos;
+		Coord target_pos = Coord( ( int )vec.x, ( int )vec.y );
+		bool overlap = false;
+		for ( int i = 0; i < ( int )root.size( ); i++ ) {
+			if ( root[ i ].getIdx( ) == target_pos.getIdx( ) ) {
+				overlap = true;
+			}
 		}
-		vec = mat.multiply( vec.normalize ) + vec;
+		dir = mat.multiply( dir );
+		if ( overlap ) {
+			continue;
+		}
+		root.push_back( target_pos );
 	}
 	return root;
 }
 
 Coord GuardiansFactory::getPos( ) const {
-	return Coord( getCoord( ).x + 1, getCoord( ).y + 3 );
+	return Coord( getCoord( ).x + 2, getCoord( ).y + 2 );
 }
 
 void GuardiansFactory::installRoot( unsigned char value ) {
@@ -97,4 +101,29 @@ void GuardiansFactory::deleteRoot( ) {
 
 std::vector< Coord > GuardiansFactory::getRoot( ) const {
 	return _root;
+}
+
+void GuardiansFactory::searchEnemy( ) {
+	AppPtr app = App::getTask( );
+	EnemiesPtr enemies = app->getEnemies( );
+	int min = SEARCH_RANGE;
+	for ( int i = 0; i < enemies->getSize( ); i++ ) {
+		EnemyPtr enemy = enemies->get( i );
+		Vector ep = Vector( enemy->getCoord( ).x, enemy->getCoord( ).y );
+		Vector pos = Vector( getCoord( ).x, getCoord( ).y );
+		Vector vec = ep - pos;
+		int length = ( int )vec.getLength( );
+		if ( length <= min ) {
+			_enemy = enemy;
+			min = length;
+		}
+	}
+}
+
+bool GuardiansFactory::inEnemy( ) {
+	return _enemy.expired( );
+}
+
+EnemyPtr GuardiansFactory::getTargetEnemy( ) {
+	return _enemy.lock( );
 }
