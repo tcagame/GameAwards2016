@@ -249,6 +249,23 @@ void Viewer::drawRoot( ) {
 	
 		}
 	}
+	/*
+	{//ガーディアンルート
+		GuardiansFactoriesPtr guardians_factories = app->getGuardiansFactories( );
+		const int size = guardians_factories->getSize( );
+		for ( int i = 0; i < size; i++ ) {
+			GuardiansFactoryPtr guardians_factory = guardians_factories->get( i );
+			std::vector<Coord> root = guardians_factory->getRoot( ); 
+			for ( int j = 0; j < ( int )root.size( ); j++ ) {
+				int sx = root[ j ].x * CHIP_SIZE;
+				int sy = root[ j ].y * CHIP_SIZE;
+				DrawerPtr drawer = Drawer::getTask( );
+				drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_ROOT, Drawer::BLEND_ALPHA, 0.5 ) );
+			}
+	
+		}
+	}
+	*/
 }
 
 void Viewer::drawForest( ) {
