@@ -29,8 +29,8 @@ void Character::update( ) {
 
 void Character::getRootPoint( ) {
 	Coord pos = getCoord( );
+	_target = Vector( getCoord( ).x, getCoord( ).y );
 	if ( !existMaterial( _target_pos ) && _target_key == 0 ) {
-		_target = Vector( getCoord( ).x, getCoord( ).y );
 		return;
 	}
 

@@ -22,8 +22,8 @@ bool Guardians::create( const std::vector< Coord >& root, const Coord& factory_p
 	if ( _idx < NUM ) {
 		_array[ _idx ] = GuardianPtr( new Guardian( root, factory_pos ) );
 		_idx++;
-		return true;
 	}
+		return true;
 	return false;
 }
 

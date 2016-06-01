@@ -38,7 +38,6 @@ bool GuardiansFactory::install( const Coord& coord, unsigned char value ) {
 	bool result = Facility::install( coord, CHIP_TYPE_GUARDIAN, value );
 	if ( result ) {
 		_root = searchRoot( );
-		//installRoot( value );
 	}
 	return result;
 }
@@ -52,15 +51,21 @@ std::vector< Coord > GuardiansFactory::searchRoot( ) {
 	Vector dir = Vector( 1, 0 );
 	Matrix mat = Matrix::makeTransformRotation( Vector( 0, 0, 1 ), PI2 / DIV );
 	for ( int i = 0; i < DIV; i++ ) {
-		Vector vec = dir.normalize( ) * SEARCH_RANGE + pos;
+		Vector vec = dir.normalize( ) + pos;
 		Coord target_pos = Coord( ( int )vec.x, ( int )vec.y );
 		chip = map->getChip( target_pos );
 
-		while ( chip.type != CHIP_TYPE_NONE && chip.type != CHIP_TYPE_GUARDIAN ) {
+		while ( chip.type == CHIP_TYPE_NONE || chip.type == CHIP_TYPE_GUARDIAN ) {
 			double length = ( vec - pos ).getLength( );
-			vec = dir.normalize( ) * ( length - 1 ) + pos;
-			target_pos = Coord( ( int )vec.x, ( int )vec.y );
-			chip = map->getChip( target_pos );
+			if ( length + 1 > SEARCH_RANGE ) {
+				break;
+			}
+			vec = dir.normalize( ) * ( length + 1 ) + pos;
+			Coord temp = Coord( ( int )vec.x, ( int )vec.y );
+			chip = map->getChip( temp );
+			if ( chip.type == CHIP_TYPE_NONE || chip.type == CHIP_TYPE_GUARDIAN ) {
+				target_pos = temp;
+			}
 		}
 
 		bool overlap = false;
