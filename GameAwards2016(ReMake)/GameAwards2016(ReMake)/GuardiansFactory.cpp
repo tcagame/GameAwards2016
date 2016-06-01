@@ -10,8 +10,8 @@
 
 static const int WIDTH = 3;
 static const int HEIGHT = 3;
-static const int SEARCH_RANGE = 5;
-static const int DIV = SEARCH_RANGE * 8;
+static const int SEARCH_RANGE = 7;
+static const int DIV = SEARCH_RANGE * 16;
 
 GuardiansFactory::GuardiansFactory( MapPtr map ) :
 Facility( map, WIDTH, HEIGHT ) {
@@ -26,7 +26,7 @@ void GuardiansFactory::update( ) {
 	AppPtr app = App::getTask( );
 	if ( _max > _num ) {
 		GuardiansPtr guardians = app->getGuardians( );
-		guardians->create( _root );
+		guardians->create( _root, getPos( ) );
 		_num++;
 	}
 	if ( !_enemy.expired( ) ) {
@@ -44,6 +44,9 @@ bool GuardiansFactory::install( const Coord& coord, unsigned char value ) {
 }
 
 std::vector< Coord > GuardiansFactory::searchRoot( ) {
+	AppPtr app = App::getTask( );
+	MapPtr map = app->getMap( );
+	Map::Chip chip;
 	std::vector< Coord > root;
 	Vector pos = Vector( getPos( ).x, getPos( ).y );
 	Vector dir = Vector( 1, 0 );
@@ -51,12 +54,22 @@ std::vector< Coord > GuardiansFactory::searchRoot( ) {
 	for ( int i = 0; i < DIV; i++ ) {
 		Vector vec = dir.normalize( ) * SEARCH_RANGE + pos;
 		Coord target_pos = Coord( ( int )vec.x, ( int )vec.y );
+		chip = map->getChip( target_pos );
+
+		while ( chip.type != CHIP_TYPE_NONE && chip.type != CHIP_TYPE_GUARDIAN ) {
+			double length = ( vec - pos ).getLength( );
+			vec = dir.normalize( ) * ( length - 1 ) + pos;
+			target_pos = Coord( ( int )vec.x, ( int )vec.y );
+			chip = map->getChip( target_pos );
+		}
+
 		bool overlap = false;
 		for ( int i = 0; i < ( int )root.size( ); i++ ) {
 			if ( root[ i ].getIdx( ) == target_pos.getIdx( ) ) {
 				overlap = true;
 			}
 		}
+
 		dir = mat.multiply( dir );
 		if ( overlap ) {
 			continue;

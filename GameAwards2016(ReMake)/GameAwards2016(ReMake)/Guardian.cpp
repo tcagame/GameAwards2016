@@ -1,5 +1,8 @@
 #include "Guardian.h"
 #include "App.h"
+#include "Map.h"
+#include "GuardiansFactories.h"
+#include "GuardiansFactory.h"
 #include "Enemies.h"
 #include "Enemy.h"
 
@@ -7,13 +10,14 @@ static const int POWER = 1000;
 static const Coord FACTORY_DIFF = Coord( 1, 3 );
 static const int SEARCH_RANGE = 1;
 
-Guardian::Guardian( const std::vector<Coord>& root ) {
+Guardian::Guardian( const std::vector<Coord>& root, const Coord& factory_pos ) {
 	_speed = 1;
 	_target_key = 0;
 	_root = root;
 	_time = 0;
 	setCoord( root[ 0 ] );
 	_is_attack = false;
+	_factory_pos = factory_pos;
 }
 
 Guardian::~Guardian( ) {
@@ -57,17 +61,30 @@ void Guardian::getRootPoint( ) {
 }
 
 void Guardian::move( ) {
+	AppPtr app = App::getTask( );
+	MapPtr map = app->getMap( );
+	Map::Chip chip;
+	
 	if ( _time % 10 == 0 ) {
 		getRootPoint( );
 		_time = 0;
 	}
 	_time++;
-	Vector dir = _target - Vector( getCoord( ).x, getCoord( ).y );
+	Vector pos = Vector( getCoord( ).x, getCoord( ).y );
+	Vector dir = _target - pos;
 	dir = dirNomarize( dir );
-	Coord pos = getCoord( );
+	Coord after_pos; 
+	after_pos.x = ( int )( pos.x + dir.x * _speed );
+	after_pos.y = ( int )( pos.y + dir.y * _speed );
+	chip = map->getChip( after_pos );
+	if ( chip.type != CHIP_TYPE_NONE && chip.type != CHIP_TYPE_GUARDIAN ) {
+		Vector factory_pos = Vector( _factory_pos.x, _factory_pos.y );
+		Vector dir_for_factory = factory_pos - pos;
+		dir = dirNomarize( dir_for_factory );
+	}
 	pos.x += ( int )( dir.x * _speed );
 	pos.y += ( int )( dir.y * _speed );
-	setCoord( pos );
+	setCoord( Coord( ( int )pos.x, ( int )pos.y ) );
 }
 
 Vector Guardian::dirNomarize( const Vector& dir ) {

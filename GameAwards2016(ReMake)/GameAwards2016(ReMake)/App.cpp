@@ -36,6 +36,7 @@ void App::initialize( ) {
 	_pioneers_factorys = PioneersFactorysPtr( new PioneersFactorys( _map ) );
 	_guardians_factories = GuardiansFactoriesPtr( new GuardiansFactories( _map ) );
 
+	_gold_mines->install( Coord( 5, 10 ) );
 	_enemies->create( Coord( 1, 0 ) );
 	_guardians_factories->install( Coord( 5, 15 ) );
 }

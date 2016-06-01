@@ -249,7 +249,7 @@ void Viewer::drawRoot( ) {
 	
 		}
 	}
-	/*
+	
 	{//ガーディアンルート
 		GuardiansFactoriesPtr guardians_factories = app->getGuardiansFactories( );
 		const int size = guardians_factories->getSize( );
@@ -265,7 +265,7 @@ void Viewer::drawRoot( ) {
 	
 		}
 	}
-	*/
+	
 }
 
 void Viewer::drawForest( ) {

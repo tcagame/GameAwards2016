@@ -13,7 +13,7 @@ public:
 	virtual ~Guardians( );
 public:
 	void update( );
-	bool create( const std::vector< Coord >& root );
+	bool create( const std::vector< Coord >& root, const Coord& factory_pos );
 	int getSize( );
 	GuardianPtr get( int idx );
 private:

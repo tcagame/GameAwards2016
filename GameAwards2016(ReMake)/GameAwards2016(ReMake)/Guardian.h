@@ -9,7 +9,7 @@ PTR( Enemy );
 
 class Guardian : public Object {
 public:
-	Guardian( const std::vector< Coord >& root );
+	Guardian( const std::vector< Coord >& root, const Coord& factory_pos );
 	virtual ~Guardian( );
 public:
 	void update( );
@@ -26,6 +26,7 @@ private:
 	int _speed;
 	int _target_key;
 	bool _is_attack;
+	Coord _factory_pos;
 	EnemyWeakPtr _enemy;
 
 	int _time;

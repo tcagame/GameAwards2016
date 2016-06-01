@@ -18,9 +18,9 @@ int Guardians::getSize( ) {
 	return _idx;
 }
 
-bool Guardians::create( const std::vector< Coord >& root ) {
+bool Guardians::create( const std::vector< Coord >& root, const Coord& factory_pos ) {
 	if ( _idx < NUM ) {
-		_array[ _idx ] = GuardianPtr( new Guardian( root ) );
+		_array[ _idx ] = GuardianPtr( new Guardian( root, factory_pos ) );
 		_idx++;
 		return true;
 	}
