@@ -71,6 +71,7 @@ private:
 	unsigned char reverseDir( unsigned char start_dir ) const;
 	int convLineTypeToIdx( unsigned char dir ) const;
 	void reflesh( );
+	void addCount( );
 private:
 
 	Coord _click_coord;
@@ -78,5 +79,6 @@ private:
 	CLICK _click_right;
 	Coord _coord_guid;
 	GUIDE _guide;
+	int _count;
 };
 
