@@ -60,3 +60,4 @@
 ・_pioneers_factorysを受け取れるようにする。
 ・updateに_pioneers_factorys->update(　)を追加する。
 
+テスト
