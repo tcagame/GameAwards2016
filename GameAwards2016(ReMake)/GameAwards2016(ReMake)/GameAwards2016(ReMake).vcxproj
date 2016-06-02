@@ -109,6 +109,7 @@
     <ClCompile Include="PioneersFactory.cpp" />
     <ClCompile Include="PioneersFactorys.cpp" />
     <ClCompile Include="Pioneers.cpp" />
+    <ClCompile Include="UnitMap.cpp" />
     <ClCompile Include="Viewer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -119,6 +120,7 @@
   <ItemGroup>
     <ClInclude Include="App.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="CharacterType.h" />
     <ClInclude Include="Chip.h" />
     <ClInclude Include="Coord.h" />
     <ClInclude Include="Enemies.h" />
@@ -143,6 +145,7 @@
     <ClInclude Include="PioneersFactory.h" />
     <ClInclude Include="PioneersFactorys.h" />
     <ClInclude Include="Pioneers.h" />
+    <ClInclude Include="UnitMap.h" />
     <ClInclude Include="Viewer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
