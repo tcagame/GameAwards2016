@@ -4,6 +4,7 @@
 
 PTR( App );
 PTR( Map );
+PTR( UnitMap )
 PTR( Miners );
 PTR( Pioneers );
 PTR( Guardians );
@@ -26,6 +27,7 @@ public:
 	void update( );
 	MapConstPtr getMap( ) const;
 	MapPtr getMap( );
+	UnitMapPtr getUnitMap( );
 	MinersPtr getMiners( );
 	PioneersPtr getPioneers( );
 	EnemiesPtr getEnemies( );
@@ -39,6 +41,7 @@ public:
 public:
 	int _gold;
 	MapPtr _map;
+	UnitMapPtr _unit_map;
 	MinersPtr _miners;
 	PioneersPtr _pioneers;
 	EnemiesPtr _enemies;

@@ -23,6 +23,7 @@ Character::~Character( ) {
 }
 
 void Character::update( ) {
+
 	move( );
 	action( );
 }

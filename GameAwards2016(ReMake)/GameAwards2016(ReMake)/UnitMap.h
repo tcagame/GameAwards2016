@@ -1,7 +1,7 @@
 #pragma once
 #include"smart_ptr.h"
 #include "Coord.h"
-#include "CharacterType.h"
+#include "CharacterType.cpp"
 #include <array>
 
 PTR( UnitMap );

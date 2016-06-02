@@ -1,6 +1,7 @@
 #include "App.h"
 #include "Framework.h"
 #include "Map.h"
+#include "UnitMap.h"
 #include "Miners.h"
 #include "Pioneers.h"
 #include "Enemies.h"
@@ -26,6 +27,7 @@ void App::initialize( ) {
 	_gold = 0;
 
 	_map = MapPtr( new Map );
+	_unit_map = UnitMapPtr( new UnitMap );
 	_miners = MinersPtr( new Miners );
 	_pioneers = PioneersPtr( new Pioneers );
 	_enemies = EnemiesPtr( new Enemies );
@@ -60,6 +62,10 @@ MapConstPtr App::getMap( ) const{
 
 MapPtr App::getMap( ) {
 	return _map;
+}
+
+UnitMapPtr App::getUnitMap( ) {
+	return _unit_map;
 }
 
 MinersPtr App::getMiners( ) {
