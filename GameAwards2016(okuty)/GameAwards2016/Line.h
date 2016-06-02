@@ -4,6 +4,7 @@
 #include "Chip.h"
 #include "smart_ptr.h"
 #include <array>
+#include <vector>
 
 PTR( Line );
 PTR( Map );
@@ -29,7 +30,7 @@ public:
 			bool guide;
 			unsigned char form_dir; //dir
 			unsigned char circuit_dir; //dir
-			unsigned char power;
+			unsigned char resist;
 			unsigned char view_num;
 		};
 		std::array< Chip, COORD_WIDTH * COORD_HEIGHT > array;
@@ -69,12 +70,7 @@ public:
 	bool setDeleteGuide( const Coord& coord );
 	void deleteAlongGuide( const Coord& coord );
 private:
-	struct CircuitBranchData {
-		unsigned char power;
-		unsigned char view_num;
-		Coord coord;
-	};
-private:
+	void makeCircuitBranch( );
 	FacilityConstPtr getChipType( CHIP_TYPE chip_type, unsigned char value );
 	bool checkDelete( const Coord& coord, const Coord& old_coord );
 	bool makeCircuitNext( const Coord& coord, const Coord& old_coord );
@@ -87,8 +83,21 @@ private:
 	unsigned char getNowDir( const Coord& coord, const Coord& old_coord );
 	unsigned char reverseDir( unsigned char dir ) const;
 	bool setConnectFacility( const Coord& coord );
-	Coord getFacilityConnectCoord( const Coord& coord );
 	bool destroyLineDir( CHIP_TYPE type, const Coord& coord );
+private:
+	struct Stock {
+		unsigned char resist;
+		unsigned char view_num;
+		Coord coord;
+		Stock( ) :
+		resist( 0 ),
+		view_num( 0 ),
+		coord ( 0, 0 ) { 
+
+		}
+		Stock( unsigned char resist_, unsigned char view_num_, Coord coord_ ) : 
+			resist( resist_ ), view_num( view_num_ ),  coord( coord_ ) { }
+	};
 private:
 	MapPtr _map;
 	PowerplantPtr _powerplant;
@@ -106,5 +115,5 @@ private:
 	Coord _line_start_coord;
 	Coord _delete_coord_first_conecter;
 	Coord _delete_coord_second_conecter;
-
+	std::vector< Stock > _stock;
 };
