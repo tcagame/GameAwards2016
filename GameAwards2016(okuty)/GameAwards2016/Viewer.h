@@ -64,6 +64,7 @@ private:
 	void drawBases( ) const;
 	void drawRefineries( ) const;
 	void drawBulletins( ) const;
+	void drawGoldMines( ) const;
 	void drawGuidFacility( ) const;
 	void drawGuideLine( ) const;
 	void drawLine( ) const;

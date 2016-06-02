@@ -93,6 +93,9 @@
     <ClCompile Include="Chargers.cpp" />
     <ClCompile Include="Facilities.cpp" />
     <ClCompile Include="Facility.cpp" />
+    <ClCompile Include="GoldMine.cpp" />
+    <ClCompile Include="GoldMines.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Refineries.cpp" />
     <ClCompile Include="Refinery.cpp" />
     <ClCompile Include="Line.cpp" />
@@ -114,6 +117,9 @@
     <ClInclude Include="Coord.h" />
     <ClInclude Include="Facilities.h" />
     <ClInclude Include="Facility.h" />
+    <ClInclude Include="GoldMine.h" />
+    <ClInclude Include="GoldMines.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Ratio.h" />
     <ClInclude Include="Refineries.h" />
     <ClInclude Include="Refinery.h" />
