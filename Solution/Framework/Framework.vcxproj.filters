@@ -1,2 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" />
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Drawer.cpp" />
+    <ClCompile Include="Framework.cpp" />
+    <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="Mouse.cpp" />
+    <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="Task.cpp" />
+    <ClCompile Include="WinMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Drawer.h" />
+    <ClInclude Include="Framework.h" />
+    <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="mathConst.h" />
+    <ClInclude Include="mathmatics.h" />
+    <ClInclude Include="Mouse.h" />
+    <ClInclude Include="smart_ptr.h" />
+    <ClInclude Include="Task.h" />
+  </ItemGroup>
+</Project>
