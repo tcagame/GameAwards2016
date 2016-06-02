@@ -158,8 +158,10 @@ void Viewer::drawMiner( ) {
 	const int size = miners->getSize( );
 	for ( int i = 0; i < size; i++ ) {
 		MinerPtr miner = miners->get( i );
-		int sx = miner->getCoord( ).x * CHIP_SIZE;
-		int sy = miner->getCoord( ).y * CHIP_SIZE;
+		Coord pos = miner->getCoord( );
+		Miner::RatioCoord ratio = miner->getRatio( );
+		int sx = pos.x * CHIP_SIZE + ratio.x.cal( CHIP_SIZE );
+		int sy = pos.y * CHIP_SIZE + ratio.y.cal( CHIP_SIZE );
 		DrawerPtr drawer = Drawer::getTask( );
 		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_MINER ) );
 	}

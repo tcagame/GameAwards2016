@@ -11,10 +11,10 @@
 #include <queue>
 
 Character::Character( const std::vector<Coord>& root, const Coord& target_pos ) {
-	_speed = 1;
+	const int RATIO_MAX = _ratio.x.RATIO_ACCURACY;
+	_speed = RATIO_MAX / 10;
 	_target_key = 0;
 	_root = root;
-	_time = 0;
 	_target_pos = target_pos;
 	setCoord( root[ 0 ] );
 }
@@ -50,16 +50,26 @@ void Character::getRootPoint( ) {
 }
 
 void Character::move( ) {
-	if ( _time % 10 == 0 ) {
-		getRootPoint( );
-		_time = 0;
-	}
-	_time++;
+	getRootPoint( );
 	Vector dir = _target - Vector( getCoord( ).x, getCoord( ).y );
 	dir = dirNomarize( dir );
 	Coord pos = getCoord( );
-	pos.x += ( int )( dir.x * _speed );
-	pos.y += ( int )( dir.y * _speed );
+	const int RATIO_MAX = _ratio.x.RATIO_ACCURACY;
+	if ( _ratio.x.value + dir.x * _speed > RATIO_MAX ) {
+		pos.x += 1;
+	}
+	if ( _ratio.y.value + dir.y * _speed > RATIO_MAX ) {
+		pos.y += 1;
+	}
+	if ( _ratio.x.value + dir.x * _speed < 0 ) {
+		pos.x -= 1;
+	}
+	if ( _ratio.y.value + dir.y * _speed < 0 ) {
+		pos.y -= 1;
+	}
+	_ratio.x.increase( ( int )dir.x * _speed );
+	_ratio.y.increase( ( int )dir.y * _speed );
+
 	setCoord( pos );
 }
 
@@ -96,4 +106,8 @@ bool Character::existMaterial( Coord pos ) {
 		return forest->isExist( );
 	}
 	return false;
+}
+
+Character::RatioCoord Character::getRatio( ) {
+	return _ratio;
 }

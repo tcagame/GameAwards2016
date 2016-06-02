@@ -145,6 +145,7 @@
     <ClInclude Include="PioneersFactory.h" />
     <ClInclude Include="PioneersFactorys.h" />
     <ClInclude Include="Pioneers.h" />
+    <ClInclude Include="Ratio.h" />
     <ClInclude Include="UnitMap.h" />
     <ClInclude Include="Viewer.h" />
   </ItemGroup>
