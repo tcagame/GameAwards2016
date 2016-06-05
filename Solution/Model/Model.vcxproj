@@ -23,6 +23,8 @@
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Mgr.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Packet.cpp" />
+    <ClCompile Include="Packets.cpp" />
     <ClCompile Include="Powerplant.cpp" />
     <ClCompile Include="Refineries.cpp" />
     <ClCompile Include="Refinery.cpp" />
@@ -42,6 +44,8 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="Mgr.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="Packet.h" />
+    <ClInclude Include="Packets.h" />
     <ClInclude Include="Powerplant.h" />
     <ClInclude Include="Ratio.h" />
     <ClInclude Include="Refineries.h" />

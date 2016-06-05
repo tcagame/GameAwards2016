@@ -10,6 +10,8 @@
 #include "Refinery.h"
 #include "Bulletins.h"
 #include "Bulletin.h"
+#include "Packets.h"
+#include "Packet.h"
 #include "Viewer.h"
 #include "Powerplant.h"
 #include "Framework.h"
@@ -35,6 +37,7 @@ App::App( ) {
 	_bases      = BasesPtr     ( new Bases     ( ) );
 	_refineries = RefineriesPtr( new Refineries( ) );
 	_bulletins  = BulletinsPtr ( new Bulletins ( ) );
+	_packets    = PacketsPtr   ( new Packets   ( ) ); 
 
 	_chargers->initialize( _map );
 	_bases->initialize( _map );
@@ -44,6 +47,8 @@ App::App( ) {
 	// ”­“dŠ‚ÍÅ‰‚©‚çÝ’u‚³‚ê‚Ä‚¢‚é
 	bool result_powerplant_installation = _powerplant->install( Coord( POWERPLANT_POS_X, POWERPLANT_POS_Y ), 0 );
 	assert( result_powerplant_installation );
+
+	_packets->creatPacket( Coord( POWERPLANT_POS_X, POWERPLANT_POS_Y ) );
 
 	_line = LinePtr( new Line( _map, _powerplant, _chargers, _bases, _refineries, _bulletins ) );
 	_mode = MODE_LINE;
@@ -59,6 +64,7 @@ void App::update( ) {
 	doPlacementOperation( );
 	_powerplant->update( );
 	_line->update( );
+	_packets->update( );
 }
 	
 
@@ -296,6 +302,12 @@ BulletinsConstPtr App::getBulletins( ) const {
 LineConstPtr App::getLine( ) const {
 	return _line;
 }
+
+
+PacketsConstPtr App::getPackets( ) const {
+	return _packets;
+}
+
 
 bool App::isModeDeleteLine( ) const {
 	if ( _mode == MODE_DELETE_LINE ) {

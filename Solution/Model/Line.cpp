@@ -40,7 +40,6 @@ Line::~Line( ) {
 }
 
 void Line::update( ) {
-	_data.packet_ratio.increase( POWERPLANT_LEVEL );
 }
 
 void Line::makeCircuit( ) {
@@ -59,92 +58,12 @@ void Line::makeCircuit( ) {
 
 	// zŠÂŒo˜Hì¬
 	makeCircuitNext( _powerplant->getStartCoord( ), start_coord );
-	_stock.push_back( Stock( 1, 0, _powerplant->getStartCoord( ) ) );
-
-	makeCircuitBranch( );
 }
 
 bool Line::isGuiding( ) const {
 	return _guide_mode;
 }
-void Line::makeCircuitBranch( ) {
 
-	while ( !_stock.empty( ) ) {
-		Stock stock = _stock.back( );
-		_stock.pop_back( );
-		_data.array[ stock.coord.getIdx( ) ].resist = stock.resist;
-		_data.array[ stock.coord.getIdx( ) ].view_num = stock.view_num;
-		if ( _data.array[ stock.coord.getIdx( ) ].circuit_dir == DIR_NONE ) {
-			continue;
-		}
-		
-		bool is_branch = false;
-		unsigned char dir = _data.array[ stock.coord.getIdx( ) ].circuit_dir;
-		if ( _data.array[ stock.coord.getIdx( ) ].form_dir == DIR_U_LR ||
-			 _data.array[ stock.coord.getIdx( ) ].form_dir == DIR__DLR ||
-			 _data.array[ stock.coord.getIdx( ) ].form_dir == DIR_UD_R || 
-			 _data.array[ stock.coord.getIdx( ) ].form_dir == DIR_UDL_  ) {
-			is_branch = true;
-		}
-		unsigned char resist = stock.resist;
-		if ( is_branch ) {
-			if ( ( dir & ~DIR_U___ ) == 0 ||
-				 ( dir & ~DIR__D__ ) == 0 || 
-				 ( dir & ~DIR___L_ ) == 0 || 
-				 ( dir & ~DIR____R ) == 0 ) {
-				resist = resist / 2;
-			}
-		}
-		unsigned char number = ( stock.view_num + 1 ) % resist;
-		Stock branch_stock_first = stock;
-		Stock branch_stock_second = stock;
-		
-		switch( dir ) {
-		case DIR_U___:
-			branch_stock_first = Stock ( resist, number, Coord( stock.coord.x, stock.coord.y - 1 ) );
-			is_branch = false;
-			break;
-		case DIR__D__:
-			branch_stock_first = Stock ( resist, number, Coord( stock.coord.x, stock.coord.y + 1 ) );
-			is_branch = false;
-			break;
-		case DIR___L_:
-			branch_stock_first = Stock ( resist, number, Coord( stock.coord.x - 1, stock.coord.y ) );
-			is_branch = false;
-			break;
-		case DIR____R:
-			branch_stock_first = Stock ( resist, number, Coord( stock.coord.x + 1, stock.coord.y ) );
-			is_branch = false;
-			break;
-		case DIR_U_L_:
-			branch_stock_first  = Stock ( resist * 2, 0, Coord( stock.coord.x, stock.coord.y - 1 ) );
-			branch_stock_second = Stock ( resist * 2, 1, Coord( stock.coord.x - 1, stock.coord.y ) );
-			break;
-		case DIR_U__R:
-			branch_stock_first  = Stock ( resist * 2, 0, Coord( stock.coord.x, stock.coord.y - 1 ) );
-			branch_stock_second = Stock ( resist * 2, 1, Coord( stock.coord.x + 1, stock.coord.y ) );
-			break;
-		case DIR__DL_:
-			branch_stock_first  = Stock ( resist * 2, 0, Coord( stock.coord.x, stock.coord.y + 1 ) );
-			branch_stock_second = Stock ( resist * 2, 1, Coord( stock.coord.x - 1, stock.coord.y ) );
-			break;
-		case DIR__D_R:
-			branch_stock_first  = Stock ( resist * 2, 0, Coord( stock.coord.x, stock.coord.y + 1 ) );
-			branch_stock_second = Stock ( resist * 2, 1, Coord( stock.coord.x + 1, stock.coord.y ) );
-			break;
-		default:
-			return;
-			break;
-		}
-		if ( !is_branch ) {
-			_stock.push_back( branch_stock_first );
-		} else {
-			
-			_stock.push_back( branch_stock_first );
-			_stock.push_back( branch_stock_second );
-		}
-	}
-}
 const Line::Data& Line::getData( ) const {
 	return _data;
 }

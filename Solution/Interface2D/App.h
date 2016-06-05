@@ -12,6 +12,7 @@ PTR( Chargers );
 PTR( Bases );
 PTR( Refineries );
 PTR( Bulletins );
+PTR( Packets );
 
 class App : public Task {
 public:
@@ -30,6 +31,7 @@ public:
 	BasesConstPtr getBases( ) const;
 	RefineriesConstPtr getRefineries( ) const;
 	BulletinsConstPtr getBulletins( ) const;
+	PacketsConstPtr getPackets( ) const ;
 	bool isModeDeleteLine( ) const;
 private:
 	enum MODE {
@@ -64,6 +66,7 @@ private:
 	MODE _mode;
 	Coord _click_push_coord;
 	FACILITY _placement_facility;
+	PacketsPtr _packets;
 	bool _operating_relocation;
 	unsigned char _relocation_idx;
 	Coord _before_coord;

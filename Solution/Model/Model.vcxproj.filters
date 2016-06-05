@@ -16,6 +16,8 @@
     <ClCompile Include="Powerplant.cpp" />
     <ClCompile Include="Refineries.cpp" />
     <ClCompile Include="Refinery.cpp" />
+    <ClCompile Include="Packets.cpp" />
+    <ClCompile Include="Packet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h" />
@@ -36,5 +38,7 @@
     <ClInclude Include="Ratio.h" />
     <ClInclude Include="Refineries.h" />
     <ClInclude Include="Refinery.h" />
+    <ClInclude Include="Packets.h" />
+    <ClInclude Include="Packet.h" />
   </ItemGroup>
 </Project>

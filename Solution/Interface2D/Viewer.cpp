@@ -13,6 +13,8 @@
 #include "mathmatics.h"
 #include "Map.h"
 #include "Line.h"
+#include "Packets.h"
+#include "Packet.h"
 #include "Coord.h"
 #include "Chip.h"
 #include "Ratio.h"
@@ -86,10 +88,9 @@ void Viewer::update( ) {
 	drawLine( ); // ƒ‰ƒCƒ“‚ª‰æ–Ê‚É•\Ž¦‚³‚ê‚Ä‚¢‚È‚¢‚Ì‚Å‚±‚±‚àŠÖŒW‚È‚¢
 	drawGuidFacility( );
 	drawGuideLine( );
-	drawPacketAnimation( );
+	drawPacket( );
 
 	reflesh( );
-	addCount( );
 }
 
 void Viewer::reflesh(  ) {
@@ -349,130 +350,25 @@ void Viewer::drawGuideLine( ) const {
 	}
 }
 
-void Viewer::drawPacketAnimation( ) const {
+void Viewer::drawPacket( ) const {
 	AppPtr app = App::getTask( );
 	if ( !app ) {
 		return;
 	}
-
-	LineConstPtr line = app->getLine( );
-	const Line::Data& data = line->getData( );
-	int length = data.packet_ratio.cal( CHIP_SIZE );
-
 	DrawerPtr drawer = Drawer::getTask( );
-	for ( int i = 0; i < COORD_WIDTH; i++ ) {
-		for ( int j = 0; j < COORD_HEIGHT; j++ ) {
-			Line::Data::Chip chip = data.array[ i + j * COORD_WIDTH ];
-			if ( chip.guide || chip.circuit_dir == Line::DIR_NONE ) {
-				continue;
-			}
-			int num = ( chip.view_num + 1 ) % chip.resist;
-			if ( num != 0 ) {
-				continue;
-			}
-
-			int offset_x = 0;
-			int offset_y = 0;
-			unsigned char start_dir = ~chip.circuit_dir & chip.form_dir;
-			switch( start_dir ) {
-			case Line::DIR_U___:
-				offset_y = PACKET_OFFSET * 3;
-				offset_x = PACKET_OFFSET;
-				break;
-			case Line::DIR__D__:
-				offset_y = -PACKET_OFFSET;
-				offset_x = PACKET_OFFSET;
-				break;
-			case Line::DIR___L_:
-				offset_x = PACKET_OFFSET * 3;
-				offset_y = PACKET_OFFSET;
-				break;
-			case Line::DIR____R:
-				offset_x = -PACKET_OFFSET;
-				offset_y = PACKET_OFFSET;
-				break;
-			default:
-				break;
-			}
-
-			int sx = i * CHIP_SIZE + offset_x;
-			int sy = j * CHIP_SIZE + offset_y;
-			int animation_sx = sx;
-			int animation_sy = sy;
-			unsigned char advance_dir;
-			bool is_reverse = false;
-
-			switch( chip.form_dir ) {
-			case Line::DIR_UD__: 
-			case Line::DIR___LR:
-				advance_dir = chip.circuit_dir;
-				break;
-			case Line::DIR_U_L_: 
-			case Line::DIR_U__R: 
-			case Line::DIR__DL_: 
-			case Line::DIR__D_R:
-				advance_dir = reverseDir( start_dir );
-				is_reverse = true;
-				break;
-			default:
-				continue;
-			}
-
-			if( ( length < CHIP_SIZE / 2 || !is_reverse ) ) {
-				if ( advance_dir & Line::DIR_U___ ) {
-					animation_sy -= length;
-				}
-				if ( advance_dir & Line::DIR__D__ ) {
-					animation_sy += length;
-				}
-				if ( advance_dir & Line::DIR___L_ ) {
-					animation_sx -= length;
-				}
-				if ( advance_dir & Line::DIR____R ) {
-					animation_sx += length;
-				}
-			} else {
-				if ( start_dir & Line::DIR_U___ ) {
-					animation_sy += CHIP_SIZE / 2;
-				}
-				if ( start_dir & Line::DIR__D__ ) {
-					animation_sy -= CHIP_SIZE / 2;
-				}
-				if ( start_dir & Line::DIR___L_ ) {
-					animation_sx += CHIP_SIZE / 2;
-				}
-				if ( start_dir & Line::DIR____R ) {
-					animation_sx -= CHIP_SIZE / 2;
-				}
-				if ( chip.circuit_dir & Line::DIR_U___ ) {
-					animation_sy -= length - CHIP_SIZE / 2;
-				}
-				if ( chip.circuit_dir & Line::DIR__D__ ) {
-					animation_sy += length - CHIP_SIZE / 2;
-				}
-				if ( chip.circuit_dir & Line::DIR___L_ ) {
-					animation_sx -= length - CHIP_SIZE / 2;
-				}
-				if ( chip.circuit_dir & Line::DIR____R ) {
-					animation_sx += length - CHIP_SIZE / 2;
-				}
-			}
-		
-			drawer->set( Drawer::Sprite( Drawer::Transform( animation_sx, animation_sy ), RES_PACKET ) );
-		}
+	PacketsConstPtr packets = app->getPackets( );
+	int count = packets->getCount( );
+	for ( int i = 0; i < count; i++ ) {
+		PacketPtr packet = packets->get( i );
+		Coord coord = packet->getCoord( );
+		Ratio ratio_x = packet->getRatioX( );
+		Ratio ratio_y = packet->getRatioY( );
+		int sx = coord.x * CHIP_SIZE + ratio_x.cal( CHIP_SIZE );
+		int sy = coord.y * CHIP_SIZE + ratio_y.cal( CHIP_SIZE );
+		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_PACKET ) );
 	}
 }
 
-void Viewer::addCount( ) {
-	AppPtr app = App::getTask( );
-	if ( !app ) {
-		return;
-	}
-	LineConstPtr line = app->getLine( );
-	const Line::Data& data = line->getData( );
-	int length = data.packet_ratio.cal( CHIP_SIZE );
-
-}
 
 unsigned char Viewer::reverseDir( unsigned char start_dir ) const {
 	switch ( start_dir ) {

@@ -67,11 +67,10 @@ private:
 	void drawGuidFacility( ) const;
 	void drawGuideLine( ) const;
 	void drawLine( ) const;
-	void drawPacketAnimation( ) const;
+	void drawPacket( ) const;
 	unsigned char reverseDir( unsigned char start_dir ) const;
 	int convLineTypeToIdx( unsigned char dir ) const;
 	void reflesh( );
-	void addCount( );
 private:
 
 	Coord _click_coord;
