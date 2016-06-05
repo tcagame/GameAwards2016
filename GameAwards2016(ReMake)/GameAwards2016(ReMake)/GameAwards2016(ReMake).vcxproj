@@ -110,6 +110,7 @@
     <ClCompile Include="PioneersFactory.cpp" />
     <ClCompile Include="PioneersFactorys.cpp" />
     <ClCompile Include="Pioneers.cpp" />
+    <ClCompile Include="RatioCoord.cpp" />
     <ClCompile Include="UnitMap.cpp" />
     <ClCompile Include="Viewer.cpp" />
   </ItemGroup>
@@ -146,6 +147,7 @@
     <ClInclude Include="PioneersFactorys.h" />
     <ClInclude Include="Pioneers.h" />
     <ClInclude Include="Ratio.h" />
+    <ClInclude Include="RatioCoord.h" />
     <ClInclude Include="UnitMap.h" />
     <ClInclude Include="Viewer.h" />
   </ItemGroup>

@@ -10,10 +10,12 @@
 #include <array>
 #include <queue>
 
-Character::Character( const std::vector<Coord>& root, const Coord& target_pos ) {
-	const int RATIO_MAX = _ratio.x.RATIO_ACCURACY;
+Character::Character( const std::vector<Coord>& root, const Coord& target_pos ) :
+_pos( root[ 0 ] ) {
+	Ratio temp;
+	const int RATIO_MAX = temp.RATIO_ACCURACY;
 	_speed = RATIO_MAX / 10;
-	_target_key = 0;
+	_root_key = 0;
 	_root = root;
 	_target_pos = target_pos;
 	setCoord( root[ 0 ] );
@@ -28,66 +30,30 @@ void Character::update( ) {
 }
 
 void Character::getRootPoint( ) {
-	Coord pos = getCoord( );
-	_target = Vector( getCoord( ).x, getCoord( ).y );
-	if ( !existMaterial( _target_pos ) && _target_key == 0 ) {
+	_root_point = _pos.getCoordWithRatio( );
+	if ( !existMaterial( _target_pos ) && _root_key == 0 ) {
 		return;
 	}
-
 	if ( ( int )_root.size( ) == 1 ) {
 		return;
 	}
-	if ( _target_key < ( int )_root.size( ) - 1 ) {
-		Coord target = _root[ _target_key ];
-		if ( pos.getIdx( ) == target.getIdx( ) ) {
-			_target_key++;
-		}
-	} else {
-		_target_key = 0;
-	}
 
-	_target = Vector( _root[ _target_key ].x, _root[ _target_key ].y );
+	if ( _root_key < ( int )_root.size( ) - 1 ) {
+		if ( _pos.getCoordWithRatio( ) == _root_point ) {
+			_root_key++;
+			_root_key %= ( int )_root.size( );
+		}
+	}
+	_root_point = RatioCoord( Coord( _root[ _root_key ].x, _root[ _root_key ].y ) ).getCoordWithRatio( );
 }
 
 void Character::move( ) {
 	getRootPoint( );
-	Vector dir = _target - Vector( getCoord( ).x, getCoord( ).y );
-	dir = dirNomarize( dir );
-	Coord pos = getCoord( );
-	const int RATIO_MAX = _ratio.x.RATIO_ACCURACY;
-	if ( _ratio.x.value + dir.x * _speed > RATIO_MAX ) {
-		pos.x += 1;
-	}
-	if ( _ratio.y.value + dir.y * _speed > RATIO_MAX ) {
-		pos.y += 1;
-	}
-	if ( _ratio.x.value + dir.x * _speed < 0 ) {
-		pos.x -= 1;
-	}
-	if ( _ratio.y.value + dir.y * _speed < 0 ) {
-		pos.y -= 1;
-	}
-	_ratio.x.increase( ( int )dir.x * _speed );
-	_ratio.y.increase( ( int )dir.y * _speed );
+	Vector dir = _root_point - Vector( getCoord( ).x, getCoord( ).y );
+	Vector vec = dir.normalize( ) * _speed;
+	_pos.increase( Coord( ( int )vec.x, ( int )vec.y ) );
 
-	setCoord( pos );
-}
-
-Vector Character::dirNomarize( const Vector& dir ) {
-	Vector result = dir.normalize( );
-	if ( result.x > 0 ) {
-		result.x = 1;
-	}
-	if ( result.y > 0 ) {
-		result.y = 1;
-	}
-	if ( result.x < 0 ) {
-		result.x = -1;
-	}
-	if ( result.y < 0 ) {
-		result.y = -1;
-	}
-	return result;
+	setCoord( _pos.getPos( ) );
 }
 
 bool Character::existMaterial( Coord pos ) {
@@ -108,6 +74,6 @@ bool Character::existMaterial( Coord pos ) {
 	return false;
 }
 
-Character::RatioCoord Character::getRatio( ) {
-	return _ratio;
+RatioCoord Character::getRatioCoord( ) {
+	return _pos;
 }
