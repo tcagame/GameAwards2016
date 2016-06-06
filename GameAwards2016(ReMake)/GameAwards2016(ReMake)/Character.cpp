@@ -15,10 +15,11 @@ _pos( root[ 0 ] ) {
 	Ratio temp;
 	const int RATIO_MAX = temp.RATIO_ACCURACY;
 	_speed = RATIO_MAX / 10;
-	_root_key = 0;
 	_root = root;
 	_target_pos = target_pos;
 	setCoord( root[ 0 ] );
+	_root_point = Vector( root[ 0 ].x, root[ 0 ].y );
+	_pop_point = root[ 0 ];
 }
 
 Character::~Character( ) {
@@ -30,30 +31,46 @@ void Character::update( ) {
 }
 
 void Character::getRootPoint( ) {
-	_root_point = _pos.getCoordWithRatio( );
-	if ( !existMaterial( _target_pos ) && _root_key == 0 ) {
+	if ( !existMaterial( _target_pos ) && _pos.getCoord( ).getIdx( ) == _pop_point.getIdx( ) ) {
+		_root_point = _pos.getCoordWithRatio( );
 		return;
 	}
 	if ( ( int )_root.size( ) == 1 ) {
+		_root_point = _pos.getCoordWithRatio( );
 		return;
 	}
 
-	if ( _root_key < ( int )_root.size( ) - 1 ) {
-		if ( _pos.getCoordWithRatio( ) == _root_point ) {
-			_root_key++;
-			_root_key %= ( int )_root.size( );
+	//‚±‚±‚ð•Ï‚¦‚é
+	Coord root_coord = Coord( ( int )_root_point.x, ( int )_root_point.y );
+	if ( _pos.getCoord( ).getIdx( ) == root_coord.getIdx( ) ) {
+		int root_key;
+		for ( int i = 0; i < ( int )_root.size( ); i++ ) {
+			if ( _pos.getCoord( ).getIdx( ) == _root[ i ].getIdx( ) ) {
+				root_key = i;
+			}
 		}
+		/*
+		Vector point[ 3 ];
+		for ( int i = 0; i < 3; i++ ) {
+			int key = i + root_key;
+			key %= ( int )_root.size( );
+			point[ i ] = Vector( _root[ key ].x, _root[ key ].y );
+		}
+		*/
+		int key = root_key + 1;
+		key %= ( int )_root.size( );
+		Vector target = Vector( _root[ key ].x, _root[ key ].y ); 
+		_root_point = target;
 	}
-	_root_point = RatioCoord( Coord( _root[ _root_key ].x, _root[ _root_key ].y ) ).getCoordWithRatio( );
 }
 
 void Character::move( ) {
 	getRootPoint( );
-	Vector dir = _root_point - Vector( getCoord( ).x, getCoord( ).y );
+	Vector dir = _root_point - _pos.getCoordWithRatio( );
 	Vector vec = dir.normalize( ) * _speed;
 	_pos.increase( Coord( ( int )vec.x, ( int )vec.y ) );
 
-	setCoord( _pos.getPos( ) );
+	setCoord( _pos.getCoord( ) );
 }
 
 bool Character::existMaterial( Coord pos ) {

@@ -159,9 +159,9 @@ void Viewer::drawMiner( ) {
 	for ( int i = 0; i < size; i++ ) {
 		MinerPtr miner = miners->get( i );
 		RatioCoord ratio = miner->getRatioCoord( );
-		Coord pos = ratio.getPos( );
-		int sx = pos.x * CHIP_SIZE + ratio.getRatio( ).x.cal( CHIP_SIZE );
-		int sy = pos.y * CHIP_SIZE + ratio.getRatio( ).y.cal( CHIP_SIZE );
+		Coord coord = ratio.getCoord( );
+		int sx = coord.x * CHIP_SIZE + ratio.getRatio( ).x.cal( CHIP_SIZE );
+		int sy = coord.y * CHIP_SIZE + ratio.getRatio( ).y.cal( CHIP_SIZE );
 		DrawerPtr drawer = Drawer::getTask( );
 		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_MINER ) );
 	}
@@ -177,9 +177,9 @@ void Viewer::drawPioneer( ) {
 	for ( int i = 0; i < size; i++ ) {
 		PioneerPtr pioneer = pioneers->get( i );
 		RatioCoord ratio = pioneer->getRatioCoord( );
-		Coord pos = ratio.getPos( );
-		int sx = pos.x * CHIP_SIZE + ratio.getRatio( ).x.cal( CHIP_SIZE ) - CHIP_SIZE / 2;
-		int sy = pos.y * CHIP_SIZE + ratio.getRatio( ).y.cal( CHIP_SIZE ) - CHIP_SIZE / 2;
+		Coord coord = ratio.getCoord( );
+		int sx = coord.x * CHIP_SIZE + ratio.getRatio( ).x.cal( CHIP_SIZE );
+		int sy = coord.y * CHIP_SIZE + ratio.getRatio( ).y.cal( CHIP_SIZE );
 		DrawerPtr drawer = Drawer::getTask( );
 		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_PIONEER ) );
 	}

@@ -24,8 +24,8 @@ private:
 	int _speed;
 	std::vector< Coord > _root;
 	Vector _root_point;
-	int _root_key;
 	Coord _target_pos;
+	Coord _pop_point;
 	RatioCoord _pos;
 };
 

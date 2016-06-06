@@ -15,9 +15,9 @@ public:
 public:
 	void increase( const Coord& vec );
 	RatioPoint getRatio( ) const;
-	Coord getPos( ) const;
+	Coord getCoord( ) const;
 	Vector getCoordWithRatio( ) const;
 private:
-	Coord _pos;
+	Coord _coord;
 	RatioPoint _ratio;
 };
