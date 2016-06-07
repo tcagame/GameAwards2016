@@ -37,7 +37,7 @@ App::App( ) {
 	_bases      = BasesPtr     ( new Bases     ( ) );
 	_refineries = RefineriesPtr( new Refineries( ) );
 	_bulletins  = BulletinsPtr ( new Bulletins ( ) );
-	_packets    = PacketsPtr   ( new Packets   ( ) ); 
+
 
 	_chargers->initialize( _map );
 	_bases->initialize( _map );
@@ -47,11 +47,13 @@ App::App( ) {
 	// ”­“dŠ‚ÍÅ‰‚©‚çÝ’u‚³‚ê‚Ä‚¢‚é
 	bool result_powerplant_installation = _powerplant->install( Coord( POWERPLANT_POS_X, POWERPLANT_POS_Y ), 0 );
 	assert( result_powerplant_installation );
-
-	_packets->creatPacket( Coord( POWERPLANT_POS_X, POWERPLANT_POS_Y ) );
-
 	_line = LinePtr( new Line( _map, _powerplant, _chargers, _bases, _refineries, _bulletins ) );
 	_mode = MODE_LINE;
+	
+	_packets = PacketsPtr ( new Packets( _line ) ); 
+	_packets->creatPacket( Coord( POWERPLANT_POS_X - 1, POWERPLANT_POS_Y + 1 ) );
+
+	
 }
 
 App::~App( ) {

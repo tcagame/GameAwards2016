@@ -18,6 +18,7 @@
     <ClCompile Include="Refinery.cpp" />
     <ClCompile Include="Packets.cpp" />
     <ClCompile Include="Packet.cpp" />
+    <ClCompile Include="RatioCoord.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h" />
@@ -40,5 +41,6 @@
     <ClInclude Include="Refinery.h" />
     <ClInclude Include="Packets.h" />
     <ClInclude Include="Packet.h" />
+    <ClInclude Include="RatioCoord.h" />
   </ItemGroup>
 </Project>
