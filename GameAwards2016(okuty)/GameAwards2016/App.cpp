@@ -254,11 +254,11 @@ void App::doFacilityPlacementOperation( ) {
 	} else {
 		if ( coord.getIdx( ) != _before_coord.getIdx( ) ) {
 			FacilityConstPtr facility = facilities->get( _relocation_idx );
-			if ( facility->getLineFixationLeft( ).getIdx( ) >= 0 ) {
+			if ( facility->getLineFixationLeft( ).getIdx( ) > 0 ) {
 				_line->setDeleteGuide( facility->getExitCoord( facility->getLineFixationLeft( ) ) );
 				_line->deleteAlongGuide( facility->getExitCoord( facility->getLineFixationLeft( ) ) );
 			}
-			if ( facility->getLineFixationRight( ).getIdx( ) >= 0 ) {
+			if ( facility->getLineFixationRight( ).getIdx( ) > 0 ) {
 				_line->setDeleteGuide( facility->getExitCoord( facility->getLineFixationRight( ) ) );
 				_line->deleteAlongGuide( facility->getExitCoord( facility->getLineFixationRight( ) ) );
 			}

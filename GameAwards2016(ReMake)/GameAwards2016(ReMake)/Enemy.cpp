@@ -18,8 +18,10 @@ Enemy::~Enemy( ) {
 }
 
 void Enemy::update( ) {
+
 	searchTarget( );
 	move( );
+
 }
 
 void Enemy::move( ) {

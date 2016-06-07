@@ -10,13 +10,16 @@
 #include <array>
 #include <queue>
 
-Character::Character( const std::vector<Coord>& root, const Coord& target_pos ) {
-	_speed = 1;
-	_target_key = 0;
+Character::Character( const std::vector<Coord>& root, const Coord& target_pos ) :
+_pos( root[ 0 ] ),
+_pop_point( root[ 0 ] ){
+	Ratio temp;
+	const int RATIO_MAX = temp.RATIO_ACCURACY;
+	_speed = RATIO_MAX / 10;
 	_root = root;
-	_time = 0;
 	_target_pos = target_pos;
 	setCoord( root[ 0 ] );
+	_root_point = Vector( root[ 0 ].x, root[ 0 ].y );
 }
 
 Character::~Character( ) {
@@ -28,56 +31,47 @@ void Character::update( ) {
 }
 
 void Character::getRootPoint( ) {
-	Coord pos = getCoord( );
-	_target = Vector( getCoord( ).x, getCoord( ).y );
-	if ( !existMaterial( _target_pos ) && _target_key == 0 ) {
+	if ( !existMaterial( _target_pos ) && _pos.getCoord( ).getIdx( ) == _pop_point.getCoord( ).getIdx( ) ) {
+		_root_point =_pos.getCoordWithRatio( );
 		return;
 	}
-
 	if ( ( int )_root.size( ) == 1 ) {
+		_root_point = _pos.getCoordWithRatio( );
 		return;
 	}
-	if ( _target_key < ( int )_root.size( ) - 1 ) {
-		Coord target = _root[ _target_key ];
-		if ( pos.getIdx( ) == target.getIdx( ) ) {
-			_target_key++;
-		}
-	} else {
-		_target_key = 0;
-	}
 
-	_target = Vector( _root[ _target_key ].x, _root[ _target_key ].y );
+	//‚±‚±‚ð•Ï‚¦‚é
+	Coord root_coord = Coord( ( int )_root_point.x, ( int )_root_point.y );
+	if ( _pos.getCoord( ).getIdx( ) == root_coord.getIdx( ) ) {
+		int root_key;
+		for ( int i = 0; i < ( int )_root.size( ); i++ ) {
+			if ( _pos.getCoord( ).getIdx( ) == _root[ i ].getIdx( ) ) {
+				root_key = i;
+				break;
+			}
+		}
+		/*˜p‹È—pƒvƒƒOƒ‰ƒ€
+		Vector point[ 3 ];
+		for ( int i = 0; i < 3; i++ ) {
+			int key = i + root_key;
+			key %= ( int )_root.size( );
+			point[ i ] = Vector( _root[ key ].x, _root[ key ].y );
+		}
+		*/
+		int key = root_key + 1;
+		key %= ( int )_root.size( );
+		RatioCoord target( _root[ key ] );
+		_root_point = target.getCoordWithRatio( );
+	}
 }
 
 void Character::move( ) {
-	if ( _time % 10 == 0 ) {
-		getRootPoint( );
-		_time = 0;
-	}
-	_time++;
-	Vector dir = _target - Vector( getCoord( ).x, getCoord( ).y );
-	dir = dirNomarize( dir );
-	Coord pos = getCoord( );
-	pos.x += ( int )( dir.x * _speed );
-	pos.y += ( int )( dir.y * _speed );
-	setCoord( pos );
-}
+	getRootPoint( );
+	Vector dir = _root_point - _pos.getCoordWithRatio( );
+	Vector vec = dir.normalize( ) * _speed;
+	_pos.increase( Coord( ( int )vec.x, ( int )vec.y ) );
 
-Vector Character::dirNomarize( const Vector& dir ) {
-	Vector result = dir.normalize( );
-	if ( result.x > 0 ) {
-		result.x = 1;
-	}
-	if ( result.y > 0 ) {
-		result.y = 1;
-	}
-	if ( result.x < 0 ) {
-		result.x = -1;
-	}
-	if ( result.y < 0 ) {
-		result.y = -1;
-	}
-	return result;
+	setCoord( _pos.getCoord( ) );
 }
 
 bool Character::existMaterial( Coord pos ) {
@@ -96,4 +90,8 @@ bool Character::existMaterial( Coord pos ) {
 		return forest->isExist( );
 	}
 	return false;
+}
+
+RatioCoord Character::getRatioCoord( ) {
+	return _pos;
 }

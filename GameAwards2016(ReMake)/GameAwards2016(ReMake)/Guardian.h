@@ -2,6 +2,7 @@
 #include "Object.h"
 #include "smart_ptr.h"
 #include "mathmatics.h"
+#include "RatioCoord.h"
 #include <vector>
 
 PTR( Guardian );
@@ -17,17 +18,15 @@ private:
 	void getRootPoint( );
 	void move( );
 	void action( );
-	Vector dirNomarize( const Vector& dir );
 	bool existEnemy( );
 	void searchEnemy( );
 private:
 	std::vector< Coord > _root;
 	Vector _target;
 	int _speed;
-	int _target_key;
 	bool _is_attack;
-	Coord _factory_pos;
 	EnemyWeakPtr _enemy;
-
+	RatioCoord _factory_pos;
+	RatioCoord _pos;
 	int _time;
 };

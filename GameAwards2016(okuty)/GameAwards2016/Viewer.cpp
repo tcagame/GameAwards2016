@@ -79,6 +79,7 @@ void Viewer::initialize( ) {
 
 	_click_left = CLICK_NONE;
 	_click_right = CLICK_NONE;
+	_count = 0;
 }
 
 void Viewer::update( ) {
@@ -98,6 +99,7 @@ void Viewer::update( ) {
 	drawPacketAnimation( );
 
 	reflesh( );
+	addCount( );
 }
 
 void Viewer::reflesh(  ) {
@@ -406,6 +408,10 @@ void Viewer::drawPacketAnimation( ) const {
 			if ( chip.guide || chip.circuit_dir == Line::DIR_NONE ) {
 				continue;
 			}
+			int num = ( chip.view_num + 1 ) % chip.resist;
+			if ( num != 0 ) {
+				continue;
+			}
 
 			int offset_x = 0;
 			int offset_y = 0;
@@ -437,6 +443,7 @@ void Viewer::drawPacketAnimation( ) const {
 			int animation_sy = sy;
 			unsigned char advance_dir;
 			bool is_reverse = false;
+
 			switch( chip.form_dir ) {
 			case Line::DIR_UD__: 
 			case Line::DIR___LR:
@@ -450,7 +457,7 @@ void Viewer::drawPacketAnimation( ) const {
 				is_reverse = true;
 				break;
 			default:
-				break;
+				continue;
 			}
 
 			if( ( length < CHIP_SIZE / 2 || !is_reverse ) ) {
@@ -492,10 +499,21 @@ void Viewer::drawPacketAnimation( ) const {
 					animation_sx += length - CHIP_SIZE / 2;
 				}
 			}
-	
+		
 			drawer->set( Drawer::Sprite( Drawer::Transform( animation_sx, animation_sy ), RES_PACKET ) );
 		}
 	}
+}
+
+void Viewer::addCount( ) {
+	AppPtr app = App::getTask( );
+	if ( !app ) {
+		return;
+	}
+	LineConstPtr line = app->getLine( );
+	const Line::Data& data = line->getData( );
+	int length = data.packet_ratio.cal( CHIP_SIZE );
+
 }
 
 unsigned char Viewer::reverseDir( unsigned char start_dir ) const {

@@ -1,6 +1,7 @@
 #include "App.h"
 #include "Framework.h"
 #include "Map.h"
+#include "UnitMap.h"
 #include "Miners.h"
 #include "Pioneers.h"
 #include "Enemies.h"
@@ -26,6 +27,7 @@ void App::initialize( ) {
 	_gold = 0;
 
 	_map = MapPtr( new Map );
+	_unit_map = UnitMapPtr( new UnitMap );
 	_miners = MinersPtr( new Miners );
 	_pioneers = PioneersPtr( new Pioneers );
 	_enemies = EnemiesPtr( new Enemies );
@@ -37,7 +39,7 @@ void App::initialize( ) {
 	_guardians_factories = GuardiansFactoriesPtr( new GuardiansFactories( _map ) );
 
 	_forests->install( Coord( 10, 5 ) );
-	_gold_mines->install( Coord( 5, 10 ) );
+	_gold_mines->install( Coord( 15, 15 ) );
 	_enemies->create( Coord( 1, 0 ) );
 	_pioneers_factorys->install( Coord( 2, 5 ) );
 	_miners_factorys->install( Coord( 15, 5 ) );
@@ -60,6 +62,10 @@ MapConstPtr App::getMap( ) const{
 
 MapPtr App::getMap( ) {
 	return _map;
+}
+
+UnitMapPtr App::getUnitMap( ) {
+	return _unit_map;
 }
 
 MinersPtr App::getMiners( ) {

@@ -2,6 +2,7 @@
 #include "Object.h"
 #include "smart_ptr.h"
 #include "mathmatics.h"
+#include "RatioCoord.h"
 #include <vector>
 
 PTR( Character );
@@ -12,20 +13,19 @@ public:
 	virtual ~Character( );
 public:
 	void update( );
+	RatioCoord getRatioCoord( );
 protected:
 	virtual void action( ) = 0;
 private:
 	void move( );
 	void getRootPoint( );
-	Vector dirNomarize( const Vector& dir );
 	bool existMaterial( Coord pos );
 private:
 	int _speed;
 	std::vector< Coord > _root;
-	Vector _target;
-	int _target_key;
+	Vector _root_point;
 	Coord _target_pos;
-
-	int _time;
+	RatioCoord _pop_point;
+	RatioCoord _pos;
 };
 
