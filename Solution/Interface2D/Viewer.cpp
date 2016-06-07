@@ -13,7 +13,6 @@
 #include "mathmatics.h"
 #include "Map.h"
 #include "Line.h"
-#include "Packets.h"
 #include "Packet.h"
 #include "Coord.h"
 #include "Chip.h"
@@ -164,7 +163,7 @@ void Viewer::drawPowerplant( ) const {
 		return;
 	}
 	PowerplantConstPtr powerplant = app->getPowerplant( );
-	Coord coord = powerplant->getCoord( );
+	const Coord& coord = powerplant->getCoord( );
 
 	int sx = coord.x * CHIP_SIZE + POWERPLANT_OFFSET_X;
 	int sy = coord.y * CHIP_SIZE;
@@ -182,7 +181,7 @@ void Viewer::drawChargers( ) const {
 	const int size = chargers->getSize( );
 	for ( int i = 0; i < size; i++ ) {
 		ChargerConstPtr charger = std::dynamic_pointer_cast< const Charger >( chargers->get( i ) );
-		Coord coord = charger->getCoord( );
+		const Coord& coord = charger->getCoord( );
 		int sx = coord.x * CHIP_SIZE + CHARGER_OFFSET_X;
 		int sy = coord.y * CHIP_SIZE;
 		DrawerPtr drawer = Drawer::getTask( );
@@ -200,7 +199,7 @@ void Viewer::drawBases( ) const {
 	const int size = bases->getSize( );
 	for ( int i = 0; i < size; i++ ) {
 		BaseConstPtr base = std::dynamic_pointer_cast< const Base >( bases->get( i ) );
-		Coord coord = base->getCoord( );
+		const Coord& coord = base->getCoord( );
 		int sx = coord.x * CHIP_SIZE + BASE_OFFSET_X;
 		int sy = coord.y * CHIP_SIZE;
 		DrawerPtr drawer = Drawer::getTask( );
@@ -217,7 +216,7 @@ void Viewer::drawRefineries( ) const {
 	const int size = refineries->getSize( );
 	for ( int i = 0; i < size; i++ ) {
 		RefineryConstPtr refinery = std::dynamic_pointer_cast< const Refinery >( refineries->get( i ) );
-		Coord coord = refinery->getCoord( );
+		const Coord& coord = refinery->getCoord( );
 		int sx = coord.x * CHIP_SIZE + REFINERY_OFFSET_X;
 		int sy = coord.y * CHIP_SIZE;
 		DrawerPtr drawer = Drawer::getTask( );
@@ -234,7 +233,7 @@ void Viewer::drawBulletins( ) const {
 	const int size = bulletins->getSize( );
 	for ( int i = 0; i < size; i++ ) {
 		BulletinConstPtr bulletin = std::dynamic_pointer_cast< const Bulletin >( bulletins->get( i ) );
-		Coord coord = bulletin->getCoord( );
+		const Coord& coord = bulletin->getCoord( );
 		int sx = coord.x * CHIP_SIZE + BULLETIN_OFFSET_X;
 		int sy = coord.y * CHIP_SIZE;
 		DrawerPtr drawer = Drawer::getTask( );
@@ -281,12 +280,12 @@ void Viewer::drawLine( ) const {
 	}
 
 	LineConstPtr line = app->getLine( );
-	const Line::Data data = line->getData( );
 
 	DrawerPtr drawer = Drawer::getTask( );
 	for ( int i = 0; i < COORD_WIDTH; i++ ) {
 		for ( int j = 0; j < COORD_HEIGHT; j++ ) {
-			Line::Data::Chip chip = data.array[ i + j * COORD_WIDTH ];
+			Coord coord( i, j );
+			const Line::Chip& chip = line->getChip( coord );
 			if ( chip.guide ) {
 				continue;
 			}
@@ -319,10 +318,10 @@ void Viewer::drawGuideLine( ) const {
 	}
 
 	DrawerPtr drawer = Drawer::getTask( );
-	const Line::Data data = line->getData( );
 	for ( int i = 0; i < COORD_WIDTH; i++ ) {
 		for ( int j = 0; j < COORD_HEIGHT; j++ ) {
-			Line::Data::Chip chip = data.array[ i + j * COORD_WIDTH ];
+			Coord coord( i, j );
+			const Line::Chip& chip = line->getChip( coord );
 			if ( !chip.guide ) {
 				continue;
 			}
@@ -357,15 +356,20 @@ void Viewer::drawPacket( ) const {
 		return;
 	}
 	DrawerPtr drawer = Drawer::getTask( );
-	PacketsConstPtr packets = app->getPackets( );
-	int count = packets->getCount( );
-	for ( int i = 0; i < count; i++ ) {
-		PacketPtr packet = packets->get( i );
-		Coord coord = packet->getCoord( );
-		Ratio ratio_x = packet->getRatioX( );
-		Ratio ratio_y = packet->getRatioY( );
-		int sx = coord.x * CHIP_SIZE + ratio_x.cal( CHIP_SIZE ) + PACKET_OFFSET_X;
-		int sy = coord.y * CHIP_SIZE + ratio_y.cal( CHIP_SIZE ) + PACKET_OFFSET_Y;
+	LineConstPtr line = app->getLine( );
+	for ( int i = 0; i < Line::PACKET_NUM; i++ ) {
+		PacketPtr packet = line->getPacket( i );
+		if ( packet->isWaiting( ) ) {
+			continue;
+		}
+		const Coord& coord = packet->getCoord( );
+		const Ratio& animation_ratio = packet->getAnimationRatio( );
+		const Line::Chip& chip = line->getChip( coord );
+
+		// animation_ratio‚ð‚Â‚©‚Á‚Ä•`‰æˆÊ’u‚ðŒvŽZ‚·‚é
+		int sx = int ( coord.x * CHIP_SIZE + CHIP_SIZE * 0.5 - 25 );
+		int sy = int ( coord.y * CHIP_SIZE + CHIP_SIZE * 0.5 - 25 );
+
 		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_PACKET ) );
 	}
 }

@@ -2,12 +2,12 @@
 #include "Coord.h"
 #include "Ratio.h"
 #include "Line.h"
+#include <assert.h>
 
+const int POWERPLANT_LEVEL = Ratio::ACCURACY * 10 / 100; // 10Åì
 
-Packet::Packet( const Coord& coord, const Ratio& x, const Ratio& y ) :
-_ratio_coord( coord, x, y ),
-_before_coord( coord ) {
-	_is_center_chip = false;
+Packet::Packet( ) {
+	_waiting = true;
 }
 
 
@@ -15,81 +15,57 @@ Packet::~Packet( ) {
 }
 
 Coord Packet::getCoord( ) {
-	return _ratio_coord.getCoord( );
+	return _coord;
 }
 
-Ratio Packet::getRatioX( ) {
-	return _ratio_coord.getRatio( ).x;
+Ratio Packet::getAnimationRatio( ) const {
+	return _animation_ratio;
 }
 
-Ratio Packet::getRatioY( ) {
-	return _ratio_coord.getRatio( ).y;
-}
 
 void Packet::update( ) {
-	if ( _next_dir == Line::DIR_NONE ) {
+	if ( _waiting ) {
 		return;
 	}
 
-	int ratio_x = _ratio_coord.getRatio( ).x.cal( Ratio::RATIO_ACCURACY );
-	int ratio_y = _ratio_coord.getRatio( ).y.cal( Ratio::RATIO_ACCURACY );
+	// êiÇﬂÇÈ
+	_animation_ratio.increase( POWERPLANT_LEVEL );
+}
 
-	if ( ratio_x == Ratio::RATIO_ACCURACY / 2 || ratio_y == Ratio::RATIO_ACCURACY / 2 ) {
-		_is_center_chip = true;
-	}
+bool Packet::isWaiting( ) const {
+	return _waiting;
+}
 
-	unsigned char start_dir = _line_dir & ~_next_dir;
+bool Packet::isFinishedAnimation( ) const {
+	return _animation_ratio.isOverflow( );
+}
 
-	if ( start_dir == Line::DIR____R && !_is_center_chip ) {
-		_ratio_coord.increase( Coord( -10, 0 ) );
-	}
-	if ( start_dir == Line::DIR__D__ && !_is_center_chip ) {
-		_ratio_coord.increase( Coord( 0, -10 ) );
-	}
-	if ( start_dir == Line::DIR___L_ && !_is_center_chip ) {
-		_ratio_coord.increase( Coord( 10, 0 ) );
-	}
-	if ( start_dir == Line::DIR_U___ && !_is_center_chip ) {
-		_ratio_coord.increase( Coord( 0, 10 ) );
-	}
-	
-	
-	if ( !_is_center_chip ) {
-		return;
-	}
-	switch( _next_dir ) {
+void Packet::nextChip( unsigned char dir ) {
+	switch( dir ) {
 	case Line::DIR_U___:
-		_ratio_coord.increase( Coord( 0, -10 ) );
+		_coord.y--;
 		break;
 	case Line::DIR__D__:
-		_ratio_coord.increase( Coord( 0, 10 ) );
+		_coord.y++;
 		break;
 	case Line::DIR___L_:
-		_ratio_coord.increase( Coord( -10, 0 ) );
+		_coord.x--;
 		break;
 	case Line::DIR____R:
-		_ratio_coord.increase( Coord( 10, 0 ) );
+		_coord.x++;
 		break;
 	default:
-		break;
+		assert( false );
 	}
 
+	_animation_ratio.reflesh( );
 }
 
-bool Packet::isMoveNextCoord( ) {
-	if ( _before_coord.getIdx( ) == _ratio_coord.getCoord( ).getIdx( ) ) {
-		return false;
-	}
-	_is_center_chip = false;
-	_before_coord = _ratio_coord.getCoord( );
-	return true;
+void Packet::set( const Coord& coord ) {
+	_waiting = false;
+	_coord = coord;
 }
 
-unsigned char Packet::getNextDir( ) {
-	return _next_dir;
-}
-
-void Packet::setDir( unsigned char next_dir, unsigned char line_dir ) {
-	_next_dir = next_dir;
-	_line_dir = line_dir;
+void Packet::wait( ) {
+	_waiting = true;
 }

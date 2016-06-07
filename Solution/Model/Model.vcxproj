@@ -24,7 +24,6 @@
     <ClCompile Include="Mgr.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Packet.cpp" />
-    <ClCompile Include="Packets.cpp" />
     <ClCompile Include="Powerplant.cpp" />
     <ClCompile Include="RatioCoord.cpp" />
     <ClCompile Include="Refineries.cpp" />
@@ -46,7 +45,6 @@
     <ClInclude Include="Mgr.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Packet.h" />
-    <ClInclude Include="Packets.h" />
     <ClInclude Include="Powerplant.h" />
     <ClInclude Include="Ratio.h" />
     <ClInclude Include="RatioCoord.h" />

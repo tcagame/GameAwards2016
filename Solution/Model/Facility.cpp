@@ -94,8 +94,6 @@ bool Facility::install( const Coord& coord, unsigned char value ) {
 	return true;
 }
 
-Coord exit_coord;
-
 Coord Facility::getExitCoord( const Coord& coord ) const {
 	Coord exit_coord( -1, -1 );
 	if ( coord.getIdx( ) == _connect_fixation_left.getIdx( ) ) {

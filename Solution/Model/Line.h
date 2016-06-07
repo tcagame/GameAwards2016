@@ -14,6 +14,7 @@ PTR( Chargers );
 PTR( Bases );
 PTR( Refineries );
 PTR( Bulletins );
+PTR( Packet );
 
 
 class Line {
@@ -24,16 +25,15 @@ public:
 		STATE_CIRCUIT,
 		STATE_MAX,
 	};
-	struct Data {
-		struct Chip {
-			bool is_check;
-			bool guide;
-			unsigned char form_dir; //dir
-			unsigned char circuit_dir; //dir
-		};
-		std::array< Chip, COORD_WIDTH * COORD_HEIGHT > array;
+
+	struct Chip {
+		bool is_check;
+		bool guide;
+		unsigned char form_dir; //dir
+		unsigned char circuit_dir; //dir
 	};
 	
+	static const int PACKET_NUM = 10;
 
 	static const unsigned char DIR_NONE	= 0x00;
 	static const unsigned char DIR_U___ = 0x01;
@@ -58,7 +58,7 @@ public:
 public:
 	void update( );
 	void makeCircuit( );
-	const Data& getData( ) const;
+	const Chip& getChip( const Coord& coord ) const;
 	bool isGuiding( ) const;
 	void startGuide( const Coord& coord );
 	void setGuide( const Coord& coord );
@@ -66,6 +66,8 @@ public:
 	void cancelGuide( );
 	bool setDeleteGuide( const Coord& coord );
 	void deleteAlongGuide( const Coord& coord );
+	unsigned char getNextDir( const Coord& coord ) const;
+	PacketPtr getPacket( int idx ) const;
 private:
 	FacilityConstPtr getChipType( CHIP_TYPE chip_type, unsigned char value );
 	bool checkDelete( const Coord& coord, const Coord& old_coord );
@@ -80,6 +82,8 @@ private:
 	unsigned char reverseDir( unsigned char dir ) const;
 	bool setConnectFacility( const Coord& coord );
 	bool destroyLineDir( CHIP_TYPE type, const Coord& coord );
+	void outputPackets( );
+	void updatePackets( );
 private:
 	MapPtr _map;
 	PowerplantPtr _powerplant;
@@ -87,9 +91,10 @@ private:
 	BasesPtr _bases;
 	RefineriesPtr _refineries;
 	BulletinsPtr _bulletins;
-	Data _data;
+	std::array< Chip, COORD_WIDTH * COORD_HEIGHT > _chips;
 	Coord _old_coord;
 	bool _guide_mode;
+	bool _circuit;
 	unsigned char _guide_store_from_dir;
 	unsigned char _guide_store_circuit_dir;
 	STATE _guide_store_state;
@@ -97,4 +102,7 @@ private:
 	Coord _line_start_coord;
 	Coord _delete_coord_first_conecter;
 	Coord _delete_coord_second_conecter;
+
+	std::array< PacketPtr, PACKET_NUM > _packets;
+	unsigned int _packets_count;
 };

@@ -10,7 +10,6 @@
 #include "Refinery.h"
 #include "Bulletins.h"
 #include "Bulletin.h"
-#include "Packets.h"
 #include "Packet.h"
 #include "Viewer.h"
 #include "Powerplant.h"
@@ -50,10 +49,6 @@ App::App( ) {
 	_line = LinePtr( new Line( _map, _powerplant, _chargers, _bases, _refineries, _bulletins ) );
 	_mode = MODE_LINE;
 	
-	_packets = PacketsPtr ( new Packets( _line ) ); 
-	_packets->creatPacket( Coord( POWERPLANT_POS_X - 1, POWERPLANT_POS_Y + 1 ) );
-
-	
 }
 
 App::~App( ) {
@@ -66,7 +61,6 @@ void App::update( ) {
 	doPlacementOperation( );
 	_powerplant->update( );
 	_line->update( );
-	_packets->update( );
 }
 	
 

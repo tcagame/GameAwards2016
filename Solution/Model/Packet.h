@@ -8,21 +8,20 @@ PTR( Packet );
 
 class Packet {
 public:
-	Packet( const Coord& coord, const Ratio& x, const Ratio& y );
+	Packet( );
 	virtual ~Packet( );
 public:
 	Coord getCoord( );
-	Ratio getRatioX( );
-	Ratio getRatioY( );
-	unsigned char getNextDir( );
+	Ratio getAnimationRatio( ) const;
 	void update( );
-	bool isMoveNextCoord( );
-	void setDir( unsigned char next_dir, unsigned char line_dir );
+	void nextChip( unsigned char dir );
+	bool isWaiting( ) const;
+	void set( const Coord& coord );
+	void wait( );
+	bool isFinishedAnimation( ) const;
 private:
-	Coord _before_coord;
-	RatioCoord _ratio_coord;
-	unsigned char _next_dir;
-	unsigned char _line_dir;
-	bool _is_center_chip;
+	Coord _coord;
+	Ratio _animation_ratio;
+	bool _waiting;
 };
 

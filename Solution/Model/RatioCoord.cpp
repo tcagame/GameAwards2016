@@ -16,7 +16,7 @@ RatioCoord::~RatioCoord( ) {
 }
 
 void RatioCoord::increase( const Coord& vec ) {
-	const int RATIO_MAX = _ratio.x.RATIO_ACCURACY;
+	const int RATIO_MAX = _ratio.x.ACCURACY;
 	if ( ( int )_ratio.x.value + vec.x >= RATIO_MAX ) {
 		_coord.x += 1;
 	}
@@ -43,7 +43,7 @@ RatioCoord::RatioPoint RatioCoord::getRatio( ) const {
 
 Vector RatioCoord::getCoordWithRatio( ) const {
 	Vector result;
-	const int RATIO_MAX = _ratio.x.RATIO_ACCURACY;
+	const int RATIO_MAX = _ratio.x.ACCURACY;
 	result.x = _coord.x * RATIO_MAX + _ratio.x.value;
 	result.x /= RATIO_MAX;
 	result.y = _coord.y * RATIO_MAX + _ratio.y.value;
