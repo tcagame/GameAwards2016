@@ -31,8 +31,7 @@ void Character::update( ) {
 }
 
 void Character::getRootPoint( ) {
-	double length = ( _pos.getCoordWithRatio( ) - _pop_point.getCoordWithRatio( )).getLength( );
-	if ( !existMaterial( _target_pos ) && length < 0.4 ) {
+	if ( !existMaterial( _target_pos ) && _pos.getCoord( ).getIdx( ) == _pop_point.getCoord( ).getIdx( ) ) {
 		_root_point =_pos.getCoordWithRatio( );
 		return;
 	}
