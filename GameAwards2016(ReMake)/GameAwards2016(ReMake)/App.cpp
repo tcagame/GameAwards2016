@@ -40,10 +40,11 @@ void App::initialize( ) {
 
 	_forests->install( Coord( 10, 5 ) );
 	_gold_mines->install( Coord( 15, 15 ) );
-	_enemies->create( Coord( 1, 0 ) );
 	_pioneers_factorys->install( Coord( 2, 5 ) );
 	_miners_factorys->install( Coord( 15, 5 ) );
+	_miners_factorys->install( Coord( 25, 5 ) );
 	_guardians_factories->install( Coord( 5, 15 ) );
+	_enemies->create( Coord( 15, 1 ) );
 }
 
 void App::update( ) {
