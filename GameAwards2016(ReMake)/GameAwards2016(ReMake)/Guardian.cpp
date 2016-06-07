@@ -10,14 +10,16 @@ static const int POWER = 1000;
 static const Coord FACTORY_DIFF = Coord( 1, 3 );
 static const int SEARCH_RANGE = 1;
 
-Guardian::Guardian( const std::vector<Coord>& root, const Coord& factory_pos ) {
-	_speed = 1;
-	_target_key = 0;
+Guardian::Guardian( const std::vector<Coord>& root, const Coord& factory_pos ) :
+_pos( root[ 0 ] ),
+_factory_pos( factory_pos ) {
+	int RATIO_MAX = _pos.getRatio( ).x.RATIO_ACCURACY;
+	_speed = RATIO_MAX / 10;
 	_root = root;
 	_time = 0;
 	setCoord( root[ 0 ] );
 	_is_attack = false;
-	_factory_pos = factory_pos;
+	_target = _pos.getCoordWithRatio( );
 }
 
 Guardian::~Guardian( ) {
@@ -36,72 +38,49 @@ void Guardian::update( ) {
 }
 
 void Guardian::getRootPoint( ) {
-	Coord pos = getCoord( );
 	if ( existEnemy( ) ) {
 		EnemyPtr enemy = _enemy.lock( );
 		Coord ep = enemy->getCoord( );
-		_target = Vector( ep.x, ep.y );
+		_target = RatioCoord( ep ).getCoordWithRatio( );
 		return;
 	}
 
 	if ( ( int )_root.size( ) == 1 ) {
-		_target = Vector( getCoord( ).x, getCoord( ).y );
+		_target = _pos.getCoordWithRatio( );
 		return;
 	}
-	if ( _target_key < ( int )_root.size( ) - 1 ) {
-		Coord target = _root[ _target_key ];
-		if ( pos.getIdx( ) == target.getIdx( ) ) {
-			_target_key++;
+	Coord target = Coord( ( int )_target.x, ( int )_target.y );
+	if ( target.getIdx( ) == _pos.getCoord( ).getIdx( ) ) {
+		int key;
+		for ( int i = 0; i < ( int )_root.size( ); i++ ) {
+			if ( _root[ i ].getIdx( ) == _pos.getCoord( ).getIdx( ) ) {
+				key = i;
+				key++;
+				key %= ( int )_root.size( );
+				break;
+			}
 		}
-	} else {
-		_target_key = 0;
+		_target = RatioCoord( _root[ key ] ).getCoordWithRatio( );
 	}
-
-	_target = Vector( _root[ _target_key ].x, _root[ _target_key ].y );
 }
 
 void Guardian::move( ) {
 	AppPtr app = App::getTask( );
 	MapPtr map = app->getMap( );
-	Map::Chip chip;
 	
-	if ( _time % 10 == 0 ) {
-		getRootPoint( );
-		_time = 0;
-	}
-	_time++;
-	Vector pos = Vector( getCoord( ).x, getCoord( ).y );
-	Vector dir = _target - pos;
-	dir = dirNomarize( dir );
-	Coord after_pos; 
-	after_pos.x = ( int )( pos.x + dir.x * _speed );
-	after_pos.y = ( int )( pos.y + dir.y * _speed );
-	chip = map->getChip( after_pos );
+	getRootPoint( );
+	Vector dir = _target - _pos.getCoordWithRatio( );
+	dir = dir.normalize( );
+	RatioCoord after_pos( _pos.getCoord( ) );
+	after_pos.increase( Coord( ( int )( dir.x * _speed ), ( int )( dir.y * _speed ) ) );
+	Map::Chip chip = map->getChip( after_pos.getCoord( ) );
 	if ( chip.type != CHIP_TYPE_NONE && chip.type != CHIP_TYPE_GUARDIAN ) {
-		Vector factory_pos = Vector( _factory_pos.x, _factory_pos.y );
-		Vector dir_for_factory = factory_pos - pos;
-		dir = dirNomarize( dir_for_factory );
+		Vector factory_pos = _factory_pos.getCoordWithRatio( );
+		Vector dir_for_factory = factory_pos - _pos.getCoordWithRatio( );
+		dir =dir_for_factory.normalize( );
 	}
-	pos.x += ( int )( dir.x * _speed );
-	pos.y += ( int )( dir.y * _speed );
-	setCoord( Coord( ( int )pos.x, ( int )pos.y ) );
-}
-
-Vector Guardian::dirNomarize( const Vector& dir ) {
-	Vector result = dir.normalize( );
-	if ( result.x > 0 ) {
-		result.x = 1;
-	}
-	if ( result.y > 0 ) {
-		result.y = 1;
-	}
-	if ( result.x < 0 ) {
-		result.x = -1;
-	}
-	if ( result.y < 0 ) {
-		result.y = -1;
-	}
-	return result;
+	_pos.increase( Coord( ( int )( dir.x * _speed ), ( int )( dir.y * _speed ) ) );
+	setCoord( _pos.getCoord( ) );
 }
 
 bool Guardian::existEnemy( ) {
