@@ -101,6 +101,8 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Miner.cpp" />
     <ClCompile Include="Miners.cpp" />
+    <ClCompile Include="Pioneer.cpp" />
+    <ClCompile Include="Pioneers.cpp" />
     <ClCompile Include="RatioCoord.cpp" />
     <ClCompile Include="Refineries.cpp" />
     <ClCompile Include="Refinery.cpp" />
@@ -133,6 +135,8 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="Miner.h" />
     <ClInclude Include="Miners.h" />
+    <ClInclude Include="Pioneer.h" />
+    <ClInclude Include="Pioneers.h" />
     <ClInclude Include="Ratio.h" />
     <ClInclude Include="RatioCoord.h" />
     <ClInclude Include="Refineries.h" />

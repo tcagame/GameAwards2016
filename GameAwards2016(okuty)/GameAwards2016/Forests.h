@@ -13,7 +13,7 @@ public:
 	virtual ~Forests( );
 public:
 	bool install( const Coord& pos );
-	ForestConstPtr get( int idx ) const;
+	ForestPtr get( int idx );
 	int getSize( ) const;
 private:
 	static const int NUM = 50;

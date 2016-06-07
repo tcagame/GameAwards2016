@@ -13,6 +13,7 @@
 #include "Bulletin.h"
 #include "GoldMines.h"
 #include "Miners.h"
+#include "Pioneers.h"
 #include "Forests.h"
 #include "Viewer.h"
 #include "Powerplant.h"
@@ -43,6 +44,7 @@ App::App( ) {
 	_gold_mines = GoldMinesPtr ( new GoldMines ( _map ) );
 	_forests	= ForestsPtr   ( new Forests   ( _map ) );
 	_miners		= MinersPtr	   ( new Miners	   ( ) );
+	_pioneers	= PioneersPtr  ( new Pioneers( ) );
 
 	_chargers->initialize( _map );
 	_bases->initialize( _map );
@@ -70,6 +72,7 @@ void App::update( ) {
 	_powerplant->update( );
 	_line->update( );
 	_miners->update( );
+	_pioneers->update( );
 }
 	
 
@@ -320,12 +323,16 @@ GoldMinesPtr App::getGoldMines( ) {
 	return _gold_mines;
 }
 
-ForestsConstPtr App::getForests( ) const {
+ForestsPtr App::getForests( ) {
 	return _forests;
 }
 
 MinersConstPtr App::getMiners( ) const {
 	return _miners;
+}
+
+PioneersConstPtr App::getPioneers( ) const {
+	return _pioneers;
 }
 
 bool App::isModeDeleteLine( ) const {

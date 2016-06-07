@@ -16,6 +16,7 @@ PTR( GoldMines );
 PTR( Forests );
 PTR( Bulletins );
 PTR( Miners );
+PTR( Pioneers );
 
 class App : public Task {
 public:
@@ -38,7 +39,8 @@ public:
 	BulletinsConstPtr getBulletins( ) const;
 	GoldMinesPtr getGoldMines( );
 	MinersConstPtr getMiners( ) const;
-	ForestsConstPtr getForests( ) const;
+	PioneersConstPtr getPioneers( ) const;
+	ForestsPtr getForests( );
 	bool isModeDeleteLine( ) const;
 	void addGold( int gold );
 private:
@@ -75,6 +77,7 @@ private:
 	GoldMinesPtr _gold_mines;
 	ForestsPtr _forests;
 	MinersPtr _miners;
+	PioneersPtr _pioneers;
 	MODE _mode;
 	Coord _click_push_coord;
 	FACILITY _placement_facility;

@@ -12,7 +12,7 @@ Forests::~Forests( ) {
 
 }
 
-ForestConstPtr Forests::get( int idx ) const {
+ForestPtr Forests::get( int idx ) {
 	return _array[ idx ];
 }
 

@@ -71,6 +71,7 @@ private:
 	void drawLine( ) const;
 	void drawPacketAnimation( ) const;
 	void drawMiners( ) const;
+	void drawPioneers( ) const;
 	unsigned char reverseDir( unsigned char start_dir ) const;
 	int convLineTypeToIdx( unsigned char dir ) const;
 	void reflesh( );

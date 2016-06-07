@@ -14,8 +14,10 @@
 #include "GoldMine.h"
 #include "Forests.h"
 #include "Forest.h"
-#include"Miners.h"
-#include"Miner.h"
+#include "Miners.h"
+#include "Miner.h"
+#include "Pioneers.h"
+#include "Pioneer.h"
 #include "RatioCoord.h"
 #include "mathmatics.h"
 #include "Map.h"
@@ -103,6 +105,7 @@ void Viewer::update( ) {
 	drawGuideLine( );
 	drawPacketAnimation( );
 	drawMiners( );
+	drawPioneers( );
 
 	reflesh( );
 	addCount( );
@@ -386,10 +389,10 @@ void Viewer::drawForests( ) const {
 	if ( !app ) {
 		return;
 	}
-	ForestsConstPtr forests = app->getForests( );
+	ForestsPtr forests = app->getForests( );
 	const int size = forests->getSize( );
 	for ( int i = 0; i < size; i++ ) {
-		ForestConstPtr forest = std::dynamic_pointer_cast< const Forest >( forests->get( i ) );
+		ForestPtr forest = forests->get( i );
 		int sx = forest->getCoord( ).x * CHIP_SIZE;
 		int sy = forest->getCoord( ).y * CHIP_SIZE;
 		DrawerPtr drawer = Drawer::getTask( );
@@ -521,6 +524,24 @@ void Viewer::drawMiners( ) const {
 	for ( int i = 0; i < size; i++ ) {
 		MinerConstPtr miner = miners->get( i );
 		RatioCoord ratio = miner->getRatioCoord( );
+		Coord coord = ratio.getCoord( );
+		int sx = coord.x * CHIP_SIZE + ratio.getRatio( ).x.cal( CHIP_SIZE ) - CHIP_SIZE / 2;
+		int sy = coord.y * CHIP_SIZE + ratio.getRatio( ).y.cal( CHIP_SIZE ) - CHIP_SIZE / 2;
+		DrawerPtr drawer = Drawer::getTask( );
+		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_MINER ) );
+	}
+}
+
+void Viewer::drawPioneers( ) const {
+	AppPtr app = App::getTask( );
+	if ( !app ) {
+		return;
+	}
+	PioneersConstPtr pioneers = app->getPioneers( );
+	const int size = pioneers->getSize( );
+	for ( int i = 0; i < size; i++ ) {
+		PioneerConstPtr pioneer = pioneers->get( i );
+		RatioCoord ratio = pioneer->getRatioCoord( );
 		Coord coord = ratio.getCoord( );
 		int sx = coord.x * CHIP_SIZE + ratio.getRatio( ).x.cal( CHIP_SIZE ) - CHIP_SIZE / 2;
 		int sy = coord.y * CHIP_SIZE + ratio.getRatio( ).y.cal( CHIP_SIZE ) - CHIP_SIZE / 2;
