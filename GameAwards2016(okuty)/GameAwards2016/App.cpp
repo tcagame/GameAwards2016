@@ -11,6 +11,7 @@
 #include "Bulletins.h"
 #include "Bulletin.h"
 #include "GoldMines.h"
+#include "Forests.h"
 #include "Viewer.h"
 #include "Powerplant.h"
 #include "Framework.h"
@@ -37,6 +38,7 @@ App::App( ) {
 	_refineries = RefineriesPtr( new Refineries( ) );
 	_bulletins  = BulletinsPtr ( new Bulletins ( ) );
 	_gold_mines = GoldMinesPtr ( new GoldMines ( _map ) );
+	_forests	= ForestsPtr ( new Forests ( _map ) );
 
 	_chargers->initialize( _map );
 	_bases->initialize( _map );
@@ -49,7 +51,7 @@ App::App( ) {
 
 	_line = LinePtr( new Line( _map, _powerplant, _chargers, _bases, _refineries, _bulletins ) );
 	_mode = MODE_LINE;
-	_gold_mines->install( Coord( 0, 0 ) );
+	_forests->install( Coord( 0, 0 ) );
 }
 
 App::~App( ) {
@@ -302,6 +304,10 @@ LineConstPtr App::getLine( ) const {
 
 GoldMinesConstPtr App::getGoldMines( ) const {
 	return _gold_mines;
+}
+
+ForestsConstPtr App::getForests( ) const {
+	return _forests;
 }
 
 bool App::isModeDeleteLine( ) const {

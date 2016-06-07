@@ -12,6 +12,8 @@
 #include "Refineries.h"
 #include "GoldMines.h"
 #include "GoldMine.h"
+#include "Forests.h"
+#include "Forest.h"
 #include "mathmatics.h"
 #include "Map.h"
 #include "Line.h"
@@ -37,6 +39,7 @@ enum RES {
 	RES_BASE,    
 	RES_BULLETIN,
 	RES_GOLD_MINE,
+	RES_FORESTS,
 	RES_LINE_NORMAL,
 	RES_LINE_CIRCUIT,
 	RES_LINE_GUIDEPOINT,
@@ -68,6 +71,7 @@ void Viewer::initialize( ) {
 	drawer->load( RES_BASE			 , "../resource/base.png" );
 	drawer->load( RES_BULLETIN       , "../resource/bulletin.png" );
 	drawer->load( RES_GOLD_MINE      , "../resource/GoldMine.png" );
+	drawer->load( RES_FORESTS		 , "../resource/forest.png" );
 	drawer->load( RES_LINE_GUIDEPOINT, "../resource/line_guide_point.png" );
 	drawer->load( RES_GROUND         , "../resource/ground.png" );
 	drawer->load( RES_LINE_DELETE    , "../resource/line_delete.png" );
@@ -87,7 +91,8 @@ void Viewer::update( ) {
 	drawRefineries( );
 	drawBulletins( );
 	drawGoldMines( );
-	drawLine( ); // ƒ‰ƒCƒ“‚ª‰æ–Ê‚É•\Ž¦‚³‚ê‚Ä‚¢‚È‚¢‚Ì‚Å‚±‚±‚àŠÖŒW‚È‚¢
+	drawForests( );
+	drawLine( );// ƒ‰ƒCƒ“‚ª‰æ–Ê‚É•\Ž¦‚³‚ê‚Ä‚¢‚È‚¢‚Ì‚Å‚±‚±‚àŠÖŒW‚È‚¢
 	drawGuidFacility( );
 	drawGuideLine( );
 	drawPacketAnimation( );
@@ -365,6 +370,22 @@ void Viewer::drawGoldMines( ) const {
 		int sy = gold_mine->getCoord( ).y * CHIP_SIZE;
 		DrawerPtr drawer = Drawer::getTask( );
 		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_GOLD_MINE ) );
+	}
+}
+
+void Viewer::drawForests( ) const {
+	AppPtr app = App::getTask( );
+	if ( !app ) {
+		return;
+	}
+	ForestsConstPtr forests = app->getForests( );
+	const int size = forests->getSize( );
+	for ( int i = 0; i < size; i++ ) {
+		ForestConstPtr forest = std::dynamic_pointer_cast< const Forest >( forests->get( i ) );
+		int sx = forest->getCoord( ).x * CHIP_SIZE;
+		int sy = forest->getCoord( ).y * CHIP_SIZE;
+		DrawerPtr drawer = Drawer::getTask( );
+		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_FORESTS ) );
 	}
 }
 

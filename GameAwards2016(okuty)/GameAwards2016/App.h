@@ -12,6 +12,7 @@ PTR( Chargers );
 PTR( Bases );
 PTR( Refineries );
 PTR( GoldMines );
+PTR( Forests );
 PTR( Bulletins );
 
 class App : public Task {
@@ -32,6 +33,7 @@ public:
 	RefineriesConstPtr getRefineries( ) const;
 	BulletinsConstPtr getBulletins( ) const;
 	GoldMinesConstPtr getGoldMines( ) const;
+	ForestsConstPtr getForests( ) const;
 	bool isModeDeleteLine( ) const;
 private:
 	enum MODE {
@@ -64,6 +66,7 @@ private:
 	RefineriesPtr _refineries;
 	BulletinsPtr _bulletins;
 	GoldMinesPtr _gold_mines;
+	ForestsPtr _forests;
 	MODE _mode;
 	Coord _click_push_coord;
 	FACILITY _placement_facility;
