@@ -102,3 +102,7 @@ void Guardian::searchEnemy( ) {
 		}
 	}
 }
+
+RatioCoord Guardian::getRatioCoord( ) {
+	return _pos;
+}

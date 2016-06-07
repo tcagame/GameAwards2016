@@ -14,6 +14,7 @@ public:
 	virtual ~Guardian( );
 public:
 	void update( );
+	RatioCoord getRatioCoord( );
 private:
 	void getRootPoint( );
 	void move( );

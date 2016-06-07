@@ -194,8 +194,10 @@ void Viewer::drawEnemy( ) {
 	const int size = enemies->getSize( );
 	for ( int i = 0; i < size; i++ ) {
 		EnemyPtr enemy = enemies->get( i );
-		int sx = enemy->getCoord( ).x * CHIP_SIZE;
-		int sy = enemy->getCoord( ).y * CHIP_SIZE;
+		RatioCoord ratio = enemy->getRatioCoord( );
+		Coord coord = ratio.getCoord( );
+		int sx = coord.x * CHIP_SIZE + ratio.getRatio( ).x.cal( CHIP_SIZE ) - CHIP_SIZE / 2;
+		int sy = coord.y * CHIP_SIZE + ratio.getRatio( ).y.cal( CHIP_SIZE ) - CHIP_SIZE / 2;
 		DrawerPtr drawer = Drawer::getTask( );
 		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_ENEMY ) );
 	}
@@ -206,12 +208,14 @@ void Viewer::drawGuardian( ) {
 	if ( !app ) {
 		return;
 	}
-	GuardiansPtr Guardians = app->getGuardians( );
-	const int size = Guardians->getSize( );
+	GuardiansPtr guardians = app->getGuardians( );
+	const int size = guardians->getSize( );
 	for ( int i = 0; i < size; i++ ) {
-		GuardianPtr Guardian = Guardians->get( i );
-		int sx = Guardian->getCoord( ).x * CHIP_SIZE;
-		int sy = Guardian->getCoord( ).y * CHIP_SIZE;
+		GuardianPtr guardian = guardians->get( i );
+		RatioCoord ratio = guardian->getRatioCoord( );
+		Coord coord = ratio.getCoord( );
+		int sx = coord.x * CHIP_SIZE + ratio.getRatio( ).x.cal( CHIP_SIZE ) - CHIP_SIZE / 2;
+		int sy = coord.y * CHIP_SIZE + ratio.getRatio( ).y.cal( CHIP_SIZE ) - CHIP_SIZE / 2;
 		DrawerPtr drawer = Drawer::getTask( );
 		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_GUARDIAN ) );
 	}
