@@ -1,39 +1,4 @@
-3.チケット
-・LineがCircuitになっている場合視覚的にわかるようにする
-・CircuitのときはCircuit上にPacketが出現する
-・FacilityがCircuitに組み込まれた場合、視覚的に稼働していることがわかるようにする
-・Packetが二股のLineを通過するとき、それぞれのLINE上のPacketの数を1/2する
-・PacketがFactoryを通たときにPacketのパワーをなくす
-・PacketがChargerを通過したらパワーを戻す
-・Powerplantをアップグレートできるようにする（排出するPacketを増やす)
-・Lineを回収できるようにする
-
-レギュレーション
-・UIすべて左クリックで行う
-・回路を構築した美しさを目指す（それ以外はあとまわし）
-
-α版チケット(～5/19)
-・施設サイズの変更			完了…5/15
-・施設のライン結合位置変更		完了…5/15
-・施設ゴールドマイナー作成		完了…5/16
-・施設パイオニア作成			完了…5/16
-・施設ガーディアン作成			完了…5/16
-・パケットの実装
-・電力消費・充電の実装
-・Facilityの再配置の実装		完了…5/18
-
 統合作業チケット
-・Materialクラスを追加する。
-・GoldMineクラスを追加する。
-・GoldMinesクラスを追加する。
-・GoldMinesPtr _gold_minesをAppで宣言する。
-・AppでgetGoldMinesを宣言する。
-・_gold_minesを受け取れるようにする。
-・Forestクラスを追加する。
-・Forestsクラスを追加する。
-・ForestsPtr _forestsをAppで宣言する。
-・AppでgetForestsを宣言する。
-・_forestsを受け取れるようにする。
 ・Characetrクラスを追加する
 ・Minerクラスを追加する。
 ・Minersクラスを追加する。
@@ -59,5 +24,3 @@
 ・AppでgetPioneersFactorysを宣言する。
 ・_pioneers_factorysを受け取れるようにする。
 ・updateに_pioneers_factorys->update(　)を追加する。
-
-テスト
