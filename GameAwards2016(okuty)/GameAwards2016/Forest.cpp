@@ -24,7 +24,7 @@ bool Forest::install( const Coord& pos, unsigned char value ) {
 	return Material::install( pos, CHIP_TYPE_FOREST, value );
 }
 
-bool Forest::isTarget( ) {
+bool Forest::isTarget( ) const{
 	return _target_flag;
 }
 
@@ -34,6 +34,9 @@ void Forest::setTargetFlag( bool flag ) {
 
 void Forest::attack( int damage ) {
 	_hp -= damage;
+	if ( _hp <= 0 ) {
+		erase( );
+	}
 	isExist( );
 }
 
@@ -55,9 +58,8 @@ void Forest::erase( ) {
 	erased = true;
 }
 
-bool Forest::isExist( ) {
+bool Forest::isExist( ) const{
 	if ( _hp <= 0 ) {
-		erase( );
 		return false;
 	}
 	return true;

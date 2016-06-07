@@ -13,7 +13,7 @@ public:
 	virtual ~GoldMines( );
 public:
 	bool install( const Coord& pos );
-	GoldMineConstPtr get( int idx ) const;
+	GoldMinePtr get( int idx ) ;
 	int getSize( ) const;
 private:
 	static const int NUM = 50;

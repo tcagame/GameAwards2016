@@ -14,6 +14,9 @@
 #include "GoldMine.h"
 #include "Forests.h"
 #include "Forest.h"
+#include"Miners.h"
+#include"Miner.h"
+#include "RatioCoord.h"
 #include "mathmatics.h"
 #include "Map.h"
 #include "Line.h"
@@ -39,6 +42,7 @@ enum RES {
 	RES_BASE,    
 	RES_BULLETIN,
 	RES_GOLD_MINE,
+	RES_MINER,
 	RES_FORESTS,
 	RES_LINE_NORMAL,
 	RES_LINE_CIRCUIT,
@@ -71,6 +75,7 @@ void Viewer::initialize( ) {
 	drawer->load( RES_BASE			 , "../resource/base.png" );
 	drawer->load( RES_BULLETIN       , "../resource/bulletin.png" );
 	drawer->load( RES_GOLD_MINE      , "../resource/GoldMine.png" );
+	drawer->load( RES_MINER			 , "../resource/Miner.png" );
 	drawer->load( RES_FORESTS		 , "../resource/forest.png" );
 	drawer->load( RES_LINE_GUIDEPOINT, "../resource/line_guide_point.png" );
 	drawer->load( RES_GROUND         , "../resource/ground.png" );
@@ -97,6 +102,7 @@ void Viewer::update( ) {
 	drawGuidFacility( );
 	drawGuideLine( );
 	drawPacketAnimation( );
+	drawMiners( );
 
 	reflesh( );
 	addCount( );
@@ -364,10 +370,10 @@ void Viewer::drawGoldMines( ) const {
 	if ( !app ) {
 		return;
 	}
-	GoldMinesConstPtr gold_mines = app->getGoldMines( );
+	GoldMinesPtr gold_mines = app->getGoldMines( );
 	const int size = gold_mines->getSize( );
 	for ( int i = 0; i < size; i++ ) {
-		GoldMineConstPtr gold_mine = std::dynamic_pointer_cast< const GoldMine >( gold_mines->get( i ) );
+		GoldMinePtr gold_mine = gold_mines->get( i );
 		int sx = gold_mine->getCoord( ).x * CHIP_SIZE;
 		int sy = gold_mine->getCoord( ).y * CHIP_SIZE;
 		DrawerPtr drawer = Drawer::getTask( );
@@ -502,6 +508,24 @@ void Viewer::drawPacketAnimation( ) const {
 		
 			drawer->set( Drawer::Sprite( Drawer::Transform( animation_sx, animation_sy ), RES_PACKET ) );
 		}
+	}
+}
+
+void Viewer::drawMiners( ) const {
+	AppPtr app = App::getTask( );
+	if ( !app ) {
+		return;
+	}
+	MinersConstPtr miners = app->getMiners( );
+	const int size = miners->getSize( );
+	for ( int i = 0; i < size; i++ ) {
+		MinerConstPtr miner = miners->get( i );
+		RatioCoord ratio = miner->getRatioCoord( );
+		Coord coord = ratio.getCoord( );
+		int sx = coord.x * CHIP_SIZE + ratio.getRatio( ).x.cal( CHIP_SIZE ) - CHIP_SIZE / 2;
+		int sy = coord.y * CHIP_SIZE + ratio.getRatio( ).y.cal( CHIP_SIZE ) - CHIP_SIZE / 2;
+		DrawerPtr drawer = Drawer::getTask( );
+		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_MINER ) );
 	}
 }
 

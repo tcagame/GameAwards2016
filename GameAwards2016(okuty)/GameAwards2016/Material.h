@@ -12,7 +12,7 @@ public:
 	virtual ~Material();
 public:
 	bool install( const Coord& coord, CHIP_TYPE type, int value  );
-	virtual bool isExist( ) = 0;
+	virtual bool isExist( ) const = 0;
 private:
 	const int _width;
 	const int _height;

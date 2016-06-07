@@ -12,8 +12,8 @@ public:
 	void update( );
 	bool install( const Coord& pos, unsigned char value );
 	int getGold( int power );
-	bool isExist( );
-	bool isTarget( );
+	bool isExist( ) const;
+	bool isTarget( ) const;
 	void setTargetFlag( bool info );
 private:
 	int _gold;

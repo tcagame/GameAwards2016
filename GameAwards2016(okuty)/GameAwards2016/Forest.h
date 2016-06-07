@@ -8,10 +8,10 @@ public:
 public:
 	void update( );
 	bool install( const Coord& pos, unsigned char value );
-	bool isTarget( );
+	bool isTarget( ) const ;
 	void setTargetFlag( bool info );
 	void attack( int damage );
-	bool isExist( );
+	bool isExist( ) const ;
 private:
 	void erase( );
 private:

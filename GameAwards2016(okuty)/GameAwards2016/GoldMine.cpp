@@ -33,12 +33,12 @@ int GoldMine::getGold( int power ) {
 	return result;
 }
 
-bool GoldMine::isExist( ) {
+bool GoldMine::isExist( ) const {
 	bool result = ( _gold > 0 );
 	return result;
 }
 
-bool GoldMine::isTarget( ) {
+bool GoldMine::isTarget( ) const {
 	return _target_flag;
 }
 

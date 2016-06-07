@@ -11,7 +11,7 @@ GoldMines::GoldMines( MapPtr map ) {
 GoldMines::~GoldMines( ) {
 }
 
-GoldMineConstPtr GoldMines::get( int idx ) const {
+GoldMinePtr GoldMines::get( int idx ) {
 	return _array[ idx ];
 }
 

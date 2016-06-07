@@ -1,10 +1,4 @@
 統合作業チケット
-・Characetrクラスを追加する
-・Minerクラスを追加する。
-・Minersクラスを追加する。
-・MinersPtr _minersをAppで宣言する。
-・AppでgetMinersを宣言する。
-・_minersを受け取れるようにする。
 ・updateに_miners->update(　)を追加する。
 ・Pioneerクラスを追加する。
 ・Pioneersクラスを追加する。
