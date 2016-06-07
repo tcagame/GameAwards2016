@@ -1,7 +1,10 @@
 #include "RatioCoord.h"
 
 RatioCoord::RatioCoord( const Coord& pos ) {
+	const int RATIO_MAX = _ratio.x.RATIO_ACCURACY;
 	_coord = pos;
+	_ratio.x.value = RATIO_MAX / 2;
+	_ratio.y.value = RATIO_MAX / 2;
 }
 
 RatioCoord::~RatioCoord( ) {

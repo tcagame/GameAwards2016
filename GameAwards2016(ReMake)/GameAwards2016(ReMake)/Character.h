@@ -25,7 +25,7 @@ private:
 	std::vector< Coord > _root;
 	Vector _root_point;
 	Coord _target_pos;
-	Coord _pop_point;
+	RatioCoord _pop_point;
 	RatioCoord _pos;
 };
 

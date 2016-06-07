@@ -1,7 +1,10 @@
 #pragma once
 #include "Ratio.h"
 #include "Coord.h"
+#include "smart_ptr.h"
 #include "mathmatics.h"
+
+PTR( RatioCoord );
 
 class RatioCoord {
 public:
