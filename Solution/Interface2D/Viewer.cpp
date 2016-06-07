@@ -26,7 +26,8 @@ static const int CHARGER_OFFSET_X = -32;
 static const int BASE_OFFSET_X = -32;
 static const int REFINERY_OFFSET_X = -32;
 static const int BULLETIN_OFFSET_X = -32;
-static const int PACKET_OFFSET = -8;
+static const int PACKET_OFFSET_X = -24;
+static const int PACKET_OFFSET_Y = -24;
 static const int CHIP_SIZE = 32;
 
 enum RES {
@@ -363,8 +364,8 @@ void Viewer::drawPacket( ) const {
 		Coord coord = packet->getCoord( );
 		Ratio ratio_x = packet->getRatioX( );
 		Ratio ratio_y = packet->getRatioY( );
-		int sx = coord.x * CHIP_SIZE + ratio_x.cal( CHIP_SIZE );
-		int sy = coord.y * CHIP_SIZE + ratio_y.cal( CHIP_SIZE );
+		int sx = coord.x * CHIP_SIZE + ratio_x.cal( CHIP_SIZE ) + PACKET_OFFSET_X;
+		int sy = coord.y * CHIP_SIZE + ratio_y.cal( CHIP_SIZE ) + PACKET_OFFSET_Y;
 		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_PACKET ) );
 	}
 }

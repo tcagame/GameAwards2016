@@ -6,10 +6,11 @@
 
 PTR( Packets );
 PTR( Packet );
+PTR( Line );
 
 class Packets {
 public:
-	Packets( );
+	Packets( LineConstPtr line );
 	virtual ~Packets( );
 public:
 	void creatPacket( Coord& coord );
@@ -21,5 +22,6 @@ private:
 private:
 	std::array< PacketPtr, PACKET_NUM > _packets;
 	int _packet_num;
+	LineConstPtr _line;
 };
 

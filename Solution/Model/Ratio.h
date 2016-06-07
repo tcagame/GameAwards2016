@@ -1,15 +1,18 @@
 #pragma once
 
 struct Ratio {
-	unsigned int value = 0;
+	unsigned int value;
 	static const unsigned int RATIO_ACCURACY = 1000;
-	bool increase( int n ) {
-		bool ret = false;
-		if ( value + n >= RATIO_ACCURACY ) {
-			ret = true;
+
+	Ratio( ) : value( 0 ) { }
+	Ratio( int value_ ) : value( value_ ) { }
+
+	void increase( int n ) {
+		if ( ( int )value + n < 0 ) {
+			value = RATIO_ACCURACY + ( ( int )value + n );
+		} else {
+			value = ( value + n ) % RATIO_ACCURACY;
 		}
-		value = ( value + n ) % RATIO_ACCURACY;
-		return ret;
 	}
 	int cal( int n ) const {
 		return n * value / RATIO_ACCURACY;
