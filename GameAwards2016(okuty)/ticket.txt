@@ -1,10 +1,4 @@
 統合作業チケット
-・MinersFactoryクラスを追加する。
-・MinersFactorysクラスを追加する。
-・MinersFactorysPtr _miners_factorysをAppで宣言する。
-・AppでgetMinersFactorysを宣言する。
-・_miners_factorysを受け取れるようにする。
-・updateに_miners_factorys->update(　)を追加する。
 ・PioneersFactoryクラスを追加する。
 ・PioneersFactorysクラスを追加する。
 ・PioneersFactorysPtr _pioneers_factorysをAppで宣言する。

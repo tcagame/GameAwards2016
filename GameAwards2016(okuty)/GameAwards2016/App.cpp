@@ -57,7 +57,8 @@ App::App( ) {
 
 	_line = LinePtr( new Line( _map, _powerplant, _chargers, _bases, _refineries, _bulletins ) );
 	_mode = MODE_LINE;
-	_forests->install( Coord( 0, 0 ) );
+	_gold_mines->install( Coord( 15,15 ) );
+	_refineries->install( Coord( 10, 10 ) );
 	_gold = 0;
 }
 
@@ -70,6 +71,7 @@ void App::update( ) {
 	// マウスでクリックしたところにラインを設定する
 	doPlacementOperation( );
 	_powerplant->update( );
+	_refineries->update( );
 	_line->update( );
 	_miners->update( );
 	_pioneers->update( );
@@ -328,6 +330,10 @@ ForestsPtr App::getForests( ) {
 }
 
 MinersConstPtr App::getMiners( ) const {
+	return _miners;
+}
+
+MinersPtr App::getMiners( ) {
 	return _miners;
 }
 

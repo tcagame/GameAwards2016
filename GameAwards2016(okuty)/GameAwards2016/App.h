@@ -39,6 +39,7 @@ public:
 	BulletinsConstPtr getBulletins( ) const;
 	GoldMinesPtr getGoldMines( );
 	MinersConstPtr getMiners( ) const;
+	MinersPtr getMiners( );
 	PioneersConstPtr getPioneers( ) const;
 	ForestsPtr getForests( );
 	bool isModeDeleteLine( ) const;
