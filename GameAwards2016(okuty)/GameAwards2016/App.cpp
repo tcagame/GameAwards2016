@@ -1,6 +1,7 @@
 #include "App.h"
 #include "Powerplant.h"
 #include "Map.h"
+#include "UnitMap.h"
 #include "Line.h"
 #include "Chargers.h"
 #include "Charger.h"
@@ -10,6 +11,10 @@
 #include "Refinery.h"
 #include "Bulletins.h"
 #include "Bulletin.h"
+#include "GoldMines.h"
+#include "Miners.h"
+#include "Pioneers.h"
+#include "Forests.h"
 #include "Viewer.h"
 #include "Powerplant.h"
 #include "Framework.h"
@@ -30,11 +35,16 @@ App::App( ) {
 	// リソース読み込み
 
 	_map = MapPtr( new Map( ) );
+	_unit_map = UnitMapPtr( new UnitMap );
 	_powerplant = PowerplantPtr( new Powerplant( _map ) );
 	_chargers   = ChargersPtr  ( new Chargers  ( ) );
 	_bases      = BasesPtr     ( new Bases     ( ) );
 	_refineries = RefineriesPtr( new Refineries( ) );
 	_bulletins  = BulletinsPtr ( new Bulletins ( ) );
+	_gold_mines = GoldMinesPtr ( new GoldMines ( _map ) );
+	_forests	= ForestsPtr   ( new Forests   ( _map ) );
+	_miners		= MinersPtr	   ( new Miners	   ( ) );
+	_pioneers	= PioneersPtr  ( new Pioneers( ) );
 
 	_chargers->initialize( _map );
 	_bases->initialize( _map );
@@ -47,6 +57,9 @@ App::App( ) {
 
 	_line = LinePtr( new Line( _map, _powerplant, _chargers, _bases, _refineries, _bulletins ) );
 	_mode = MODE_LINE;
+	_gold_mines->install( Coord( 15,15 ) );
+	_refineries->install( Coord( 10, 10 ) );
+	_gold = 0;
 }
 
 App::~App( ) {
@@ -58,7 +71,10 @@ void App::update( ) {
 	// マウスでクリックしたところにラインを設定する
 	doPlacementOperation( );
 	_powerplant->update( );
+	_refineries->update( );
 	_line->update( );
+	_miners->update( );
+	_pioneers->update( );
 }
 	
 
@@ -273,6 +289,14 @@ MapPtr App::getMap( ) {
 	return _map;
 }
 
+UnitMapConstPtr App::getUnitMap( ) const {
+	return _unit_map;
+}
+
+UnitMapPtr App::getUnitMap( ) {
+	return _unit_map;
+}
+
 PowerplantConstPtr App::getPowerplant( ) const {
 	return _powerplant;
 }
@@ -297,9 +321,33 @@ LineConstPtr App::getLine( ) const {
 	return _line;
 }
 
+GoldMinesPtr App::getGoldMines( ) {
+	return _gold_mines;
+}
+
+ForestsPtr App::getForests( ) {
+	return _forests;
+}
+
+MinersConstPtr App::getMiners( ) const {
+	return _miners;
+}
+
+MinersPtr App::getMiners( ) {
+	return _miners;
+}
+
+PioneersConstPtr App::getPioneers( ) const {
+	return _pioneers;
+}
+
 bool App::isModeDeleteLine( ) const {
 	if ( _mode == MODE_DELETE_LINE ) {
 		return true;
 	}
 	return false;
+}
+
+void App::addGold( int gold ) {
+	_gold += gold;
 }

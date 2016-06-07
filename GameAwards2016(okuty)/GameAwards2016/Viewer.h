@@ -64,10 +64,14 @@ private:
 	void drawBases( ) const;
 	void drawRefineries( ) const;
 	void drawBulletins( ) const;
+	void drawGoldMines( ) const;
+	void drawForests( ) const;
 	void drawGuidFacility( ) const;
 	void drawGuideLine( ) const;
 	void drawLine( ) const;
 	void drawPacketAnimation( ) const;
+	void drawMiners( ) const;
+	void drawPioneers( ) const;
 	unsigned char reverseDir( unsigned char start_dir ) const;
 	int convLineTypeToIdx( unsigned char dir ) const;
 	void reflesh( );

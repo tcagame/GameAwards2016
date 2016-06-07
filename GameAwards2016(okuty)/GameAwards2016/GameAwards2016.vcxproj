@@ -89,10 +89,21 @@
     <ClCompile Include="Bases.cpp" />
     <ClCompile Include="Bulletin.cpp" />
     <ClCompile Include="Bulletins.cpp" />
+    <ClCompile Include="Character.cpp" />
     <ClCompile Include="Charger.cpp" />
     <ClCompile Include="Chargers.cpp" />
     <ClCompile Include="Facilities.cpp" />
     <ClCompile Include="Facility.cpp" />
+    <ClCompile Include="Forest.cpp" />
+    <ClCompile Include="Forests.cpp" />
+    <ClCompile Include="GoldMine.cpp" />
+    <ClCompile Include="GoldMines.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Miner.cpp" />
+    <ClCompile Include="Miners.cpp" />
+    <ClCompile Include="Pioneer.cpp" />
+    <ClCompile Include="Pioneers.cpp" />
+    <ClCompile Include="RatioCoord.cpp" />
     <ClCompile Include="Refineries.cpp" />
     <ClCompile Include="Refinery.cpp" />
     <ClCompile Include="Line.cpp" />
@@ -100,6 +111,7 @@
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Powerplant.cpp" />
+    <ClCompile Include="UnitMap.cpp" />
     <ClCompile Include="Viewer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -108,19 +120,32 @@
     <ClInclude Include="Bases.h" />
     <ClInclude Include="Bulletin.h" />
     <ClInclude Include="Bulletins.h" />
+    <ClInclude Include="Character.h" />
+    <ClInclude Include="CharacterType.h" />
     <ClInclude Include="Charger.h" />
     <ClInclude Include="Chargers.h" />
     <ClInclude Include="Chip.h" />
     <ClInclude Include="Coord.h" />
     <ClInclude Include="Facilities.h" />
     <ClInclude Include="Facility.h" />
+    <ClInclude Include="Forest.h" />
+    <ClInclude Include="Forests.h" />
+    <ClInclude Include="GoldMine.h" />
+    <ClInclude Include="GoldMines.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="Miner.h" />
+    <ClInclude Include="Miners.h" />
+    <ClInclude Include="Pioneer.h" />
+    <ClInclude Include="Pioneers.h" />
     <ClInclude Include="Ratio.h" />
+    <ClInclude Include="RatioCoord.h" />
     <ClInclude Include="Refineries.h" />
     <ClInclude Include="Refinery.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Powerplant.h" />
+    <ClInclude Include="UnitMap.h" />
     <ClInclude Include="Viewer.h" />
   </ItemGroup>
   <ItemGroup>
