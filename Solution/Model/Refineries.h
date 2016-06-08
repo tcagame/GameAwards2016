@@ -5,11 +5,19 @@
 PTR( Refineries );
 PTR( Map );
 
+PTR( GoldMines );
+PTR( Miners );
+
 class Refineries : public Facilities {
 public:
-	Refineries( );
+	Refineries( GoldMinesPtr goldmines, MinersPtr miners );
 	virtual ~Refineries( );
+public:
+	void update( );
 private:
 	virtual FacilityPtr createFacility( MapPtr map );
+private:
+	GoldMinesPtr _goldmines;
+	MinersPtr _miners;
 };
 

@@ -11,50 +11,85 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Framework\Framework.vcxproj">
+      <Project>{c3d3fcf4-9678-4290-a376-c23adf6bdefe}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="Base.cpp" />
     <ClCompile Include="Bases.cpp" />
     <ClCompile Include="Bulletin.cpp" />
     <ClCompile Include="Bulletins.cpp" />
+    <ClCompile Include="Character.cpp" />
     <ClCompile Include="Charger.cpp" />
     <ClCompile Include="Chargers.cpp" />
+    <ClCompile Include="Enemies.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Facilities.cpp" />
     <ClCompile Include="Facility.cpp" />
+    <ClCompile Include="Forest.cpp" />
+    <ClCompile Include="Forests.cpp" />
+    <ClCompile Include="GoldMine.cpp" />
+    <ClCompile Include="GoldMines.cpp" />
+    <ClCompile Include="Guardian.cpp" />
+    <ClCompile Include="Guardians.cpp" />
+    <ClCompile Include="GuardiansFactories.cpp" />
+    <ClCompile Include="GuardiansFactory.cpp" />
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mgr.cpp" />
+    <ClCompile Include="Miner.cpp" />
+    <ClCompile Include="Miners.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Packet.cpp" />
+    <ClCompile Include="Pioneer.cpp" />
+    <ClCompile Include="Pioneers.cpp" />
     <ClCompile Include="Powerplant.cpp" />
     <ClCompile Include="RatioCoord.cpp" />
     <ClCompile Include="Refineries.cpp" />
     <ClCompile Include="Refinery.cpp" />
+    <ClCompile Include="UnitMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h" />
     <ClInclude Include="Bases.h" />
     <ClInclude Include="Bulletin.h" />
     <ClInclude Include="Bulletins.h" />
+    <ClInclude Include="Character.h" />
+    <ClInclude Include="CharacterType.h" />
     <ClInclude Include="Charger.h" />
     <ClInclude Include="Chargers.h" />
     <ClInclude Include="Chip.h" />
     <ClInclude Include="Coord.h" />
+    <ClInclude Include="Enemies.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Facilities.h" />
     <ClInclude Include="Facility.h" />
+    <ClInclude Include="Forest.h" />
+    <ClInclude Include="Forests.h" />
+    <ClInclude Include="GoldMine.h" />
+    <ClInclude Include="GoldMines.h" />
+    <ClInclude Include="Guardian.h" />
+    <ClInclude Include="Guardians.h" />
+    <ClInclude Include="GuardiansFactories.h" />
+    <ClInclude Include="GuardiansFactory.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Mgr.h" />
+    <ClInclude Include="Miner.h" />
+    <ClInclude Include="Miners.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Packet.h" />
+    <ClInclude Include="Pioneer.h" />
+    <ClInclude Include="Pioneers.h" />
     <ClInclude Include="Powerplant.h" />
     <ClInclude Include="Ratio.h" />
     <ClInclude Include="RatioCoord.h" />
     <ClInclude Include="Refineries.h" />
     <ClInclude Include="Refinery.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Framework\Framework.vcxproj">
-      <Project>{c3d3fcf4-9678-4290-a376-c23adf6bdefe}</Project>
-    </ProjectReference>
+    <ClInclude Include="UnitMap.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F2C1170C-3FBB-4E1D-A9FA-FFCD5892B6C4}</ProjectGuid>

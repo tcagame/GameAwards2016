@@ -2,33 +2,30 @@
 #include "Facility.h"
 #include <vector>
 
-PTR( Refinery );
+PTR( GuardiansFactory );
 PTR( Map );
+PTR( Enemy );
 
-PTR( GoldMines );
-PTR( Miners );
-
-class Refinery : public Facility {
+class GuardiansFactory : public Facility {
 public:
-	Refinery( MapPtr map, GoldMinesConstPtr goldmines, MinersPtr miner );
-	virtual ~Refinery( );
+	GuardiansFactory( MapPtr map );
+	virtual ~GuardiansFactory( );
 public:
 	void update( );
+	bool install( const Coord& coord, unsigned char value );
 	Coord getPos( ) const;
 	std::vector< Coord > getRoot( ) const;
+	bool inEnemy( );
+	EnemyPtr getTargetEnemy( );
 private:
 	std::vector< Coord > searchRoot( );
+	void searchEnemy( );
 	void installRoot( unsigned char value );
 	void deleteRoot( );
 private:
 	int _num;
 	int _max;
 	std::vector< Coord > _root;
-	int _target;
-	bool _isAwake;
-
-	GoldMinesConstPtr _goldmines;
-	MapPtr _map;
-	MinersPtr _miners;
+	EnemyWeakPtr _enemy;
 };
 

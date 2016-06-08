@@ -10,6 +10,14 @@
 #include "Bulletins.h"
 #include "Refinery.h"
 #include "Refineries.h"
+#include "GoldMines.h"
+#include "GoldMine.h"
+#include "Forests.h"
+#include "Forest.h"
+#include "Miners.h"
+#include "Miner.h"
+#include "Pioneers.h"
+#include "Pioneer.h"
 #include "mathmatics.h"
 #include "Map.h"
 #include "Line.h"
@@ -35,7 +43,11 @@ enum RES {
 	RES_CHARGER,    
 	RES_REFINERY,    
 	RES_BASE,    
-	RES_BULLETIN,    
+	RES_BULLETIN,
+	RES_GOLD_MINE,
+	RES_FORESTS,
+	RES_MINER,
+	RES_PIONEER,
 	RES_LINE_NORMAL,
 	RES_LINE_CIRCUIT,
 	RES_LINE_GUIDEPOINT,
@@ -70,6 +82,10 @@ void Viewer::initialize( ) {
 	drawer->load( RES_GROUND         , "ground.png" );
 	drawer->load( RES_LINE_DELETE    , "line_delete.png" );
 	drawer->load( RES_PACKET		 , "star.png" );
+	drawer->load( RES_GOLD_MINE      , "GoldMine.png" );
+	drawer->load( RES_MINER			 , "Miner.png" );
+	drawer->load( RES_PIONEER		 , "pioneer.png" );
+	drawer->load( RES_FORESTS		 , "forest.png" );
 
 	_click_left = CLICK_NONE;
 	_click_right = CLICK_NONE;
@@ -85,10 +101,14 @@ void Viewer::update( ) {
 	drawBases( );
 	drawRefineries( );
 	drawBulletins( );
+	drawGoldMines( );
+	drawForests( );
 	drawLine( ); // ƒ‰ƒCƒ“‚ª‰æ–Ê‚É•\Ž¦‚³‚ê‚Ä‚¢‚È‚¢‚Ì‚Å‚±‚±‚àŠÖŒW‚È‚¢
 	drawGuidFacility( );
 	drawGuideLine( );
 	drawPacket( );
+	drawMiners( );
+	drawPioneers( );
 
 	reflesh( );
 }
@@ -440,4 +460,74 @@ int Viewer::convLineTypeToIdx( unsigned char dir ) const {
 		break;
 	}
 
+}
+
+
+void Viewer::drawGoldMines( ) const {
+	AppPtr app = App::getTask( );
+	if ( !app ) {
+		return;
+	}
+	GoldMinesPtr gold_mines = app->getGoldMines( );
+	const int size = gold_mines->getSize( );
+	for ( int i = 0; i < size; i++ ) {
+		GoldMinePtr gold_mine = gold_mines->get( i );
+		int sx = gold_mine->getCoord( ).x * CHIP_SIZE;
+		int sy = gold_mine->getCoord( ).y * CHIP_SIZE;
+		DrawerPtr drawer = Drawer::getTask( );
+		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_GOLD_MINE ) );
+	}
+}
+
+void Viewer::drawForests( ) const {
+	AppPtr app = App::getTask( );
+	if ( !app ) {
+		return;
+	}
+	ForestsPtr forests = app->getForests( );
+	const int size = forests->getSize( );
+	for ( int i = 0; i < size; i++ ) {
+		ForestPtr forest = forests->get( i );
+		int sx = forest->getCoord( ).x * CHIP_SIZE;
+		int sy = forest->getCoord( ).y * CHIP_SIZE;
+		DrawerPtr drawer = Drawer::getTask( );
+		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_FORESTS ) );
+	}
+}
+
+
+void Viewer::drawMiners( ) const {
+	AppPtr app = App::getTask( );
+	if ( !app ) {
+		return;
+	}
+	MinersConstPtr miners = app->getMiners( );
+	const int size = miners->getSize( );
+	for ( int i = 0; i < size; i++ ) {
+		MinerConstPtr miner = miners->get( i );
+		RatioCoord ratio = miner->getRatioCoord( );
+		Coord coord = ratio.getCoord( );
+		int sx = coord.x * CHIP_SIZE + ratio.getRatio( ).x.cal( CHIP_SIZE ) - CHIP_SIZE / 2;
+		int sy = coord.y * CHIP_SIZE + ratio.getRatio( ).y.cal( CHIP_SIZE ) - CHIP_SIZE / 2;
+		DrawerPtr drawer = Drawer::getTask( );
+		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_MINER ) );
+	}
+}
+
+void Viewer::drawPioneers( ) const {
+	AppPtr app = App::getTask( );
+	if ( !app ) {
+		return;
+	}
+	PioneersConstPtr pioneers = app->getPioneers( );
+	const int size = pioneers->getSize( );
+	for ( int i = 0; i < size; i++ ) {
+		PioneerConstPtr pioneer = pioneers->get( i );
+		RatioCoord ratio = pioneer->getRatioCoord( );
+		Coord coord = ratio.getCoord( );
+		int sx = coord.x * CHIP_SIZE + ratio.getRatio( ).x.cal( CHIP_SIZE ) - CHIP_SIZE / 2;
+		int sy = coord.y * CHIP_SIZE + ratio.getRatio( ).y.cal( CHIP_SIZE ) - CHIP_SIZE / 2;
+		DrawerPtr drawer = Drawer::getTask( );
+		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_PIONEER ) );
+	}
 }

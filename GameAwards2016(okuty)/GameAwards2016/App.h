@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Task.h"
 #include "Coord.h"
 #include <string>
@@ -12,9 +11,9 @@ PTR( Powerplant );
 PTR( Chargers );
 PTR( Bases );
 PTR( Refineries );
+PTR( Bulletins );
 PTR( GoldMines );
 PTR( Forests );
-PTR( Bulletins );
 PTR( Miners );
 PTR( Pioneers );
 
