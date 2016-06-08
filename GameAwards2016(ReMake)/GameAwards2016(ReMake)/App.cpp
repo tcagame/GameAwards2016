@@ -44,7 +44,7 @@ void App::initialize( ) {
 	_miners_factorys->install( Coord( 15, 5 ) );
 	_miners_factorys->install( Coord( 25, 5 ) );
 	_guardians_factories->install( Coord( 5, 15 ) );
-	_enemies->create( Coord( 15, 1 ) );
+	_enemies->create( Coord( 10, 20 ) );
 }
 
 void App::update( ) {

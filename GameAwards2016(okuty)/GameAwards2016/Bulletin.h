@@ -1,6 +1,6 @@
 #pragma once
-
 #include "Facility.h"
+#include <vector>
 
 PTR( Bulletin );
 PTR( Map );
