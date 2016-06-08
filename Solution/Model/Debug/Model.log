@@ -1,0 +1,21 @@
+﻿2016/06/08 18:28:52 にビルドを開始しました。
+     1>ノード 2 上のプロジェクト "C:\Users\student\Desktop\GameAwards2016\Solution\Model\Model.vcxproj" (Build ターゲット)。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\student\Desktop\GameAwards2016\Solution\Framework /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Enemies.cpp Enemy.cpp Guardian.cpp Guardians.cpp GuardiansFactories.cpp GuardiansFactory.cpp
+         GuardiansFactory.cpp
+     1>c:\users\student\desktop\gameawards2016\solution\model\guardiansfactory.cpp(2): fatal error C1083: include ファイルを開けません。'App.h':No such file or directory
+         GuardiansFactories.cpp
+         Guardians.cpp
+     1>c:\users\student\desktop\gameawards2016\solution\model\guardians.cpp(3): fatal error C1083: include ファイルを開けません。'App.h':No such file or directory
+         Guardian.cpp
+     1>c:\users\student\desktop\gameawards2016\solution\model\guardian.cpp(2): fatal error C1083: include ファイルを開けません。'App.h':No such file or directory
+         Enemy.cpp
+     1>c:\users\student\desktop\gameawards2016\solution\model\enemy.cpp(2): fatal error C1083: include ファイルを開けません。'App.h':No such file or directory
+         Enemies.cpp
+     1>c:\users\student\desktop\gameawards2016\solution\model\enemies.cpp(3): fatal error C1083: include ファイルを開けません。'App.h':No such file or directory
+         コードを生成中...
+     1>プロジェクト "C:\Users\student\Desktop\GameAwards2016\Solution\Model\Model.vcxproj" (Build ターゲット) のビルドが終了しました -- 失敗。
+
+ビルドに失敗しました。
+
+経過時間 00:00:01.51
