@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "App.h"
 #include "Map.h"
+#include "UnitMap.h"
 #include "mathmatics.h"
 #include "Character.h"
 #include "Facility.h"
@@ -12,7 +13,7 @@
 
 const int WIDTH = 2;
 const int HEIGHT = 2;
-const int HP = 1000000;
+const int HP = 100;
 static const int SEARCH_RANGE = 15;
 
 Enemy::Enemy( const Coord& pos ) :
@@ -23,6 +24,7 @@ _pos( pos ) {
 	_speed = RATIO_MAX / 10;
 	_hp = HP;
 	setCoord( pos );
+	erased = false;
 	_target = _pos.getCoordWithRatio( );
 }
 
@@ -77,17 +79,36 @@ void Enemy::move( ) {
 	setCoord( _pos.getCoord( ) );
 }
 
+void Enemy::death( ) {
+	if ( erased ) {
+		return;
+	}
+	AppPtr app = App::getTask( );
+	UnitMapPtr unit_map = app->getUnitMap( );
+	UnitMap::Chip chip;
+	chip.type = CHARACTER_TYPE_NONE;
+	chip.value = 0;
+	for ( int i = 0;i < HEIGHT; i++ ) {
+		for ( int j = 0; j < WIDTH; j++ ) {
+			Coord pos = Coord( getCoord( ).x + j, getCoord( ).y + i );
+			unit_map->setChip( pos, chip );
+		}
+	}
+	erased = true;
+}
+
 bool Enemy::isExist( ) {
 	if ( _hp <= 0 ) {
+		death( );
 		return false;
 	}
 	return true;
 }
 
+
 bool Enemy::existFacility( ) {
 	return !_facility.expired( );
 }
-
 
 void Enemy::searchFacility( ) {
 	AppPtr app = App::getTask( );
@@ -212,4 +233,13 @@ void Enemy::searchRoot( ) {
 
 RatioCoord Enemy::getRatioCoord( ) {
 	return _pos;
+}
+
+int Enemy::getHP( ) {
+	return _hp;
+}
+
+void Enemy::damage( int damage ) {
+	_hp -= damage;
+	isExist( );
 }

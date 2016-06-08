@@ -1,10 +1,12 @@
 #include "Guardian.h"
 #include "App.h"
 #include "Map.h"
+#include "UnitMap.h"
 #include "GuardiansFactories.h"
 #include "GuardiansFactory.h"
 #include "Enemies.h"
 #include "Enemy.h"
+#include "CharacterType.cpp"
 
 static const int POWER = 1000;
 static const Coord FACTORY_DIFF = Coord( 1, 3 );
@@ -26,7 +28,17 @@ Guardian::~Guardian( ) {
 }
 
 void Guardian::action( ) {
-	
+	AppPtr app = App::getTask( );
+	UnitMapPtr unit_map = app->getUnitMap( );
+	UnitMap::Chip chip = unit_map->getChip( _pos.getCoord( ) );
+
+	EnemiesPtr enemies = app->getEnemies( );
+	for ( int i = 0; i < ( int )enemies->getSize( ); i++ ) {
+		if ( chip.type == CHARACTER_TYPE_ENEMY && chip.value == i ) {
+			EnemyPtr enemy = enemies->get( i );
+			 enemy->damage( POWER );
+		}
+	}
 }
 
 void Guardian::update( ) {
