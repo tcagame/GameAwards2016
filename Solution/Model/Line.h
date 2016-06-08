@@ -68,6 +68,7 @@ public:
 	void deleteAlongGuide( const Coord& coord );
 	unsigned char getNextDir( const Coord& coord ) const;
 	PacketPtr getPacket( int idx ) const;
+	bool setGuideAlongMouse( const Coord& coord );
 private:
 	FacilityConstPtr getChipType( CHIP_TYPE chip_type, unsigned char value );
 	bool checkDelete( const Coord& coord, const Coord& old_coord );
@@ -84,6 +85,8 @@ private:
 	bool destroyLineDir( CHIP_TYPE type, const Coord& coord );
 	void outputPackets( );
 	void updatePackets( );
+	bool isGuidingLength( const Coord& coord );
+
 private:
 	MapPtr _map;
 	PowerplantPtr _powerplant;
@@ -102,6 +105,7 @@ private:
 	Coord _line_start_coord;
 	Coord _delete_coord_first_conecter;
 	Coord _delete_coord_second_conecter;
+	Coord _guide_line_coord;
 
 	std::array< PacketPtr, PACKET_NUM > _packets;
 	unsigned int _packets_count;

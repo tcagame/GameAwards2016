@@ -71,7 +71,7 @@ void Line::outputPackets( ) {
 		}
 	}
 	if ( idx >= 0 ) {
-		const Coord& start_coord = _powerplant->getStartCoord( );
+		const Coord& start_coord = _powerplant->getLineFixationLeft( );
 		_packets[ idx ]->set( start_coord );
 	}
 }
@@ -121,7 +121,7 @@ void Line::makeCircuit( ) {
 	}
 
 	// 循環経路作成
-	_circuit = makeCircuitNext( _powerplant->getStartCoord( ), start_coord );
+	_circuit = makeCircuitNext( _powerplant->getLineFixationLeft( ), start_coord );
 }
 
 bool Line::isGuiding( ) const {
@@ -174,8 +174,12 @@ void Line::startGuide( const Coord& coord ) {
 	FacilityConstPtr facility = getChipType( chip.type, chip.value );
 
 	if ( facility != NULL ) {
-		if ( facility->getLineFixationLeft( ).getIdx( )  != coord.getIdx( ) &&
-			 facility->getLineFixationRight( ).getIdx( ) != coord.getIdx( ) ) {
+		Coord left = facility->getLineFixationLeft( );
+		left.x++;
+		Coord right = facility->getLineFixationRight( );
+		right.x--;
+		if ( left.getIdx( )  != coord.getIdx( ) &&
+			 right.getIdx( ) != coord.getIdx( ) ) {
 			return;
 		}
 	}
@@ -184,6 +188,65 @@ void Line::startGuide( const Coord& coord ) {
 	_guide_store_from_dir = DIR_NONE;
 	_guide_store_circuit_dir = DIR_NONE;
 	_guide_start_coord = coord;
+	_guide_line_coord = coord;
+}
+
+bool Line::setGuideAlongMouse( const Coord& coord ) {
+	if ( coord.getIdx( ) < 0 ) { 
+		return false;
+	}
+
+	Map::Chip chip = _map->getChip( coord );
+	if ( !isGuidingLength( coord ) && chip.type == CHIP_TYPE_NONE ) {
+		return true;
+	}
+	Coord mouse_coord = coord;
+	if ( chip.type != CHIP_TYPE_NONE && _guide_line_coord.getIdx( ) != _guide_start_coord.getIdx( ) ) {
+		mouse_coord = getChipType( chip.type, chip.value )->getLineFixationRight( );
+		mouse_coord.x--;
+	}
+	int diff_x = mouse_coord.x - _guide_line_coord.x;
+	int diff_y = mouse_coord.y - _guide_line_coord.y;
+	Coord diff_target_coord = _guide_line_coord;
+	
+
+	while( diff_y != 0 ){
+		if ( diff_y < 0 ) {
+			diff_target_coord.y--;
+			diff_y++;
+		} else {
+			diff_target_coord.y++;
+			diff_y--;
+		}
+		setGuide( diff_target_coord );
+	}
+	while( diff_x != 0 ) {
+		if ( diff_x < 0 ) {
+			diff_target_coord.x--;
+			diff_x++;
+		} else {
+			diff_target_coord.x++;
+			diff_x--;
+		}
+		setGuide( diff_target_coord );
+	}
+	
+	_guide_line_coord = diff_target_coord;
+	if( _guide_line_coord.getIdx( ) != _guide_start_coord.getIdx( ) ){
+		return chip.type == CHIP_TYPE_NONE;
+	} else {
+		return true;
+	}
+}
+
+
+bool Line::isGuidingLength( const Coord& coord ) {
+	int x = abs( _guide_line_coord.x - coord.x );
+	int y = abs( _guide_line_coord.y - coord.y );
+	if ( x <= 3 && y <= 3 ) {
+		return false;
+	}
+	return true;
 }
 
 void Line::setGuide( const Coord& coord ) {
@@ -196,18 +259,12 @@ void Line::setGuide( const Coord& coord ) {
 	}
 
 	// ガイド中止
-	if ( ( abs( _old_coord.x - coord.x ) > 1 || _old_coord.y != coord.y ) &&
-		 ( abs( _old_coord.y - coord.y ) > 1 || _old_coord.x != coord.x ) ) {
-		cancelGuide( );
-		return;
-	}
 	if ( _chips[ coord.getIdx( ) ].guide ) {
 		cancelGuide( );
 		return;
 	}
-	
-	unsigned char now_dir = getNowDir( coord, _old_coord );
 
+	unsigned char now_dir = getNowDir( coord, _old_coord );
 	// 一つ前を正式なラインにする
 	if ( _chips[ _old_coord.getIdx( ) ].guide ) {
 		unsigned char old_dir = _chips[ _old_coord.getIdx( ) ].form_dir;
@@ -237,6 +294,10 @@ void Line::setGuide( const Coord& coord ) {
 	_chips[ coord.getIdx( ) ].form_dir = now_dir;
 	_chips[ coord.getIdx( ) ].guide = true;
 
+
+	
+
+
 	_old_coord = coord;
 }
 
@@ -251,8 +312,12 @@ void Line::endGuide( const Coord& coord ) {
 	FacilityConstPtr facility = getChipType( end_chip.type, end_chip.value );
 
 	if ( facility != NULL ) {
-		if ( facility->getLineFixationLeft( ).getIdx( )  != coord.getIdx( ) &&
-			 facility->getLineFixationRight( ).getIdx( ) != coord.getIdx( ) ) {
+		Coord left = facility->getLineFixationLeft( );
+		left.x++;
+		Coord right = facility->getLineFixationRight( );
+		right.x--;
+		if ( left.getIdx( )  != coord.getIdx( ) &&
+			 right.getIdx( ) != coord.getIdx( ) ) {
 			return;
 		}
 	}
@@ -380,7 +445,7 @@ bool Line::makeCircuitNext( const Coord& coord, const Coord& old_coord ) {
 	
 	// ※事前にこのCoordが存在することは調べてある
 	Coord end_coord = _powerplant->getLineFixationRight( );
-
+	end_coord.x--;
 	// 最終到達点に達した
 	if ( coord.getIdx( ) == end_coord.getIdx( ) ) {
 		// PowerPlantのゴールに到達した
@@ -427,6 +492,7 @@ bool Line::setConnectFacility( const Coord& coord ) {
 		assert( false );
 	}
 	
+
 	Coord exit_coord = facility->getExitCoord( coord );
 	if ( exit_coord.getIdx( ) < 0 ) {
 		return false;

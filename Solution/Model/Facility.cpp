@@ -88,21 +88,24 @@ bool Facility::install( const Coord& coord, unsigned char value ) {
 	}
 
 	//ÉâÉCÉìê⁄ë±å≈íËà íuìoò^
-	_connect_fixation_left = Coord ( coord.x, coord.y + ( ( _height - 1 ) / 2 ) );
-	_connect_fixation_right = Coord ( coord.x + _width - 1 , coord.y + ( ( _height - 1 ) / 2 ) );
+	_connect_fixation_left = Coord ( coord.x - 1, coord.y + ( ( _height - 1 ) / 2 ) );
+	_connect_fixation_right = Coord ( coord.x + _width, coord.y + ( ( _height - 1 ) / 2 ) );
 	setCoord( coord );
 	return true;
 }
 
 Coord Facility::getExitCoord( const Coord& coord ) const {
 	Coord exit_coord( -1, -1 );
-	if ( coord.getIdx( ) == _connect_fixation_left.getIdx( ) ) {
+
+	Coord left = _connect_fixation_left;
+	left.x++;
+	if ( coord.getIdx( ) == left.getIdx( ) ) {
 		exit_coord = _connect_fixation_right;
-		exit_coord.x++;
 	}
-	if ( coord.getIdx( ) == _connect_fixation_right.getIdx( ) ) {
+	Coord right = _connect_fixation_right;
+	right.x--;
+	if ( coord.getIdx( ) == right.getIdx( ) ) {
 		exit_coord = _connect_fixation_left;
-		exit_coord.x--;
 	} 
 	return exit_coord;
 }

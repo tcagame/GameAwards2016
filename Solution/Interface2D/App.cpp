@@ -48,7 +48,7 @@ App::App( ) {
 	assert( result_powerplant_installation );
 	_line = LinePtr( new Line( _map, _powerplant, _chargers, _bases, _refineries, _bulletins ) );
 	_mode = MODE_LINE;
-	
+	_line_guide_flag = false;
 }
 
 App::~App( ) {
@@ -148,8 +148,12 @@ void App::doFacilityMoveOperation( ) {
 		return;
 	}
 
-	if( facility->getLineFixationLeft( ).getIdx( ) == coord.getIdx( ) ||
-		facility->getLineFixationRight( ).getIdx( ) == coord.getIdx( ) ) {
+	Coord left = facility->getLineFixationLeft( );
+	left.x++;
+	Coord right = facility->getLineFixationRight( );
+	right.x--;
+	if( left.getIdx( ) == coord.getIdx( ) ||
+		right.getIdx( ) == coord.getIdx( ) ) {
 		_mode = MODE_LINE;
 		return;
 	}
@@ -190,18 +194,26 @@ void App::doLinePlacementOperation( ) {
 		_line->startGuide( coord );
 	}
 
-	if ( click_left == Viewer::CLICK_HOLD ) {
-		_line->setGuide( coord );
+	if ( _line_guide_flag ) {
+		if( !_line->setGuideAlongMouse( coord ) ) {
+			_line_guide_flag = !_line_guide_flag;
+			_line->cancelGuide( );
+		}
 	}
 
 	if ( click_left == Viewer::CLICK_RELEASE ) {
-		_line->cancelGuide( );
+		if( _line_guide_flag ) {
+			_line->cancelGuide( );
+		}
 		if( _click_push_coord.getIdx( ) != coord.getIdx( ) ){
 			return;
 		}
 		if ( _line->setDeleteGuide( coord ) ) {
 			_mode = MODE_DELETE_LINE;
 		}
+
+		
+		_line_guide_flag = !_line_guide_flag;
 	}
 	
 }
@@ -251,13 +263,17 @@ void App::doFacilityPlacementOperation( ) {
 	} else {
 		if ( coord.getIdx( ) != _before_coord.getIdx( ) ) {
 			FacilityConstPtr facility = facilities->get( _relocation_idx );
-			if ( facility->getLineFixationLeft( ).getIdx( ) > 0 ) {
-				_line->setDeleteGuide( facility->getExitCoord( facility->getLineFixationLeft( ) ) );
-				_line->deleteAlongGuide( facility->getExitCoord( facility->getLineFixationLeft( ) ) );
+
+			Coord left_coord = facility->getLineFixationLeft( );
+			if ( _line->getChip( left_coord ).form_dir != Line::DIR_NONE ) {
+				_line->setDeleteGuide( facility->getLineFixationLeft( ) );
+				_line->deleteAlongGuide( facility->getLineFixationLeft( ) );
 			}
-			if ( facility->getLineFixationRight( ).getIdx( ) > 0 ) {
-				_line->setDeleteGuide( facility->getExitCoord( facility->getLineFixationRight( ) ) );
-				_line->deleteAlongGuide( facility->getExitCoord( facility->getLineFixationRight( ) ) );
+
+			Coord right_coord = facility->getLineFixationRight( );
+			if ( _line->getChip( right_coord ).form_dir != Line::DIR_NONE ) {
+				_line->setDeleteGuide( facility->getLineFixationRight( ) );
+				_line->deleteAlongGuide( facility->getLineFixationRight( ) );
 			}
 			facilities->relocation( coord, _relocation_idx );
 		}
