@@ -13,7 +13,10 @@ public:
 	virtual ~Enemy();
 public:
 	void update( );
+	void death( );
 	bool isExist( );
+	int getHP( );
+	void damage( int damage );
 	RatioCoord getRatioCoord( );
 private:
 	void getRootPoint( );
@@ -30,5 +33,6 @@ private:
 	Vector _target;
 	FacilityWeakPtr _facility;
 	RatioCoord _pos;
+	bool erased;
 };
 
