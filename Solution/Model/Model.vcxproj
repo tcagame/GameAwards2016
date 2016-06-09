@@ -33,8 +33,6 @@
     <ClCompile Include="GoldMines.cpp" />
     <ClCompile Include="Guardian.cpp" />
     <ClCompile Include="Guardians.cpp" />
-    <ClCompile Include="GuardiansFactories.cpp" />
-    <ClCompile Include="GuardiansFactory.cpp" />
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Material.cpp" />
@@ -72,8 +70,6 @@
     <ClInclude Include="GoldMines.h" />
     <ClInclude Include="Guardian.h" />
     <ClInclude Include="Guardians.h" />
-    <ClInclude Include="GuardiansFactories.h" />
-    <ClInclude Include="GuardiansFactory.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Material.h" />
