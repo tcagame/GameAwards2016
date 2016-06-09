@@ -1,18 +1,20 @@
 #include "Enemies.h"
 #include "Enemy.h"
-#include "App.h"
 #include "UnitMap.h"
 
-Enemies::Enemies( ) {
+Enemies::Enemies( UnitMapPtr unit_map, MapPtr map, BulletinsPtr bulletins, RefineriesPtr refineries ) {
 	_idx = 0;
+	_unit_map = unit_map;
+	_map = map;
+
+	_bulletins = bulletins;
+	_refineries = refineries;
 }
 
 Enemies::~Enemies( ) {
 }
 
 void Enemies::update( ) {
-	AppPtr app = App::getTask( );
-	UnitMapPtr unit_map = app->getUnitMap( );
 	UnitMap::Chip none;
 	UnitMap::Chip enemy;
 	none.type = CHARACTER_TYPE_NONE;
@@ -20,10 +22,10 @@ void Enemies::update( ) {
 	enemy.type = CHARACTER_TYPE_ENEMY;
 
 	for ( int i = 0; i < _idx; i++ ) {
-		unit_map->setChip( _array[ i ]->getCoord( ), none );
+		_unit_map->setChip( _array[ i ]->getCoord( ), none );
 		_array[ i ]->update( );
 		enemy.value = i;
-		unit_map->setChip( _array[ i ]->getCoord( ), enemy );
+		_unit_map->setChip( _array[ i ]->getCoord( ), enemy );
 	}
 }
 
@@ -33,7 +35,7 @@ int Enemies::getSize( ) {
 
 bool Enemies::create( const Coord& pos ) {
 	if ( _idx < NUM ) {
-		_array[ _idx ] = EnemyPtr( new Enemy( pos ) );
+		_array[ _idx ] = EnemyPtr( new Enemy( pos, _map, _bulletins, _refineries ) );
 		_idx++;
 		return true;
 	}

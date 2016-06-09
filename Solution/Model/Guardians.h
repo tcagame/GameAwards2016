@@ -7,9 +7,13 @@
 PTR( Guardians );
 PTR( Guardian );
 
+PTR( UnitMap );
+PTR( Map );
+PTR( Enemies );
+
 class Guardians {
 public:
-	Guardians( );
+	Guardians( UnitMapPtr unit_map, EnemiesPtr enemies, MapPtr map );
 	virtual ~Guardians( );
 public:
 	void update( );
@@ -21,5 +25,9 @@ private:
 private:
 	std::array< GuardianPtr, NUM > _array;
 	int _idx;
+	
+	UnitMapPtr _unit_map;
+	EnemiesPtr _enemies;
+	MapPtr _map;
 };
 

@@ -18,6 +18,8 @@ PTR( GoldMines );
 PTR( Forests );
 PTR( Miners );
 PTR( Pioneers );
+PTR( Guardians );
+PTR( Enemies );
 
 class App : public Task {
 public:
@@ -44,6 +46,8 @@ public:
 	MinersPtr getMiners( );
 	PioneersConstPtr getPioneers( ) const;
 	ForestsPtr getForests( );
+	EnemiesPtr getEnemies( ) const;
+	GuardiansPtr getGuardians( ) const;
 	bool isModeDeleteLine( ) const;
 	
 	//void addGold( int gold );
@@ -82,6 +86,8 @@ private:
 	ForestsPtr _forests;
 	MinersPtr _miners;
 	PioneersPtr _pioneers;
+	GuardiansPtr _guardians;
+	EnemiesPtr _enemies;
 	MODE _mode;
 	Coord _click_push_coord;
 	FACILITY _placement_facility;

@@ -22,6 +22,10 @@
 #include "Map.h"
 #include "Line.h"
 #include "Packet.h"
+#include "Enemies.h"
+#include "Enemy.h"
+#include "Guardians.h"
+#include "Guardian.h"
 #include "Coord.h"
 #include "Chip.h"
 #include "Ratio.h"
@@ -48,6 +52,8 @@ enum RES {
 	RES_FORESTS,
 	RES_MINER,
 	RES_PIONEER,
+	RES_ENEMY,
+	RES_GUARDIAN,
 	RES_LINE_NORMAL,
 	RES_LINE_CIRCUIT,
 	RES_LINE_GUIDEPOINT,
@@ -86,6 +92,8 @@ void Viewer::initialize( ) {
 	drawer->load( RES_MINER			 , "Miner.png" );
 	drawer->load( RES_PIONEER		 , "pioneer.png" );
 	drawer->load( RES_FORESTS		 , "forest.png" );
+	drawer->load( RES_ENEMY			 , "Enemy.png" );
+	drawer->load( RES_GUARDIAN		 , "Gaudian.png" );
 
 	_click_left = CLICK_NONE;
 	_click_right = CLICK_NONE;
@@ -107,6 +115,8 @@ void Viewer::update( ) {
 	drawGuidFacility( );
 	drawGuideLine( );
 	drawPacket( );
+	drawEnemies( );
+	drawGuadians( );
 	drawMiners( );
 	drawPioneers( );
 
@@ -492,6 +502,38 @@ void Viewer::drawForests( ) const {
 		int sy = forest->getCoord( ).y * CHIP_SIZE;
 		DrawerPtr drawer = Drawer::getTask( );
 		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_FORESTS ) );
+	}
+}
+
+void Viewer::drawEnemies( ) const {
+	AppPtr app = App::getTask( );
+	if ( !app ) {
+		return;
+	}
+	EnemiesPtr enemies = app->getEnemies( );
+	const int size = enemies->getSize( );
+	for ( int i = 0; i < size; i++ ) {
+		EnemyPtr enemy = enemies->get( i );
+		int sx = enemy->getCoord( ).x * CHIP_SIZE;
+		int sy = enemy->getCoord( ).y * CHIP_SIZE;
+		DrawerPtr drawer = Drawer::getTask( );
+		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_ENEMY ) );
+	}
+}
+
+void Viewer::drawGuadians( ) const {
+	AppPtr app = App::getTask( );
+	if ( !app ) {
+		return;
+	}
+	GuardiansPtr guardians = app->getGuardians( );
+	const int size = guardians->getSize( );
+	for ( int i = 0; i < size; i++ ) {
+		GuardianPtr guardian = guardians->get( i );
+		int sx = guardian->getCoord( ).x * CHIP_SIZE;
+		int sy = guardian->getCoord( ).y * CHIP_SIZE;
+		DrawerPtr drawer = Drawer::getTask( );
+		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_GUARDIAN ) );
 	}
 }
 

@@ -8,9 +8,12 @@
 PTR( Guardian );
 PTR( Enemy );
 
+PTR( Map );
+PTR( Enemies );
+
 class Guardian : public Object {
 public:
-	Guardian( const std::vector< Coord >& root, const Coord& factory_pos );
+	Guardian( const std::vector< Coord >& root, const Coord& factory_pos, EnemiesPtr enemies, MapPtr map );
 	virtual ~Guardian( );
 public:
 	void update( );
@@ -27,7 +30,9 @@ private:
 	int _speed;
 	bool _is_attack;
 	EnemyWeakPtr _enemy;
-	RatioCoord _factory_pos;
 	RatioCoord _pos;
-	int _time;
+	RatioCoord _factory_pos;
+
+	MapPtr _map;
+	EnemiesPtr _enemies;
 };

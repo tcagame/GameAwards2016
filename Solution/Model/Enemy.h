@@ -7,9 +7,13 @@
 PTR( Enemy );
 PTR( Facility );
 
+PTR( Refineries );
+PTR( Bulletins );
+PTR( Map );
+
 class Enemy : public Object {
 public:
-	Enemy( const Coord& pos );
+	Enemy( const Coord& pos, MapPtr map, BulletinsPtr bulletins, RefineriesPtr refineries );
 	virtual ~Enemy();
 public:
 	void update( );
@@ -30,5 +34,9 @@ private:
 	Vector _target;
 	FacilityWeakPtr _facility;
 	RatioCoord _pos;
+
+	MapPtr _map;
+	RefineriesPtr _refineries;
+	BulletinsPtr _bulletins;
 };
 

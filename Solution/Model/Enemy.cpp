@@ -1,13 +1,11 @@
 #include "Enemy.h"
-#include "App.h"
 #include "Map.h"
 #include "mathmatics.h"
+#include "Chip.h"
 #include "Character.h"
 #include "Facility.h"
-#include "PioneersFactorys.h"
-#include "PioneersFactory.h"
-#include "MinersFactory.h"
-#include "MinersFactorys.h"
+#include "Bulletins.h"
+#include "Refineries.h"
 #include <queue>
 
 const int WIDTH = 2;
@@ -15,15 +13,19 @@ const int HEIGHT = 2;
 const int HP = 1000000;
 static const int SEARCH_RANGE = 15;
 
-Enemy::Enemy( const Coord& pos ) :
+Enemy::Enemy( const Coord& pos, MapPtr map, BulletinsPtr bulletins, RefineriesPtr refineries  ) :
 _width( WIDTH ),
 _height( HEIGHT ),
 _pos( pos ) {
-	int RATIO_MAX = _pos.getRatio( ).x.RATIO_ACCURACY;
+	int RATIO_MAX = _pos.getRatio( ).x.ACCURACY;
 	_speed = RATIO_MAX / 10;
 	_hp = HP;
 	setCoord( pos );
 	_target = _pos.getCoordWithRatio( );
+
+	_map = map;
+	_bulletins = bulletins;
+	_refineries = refineries;
 }
 
 Enemy::~Enemy( ) {
@@ -67,9 +69,6 @@ void Enemy::getRootPoint( ) {
 }
 
 void Enemy::move( ) {
-	AppPtr app = App::getTask( );
-	MapPtr map = app->getMap( );
-	
 	getRootPoint( );
 	Vector dir = _target - _pos.getCoordWithRatio( );
 	Vector vec = dir.normalize( ) * _speed;
@@ -90,8 +89,6 @@ bool Enemy::existFacility( ) {
 
 
 void Enemy::searchFacility( ) {
-	AppPtr app = App::getTask( );
-	MapPtr map = app->getMap( );
 	Coord idx;
 	for ( int i = 0; i < ( SEARCH_RANGE * SEARCH_RANGE ); i++ ) {
 		idx.x = _pos.getCoord( ).x + ( i % SEARCH_RANGE ) - SEARCH_RANGE / 2;
@@ -103,16 +100,12 @@ void Enemy::searchFacility( ) {
 			idx.y = 0;
 		}
 
-		Map::Chip chip = map->getChip( idx );
-		if ( chip.type == CHIP_TYPE_MINER ) {
-			MinersFactorysPtr miners_factories = app->getMinersFactorys( );
-			MinersFactoryPtr miners_factory = miners_factories->get( chip.value );
-			_facility = miners_factory;
+		Map::Chip chip = _map->getChip( idx );
+		if ( chip.type == CHIP_TYPE_REFINERY ) {
+			_facility = _refineries->get( chip.value );
 		}
-		if ( chip.type == CHIP_TYPE_PIONEER ) {
-			PioneersFactorysPtr pioneers_factories = app->getPioneersFactorys( );
-			PioneersFactoryPtr pioneers_factory = pioneers_factories->get( chip.value );
-			_facility = pioneers_factory;
+		if ( chip.type == CHIP_TYPE_BULLETIN ) {
+			_facility = _bulletins->get( chip.value );
 		}
 	}
 }
@@ -134,11 +127,8 @@ void Enemy::searchRoot( ) {
 		Coord(  1, -1 ),
 	};
 	bool went[ COORD_HEIGHT * COORD_WIDTH ] = { false };
-	AppPtr app = App::getTask( );
-	MapPtr map = app->getMap( );
-	PioneersFactorysPtr pioneers_factories = app->getPioneersFactorys( );
-	int pioneers_factory_id = -1;
-	int miners_factory_id = -1;
+	int bulletin_id = -1;
+	int refinery_id = -1;
 	std::queue< std::vector< Coord > > que;
 	que.push( root );
 	went[ _pos.getCoord( ).getIdx( ) ] = true;
@@ -155,17 +145,17 @@ void Enemy::searchRoot( ) {
 				continue;
 			}
 
-			Map::Chip chip = map->getChip( after_pos );
-			if ( chip.type == CHIP_TYPE_MINER ) {
+			Map::Chip chip = _map->getChip( after_pos );
+			if ( chip.type == CHIP_TYPE_REFINERY ) {
 				temp.push_back( after_pos );
 				root = temp;
-				miners_factory_id = chip.value;
+				refinery_id = chip.value;
 				break;
 			}
-			if ( chip.type == CHIP_TYPE_PIONEER ) {
+			if ( chip.type == CHIP_TYPE_BULLETIN ) {
 				temp.push_back( after_pos );
 				root = temp;
-				pioneers_factory_id = chip.value;
+				bulletin_id = chip.value;
 				break;
 			}
 
@@ -181,10 +171,10 @@ void Enemy::searchRoot( ) {
 			went[ after_pos.getIdx( ) ] = true;
 			que.push( push );
 		}
-		if ( pioneers_factory_id != -1 ) {
+		if ( bulletin_id != -1 ) {
 			break;
 		}
-		if ( miners_factory_id != -1 ) {
+		if ( refinery_id != -1 ) {
 			break;
 		}
 	}

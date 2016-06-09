@@ -7,9 +7,14 @@
 PTR( Enemies );
 PTR( Enemy );
 
+PTR( UnitMap );
+PTR( Bulletins );
+PTR( Refineries );
+PTR( Map );
+
 class Enemies {
 public:
-	Enemies( );
+	Enemies( UnitMapPtr unit_map, MapPtr map, BulletinsPtr bulletins, RefineriesPtr refineries );
 	virtual ~Enemies( );
 public:
 	void update( );
@@ -21,5 +26,10 @@ private:
 private:
 	std::array< EnemyPtr, NUM > _array;
 	int _idx;
+
+	UnitMapPtr _unit_map;
+	MapPtr _map;
+	BulletinsPtr _bulletins;
+	RefineriesPtr _refineries;
 };
 

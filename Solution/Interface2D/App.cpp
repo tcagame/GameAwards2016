@@ -16,6 +16,9 @@
 #include "Miners.h"
 #include "Pioneers.h"
 #include "Forests.h"
+#include "Guardians.h"
+#include "Enemies.h"
+#include "Guardians.h"
 #include "Viewer.h"
 #include "Powerplant.h"
 #include "Framework.h"
@@ -39,13 +42,16 @@ App::App( ) {
 	_unit_map = UnitMapPtr( new UnitMap( ) );
 	_powerplant = PowerplantPtr( new Powerplant( _map ) );
 	_chargers   = ChargersPtr  ( new Chargers  ( ) );
-	_bases      = BasesPtr     ( new Bases     ( ) );
+	
 	_gold_mines = GoldMinesPtr ( new GoldMines ( _map ) );
 	_forests	= ForestsPtr   ( new Forests   ( _map ) );
 	_miners		= MinersPtr	   ( new Miners	   ( _unit_map ) );
 	_pioneers	= PioneersPtr  ( new Pioneers( _unit_map ) );
 	_refineries = RefineriesPtr( new Refineries( _gold_mines, _miners ) );
 	_bulletins  = BulletinsPtr ( new Bulletins ( _forests, _pioneers ) );
+	_enemies    = EnemiesPtr   ( new Enemies   ( _unit_map, _map, _bulletins, _refineries ) );
+	_guardians  = GuardiansPtr  ( new Guardians ( _unit_map, _enemies, _map ) );
+	_bases      = BasesPtr     ( new Bases     ( _enemies, _guardians ) );
 
 	_chargers->initialize( _map );
 	_bases->initialize( _map );
@@ -57,8 +63,8 @@ App::App( ) {
 	assert( result_powerplant_installation );
 	_line = LinePtr( new Line( _map, _powerplant, _chargers, _bases, _refineries, _bulletins ) );
 	_mode = MODE_LINE;
-	_forests->install( Coord( 15,15 ) );
-	_bulletins->install( Coord( 10, 10 ) );
+
+	_bases->install( Coord( 10, 10 ) );
 	//_gold = 0;
 }
 
@@ -73,8 +79,11 @@ void App::update( ) {
 	_powerplant->update( );
 	_refineries->update( );
 	_bulletins->update( );
+	_bases->update( );
 	_miners->update( );
 	_pioneers->update( );
+	_enemies->update( );
+	_guardians->update( );
 	_line->update( );
 
 }
@@ -348,6 +357,13 @@ PacketsConstPtr App::getPackets( ) const {
 	return _packets;
 }
 
+EnemiesPtr App::getEnemies( ) const {
+	return _enemies;
+}
+
+GuardiansPtr App::getGuardians( ) const {
+	return _guardians;
+}
 
 bool App::isModeDeleteLine( ) const {
 	if ( _mode == MODE_DELETE_LINE ) {
