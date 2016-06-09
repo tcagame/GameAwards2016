@@ -44,12 +44,17 @@ public:
 	void set( const Sprite& sprite );
 	void update( );
 private:
+	void flip( );
+	void drawSprite( );
+private:
 	static const int ID_NUM = 100;
 	static const int SPRITE_NUM = 2000;
 	const char * _directory;
 	std::array< Sprite, SPRITE_NUM > _sprite;
 	std::array< int, ID_NUM > _id;
 	int _sprite_idx;
+	int _refresh_count;
+	int _start_time;
 	
 };
 

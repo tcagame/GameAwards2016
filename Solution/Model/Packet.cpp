@@ -1,10 +1,7 @@
 #include "Packet.h"
 #include "Coord.h"
-#include "Ratio.h"
 #include "Line.h"
 #include <assert.h>
-
-const int POWERPLANT_LEVEL = Ratio::ACCURACY * 10 / 100; // 10Åì
 
 Packet::Packet( ) {
 	_waiting = true;
@@ -18,26 +15,8 @@ Coord Packet::getCoord( ) {
 	return _coord;
 }
 
-Ratio Packet::getAnimationRatio( ) const {
-	return _animation_ratio;
-}
-
-
-void Packet::update( ) {
-	if ( _waiting ) {
-		return;
-	}
-
-	// êiÇﬂÇÈ
-	_animation_ratio.increase( POWERPLANT_LEVEL );
-}
-
 bool Packet::isWaiting( ) const {
 	return _waiting;
-}
-
-bool Packet::isFinishedAnimation( ) const {
-	return _animation_ratio.isOverflow( );
 }
 
 void Packet::nextChip( unsigned char dir ) {
@@ -57,8 +36,6 @@ void Packet::nextChip( unsigned char dir ) {
 	default:
 		assert( false );
 	}
-
-	_animation_ratio.reflesh( );
 }
 
 void Packet::set( const Coord& coord ) {

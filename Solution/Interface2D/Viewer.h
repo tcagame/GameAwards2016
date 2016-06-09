@@ -71,6 +71,7 @@ private:
 	unsigned char reverseDir( unsigned char start_dir ) const;
 	int convLineTypeToIdx( unsigned char dir ) const;
 	void reflesh( );
+	void setPacketAnimation( int& sx, int& sy, unsigned char circuit_dir, unsigned char form_dir, Ratio ratio ) const;
 private:
 
 	Coord _click_coord;

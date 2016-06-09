@@ -6,7 +6,7 @@ struct Ratio {
 
 	Ratio( ) : value( 0 ) { }
 	Ratio( int value_ ) : value( value_ ) { }
-
+	Ratio( int value_, int max_ ) : value( value_* ACCURACY / max_ ) { }
 	void increase( unsigned int n ) {
 		value += n;
 	}
@@ -18,6 +18,10 @@ struct Ratio {
 	}
 	void reflesh( ) {
 		value %= ACCURACY;
+	}
+
+	bool isPassedHalf( ) const {
+		return value >= ACCURACY / 2;
 	}
 };
 

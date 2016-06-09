@@ -17,7 +17,8 @@
 #include <assert.h>
 
 const int POWERPLANT_LEVEL = 10; //仮
-const int OUTPUT_PACKET_TYMING = 60;
+const unsigned int PACKET_CREATE_TYMING = 3;
+const unsigned int PACKET_ANIMATION_COUNT = 30;
 
 Line::Line( MapPtr map, PowerplantPtr powerplant, ChargersPtr chargers, BasesPtr bases, RefineriesPtr refineries, BulletinsPtr bulletins ) :
 _map( map ),
@@ -26,7 +27,9 @@ _chargers( chargers ),
 _bases( bases ),
 _refineries( refineries ),
 _bulletins( bulletins ),
-_packets_count( 0 ) {
+_packets_create_count( 0 ),
+_packets_animation_count( 0 ),
+_packets_around( false ) {
 	for ( int i = 0; i < COORD_HEIGHT * COORD_WIDTH; i++ ) {
 		_chips[ i ].form_dir = DIR_NONE;
 		_chips[ i ].circuit_dir = DIR_NONE;
@@ -46,49 +49,36 @@ Line::~Line( ) {
 
 }
 
+PacketPtr Line::getPacket( int idx ) const {
+	return _packets[ idx ];
+}
+
+Ratio Line::getAnimationRatio( ) const {
+	return Ratio( _packets_animation_count, PACKET_ANIMATION_COUNT );
+}
+
 void Line::update( ) {
-	outputPackets( );
 	updatePackets( );
 }
 
-void Line::outputPackets( ) {
+void Line::updatePackets( ) {
 	// パケットを出すタイミングか？
 	if ( !_circuit ) {
 		return;
 	}
 
-	_packets_count++;
-	if ( _packets_count % OUTPUT_PACKET_TYMING != 0 ) {
-		return;
+	// パケットで満たしたので、アニメーションする
+	if ( _packets_around ) {
+		_packets_animation_count++;
+		if ( _packets_animation_count < PACKET_ANIMATION_COUNT ) {
+			return;
+		}
+		_packets_animation_count = 0;
 	}
 
-	// パケットを出す
-	int idx = -1;
+	// パケット更新
 	for ( int i = 0; i < PACKET_NUM; i++ ) {
 		if ( _packets[ i ]->isWaiting( ) ) {
-			idx = i;
-			break;
-		}
-	}
-	if ( idx >= 0 ) {
-		const Coord& start_coord = _powerplant->getLineFixationLeft( );
-		_packets[ idx ]->set( start_coord );
-	}
-}
-
-PacketPtr Line::getPacket( int idx ) const {
-	return _packets[ idx ];
-}
-
-void Line::updatePackets( ) {
-	for ( int i = 0; i < PACKET_NUM; i++ ) {
-		if ( _packets[ i ]->isWaiting( ) ) {
-			continue;
-		}
-
-		_packets[ i ]->update( );
-
-		if ( !_packets[ i ]->isFinishedAnimation( ) ) {
 			continue;
 		}
 
@@ -97,15 +87,34 @@ void Line::updatePackets( ) {
 
 		if ( coord_target.getIdx( ) == coord_powerplant.getIdx( ) ) {
 			_packets[ i ]->wait( );
+			_packets_around = true;
 		} else {
 			unsigned char dir = getNextDir( coord_target );
 			_packets[ i ]->nextChip( dir );
+		}
+	}
+
+	// パケットを生み出すか？
+	_packets_create_count++;
+	int n = _packets_create_count % PACKET_CREATE_TYMING;
+	if ( n == 0 ) {
+		int idx = -1;
+		for ( int i = 0; i < PACKET_NUM; i++ ) {
+			if ( _packets[ i ]->isWaiting( ) ) {
+				idx = i;
+				break;
+			}
+		}
+		if ( idx >= 0 ) {
+			const Coord& start_coord = _powerplant->getLineFixationLeft( );
+			_packets[ idx ]->set( start_coord );
 		}
 	}
 }
 
 void Line::makeCircuit( ) {
 	_circuit = false;
+	_packets_around = false;
 
 	// 循環経路削除
 	for ( int i = 0; i < COORD_WIDTH * COORD_HEIGHT; i++ ) {

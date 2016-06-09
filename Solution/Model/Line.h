@@ -33,7 +33,7 @@ public:
 		unsigned char circuit_dir; //dir
 	};
 	
-	static const int PACKET_NUM = 10;
+	static const int PACKET_NUM = 100;
 
 	static const unsigned char DIR_NONE	= 0x00;
 	static const unsigned char DIR_U___ = 0x01;
@@ -69,6 +69,7 @@ public:
 	unsigned char getNextDir( const Coord& coord ) const;
 	PacketPtr getPacket( int idx ) const;
 	bool setGuideAlongMouse( const Coord& coord );
+	Ratio getAnimationRatio( ) const;
 private:
 	FacilityConstPtr getChipType( CHIP_TYPE chip_type, unsigned char value );
 	bool checkDelete( const Coord& coord, const Coord& old_coord );
@@ -83,10 +84,8 @@ private:
 	unsigned char reverseDir( unsigned char dir ) const;
 	bool setConnectFacility( const Coord& coord );
 	bool destroyLineDir( CHIP_TYPE type, const Coord& coord );
-	void outputPackets( );
 	void updatePackets( );
 	bool isGuidingLength( const Coord& coord );
-
 private:
 	MapPtr _map;
 	PowerplantPtr _powerplant;
@@ -108,5 +107,7 @@ private:
 	Coord _guide_line_coord;
 
 	std::array< PacketPtr, PACKET_NUM > _packets;
-	unsigned int _packets_count;
+	unsigned int _packets_create_count;
+	unsigned int _packets_animation_count;
+	bool _packets_around;
 };

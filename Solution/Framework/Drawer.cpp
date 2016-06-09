@@ -3,6 +3,9 @@
 #include "DxLib.h"
 #include <assert.h>
 
+static const int REFRESH_COUNT = 60;	//平均を取るサンプル数
+static const int FPS = 60;
+
 Drawer::Transform::Transform( ) :
 sx( 0 ),
 sy( 0 ),
@@ -44,7 +47,9 @@ DrawerPtr Drawer::getTask( ) {
 
 Drawer::Drawer( const char * directory ) :
 _directory( directory ),
-_sprite_idx( 0 ) {
+_sprite_idx( 0 ),
+_refresh_count( REFRESH_COUNT ),
+_start_time( 0 ) {
 }
 
 
@@ -72,10 +77,13 @@ void Drawer::set( const Sprite& sprite ) {
 
 void Drawer::update( ) {
 	// 画面更新
-	ScreenFlip( );
-	ClearDrawScreen( );
+	flip( );
 
 	// スプライト描画
+	drawSprite( );
+}
+
+void Drawer::drawSprite( ) {
 	for ( int i = 0; i < _sprite_idx; i++ ) {
 		const Sprite& sprite = _sprite[ i ];
 
@@ -101,3 +109,20 @@ void Drawer::update( ) {
 	_sprite_idx = 0;
 }
 
+
+void Drawer::flip( ) {
+	if ( _refresh_count == REFRESH_COUNT ){ //60フレーム目なら平均を計算する
+		_refresh_count = 0;
+		_start_time = GetNowCount( );
+	}
+	_refresh_count++;
+
+	int took_time = GetNowCount( ) - _start_time;	//かかった時間
+	int wait_time = _refresh_count * 1000 / FPS - took_time;	//待つべき時間
+	if ( wait_time > 0 ) {
+		Sleep( wait_time );	//待機
+	}
+
+	ScreenFlip( );
+	ClearDrawScreen( );
+}
