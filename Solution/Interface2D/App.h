@@ -6,6 +6,7 @@
 
 PTR( App );
 PTR( Map );
+PTR( UnitMap );
 PTR( Line );
 PTR( Powerplant );
 PTR( Chargers );
@@ -13,6 +14,12 @@ PTR( Bases );
 PTR( Refineries );
 PTR( Bulletins );
 PTR( Packets );
+PTR( GoldMines );
+PTR( Forests );
+PTR( Miners );
+PTR( Pioneers );
+PTR( Guardians );
+PTR( Enemies );
 
 class App : public Task {
 public:
@@ -25,6 +32,8 @@ public:
 	void update( );
 	MapConstPtr getMap( ) const;
 	MapPtr getMap( );
+	UnitMapConstPtr getUnitMap( ) const;
+	UnitMapPtr getUnitMap( );
 	PowerplantConstPtr getPowerplant( ) const;
 	ChargersConstPtr getChargers( ) const;
 	LineConstPtr getLine( ) const;
@@ -32,7 +41,16 @@ public:
 	RefineriesConstPtr getRefineries( ) const;
 	BulletinsConstPtr getBulletins( ) const;
 	PacketsConstPtr getPackets( ) const ;
+	GoldMinesPtr getGoldMines( );
+	MinersConstPtr getMiners( ) const;
+	MinersPtr getMiners( );
+	PioneersConstPtr getPioneers( ) const;
+	ForestsPtr getForests( );
+	EnemiesPtr getEnemies( ) const;
+	GuardiansPtr getGuardians( ) const;
 	bool isModeDeleteLine( ) const;
+	
+	//void addGold( int gold );
 private:
 	enum MODE {
 		MODE_LINE,
@@ -57,12 +75,19 @@ private:
 	void doFacilityMoveOperation( );
 private:
 	MapPtr _map;
+	UnitMapPtr _unit_map;
 	LinePtr _line;
 	PowerplantPtr _powerplant;
 	ChargersPtr _chargers;
 	BasesPtr _bases;
 	RefineriesPtr _refineries;
 	BulletinsPtr _bulletins;
+	GoldMinesPtr _gold_mines;
+	ForestsPtr _forests;
+	MinersPtr _miners;
+	PioneersPtr _pioneers;
+	GuardiansPtr _guardians;
+	EnemiesPtr _enemies;
 	MODE _mode;
 	Coord _click_push_coord;
 	FACILITY _placement_facility;
@@ -70,5 +95,6 @@ private:
 	bool _operating_relocation;
 	unsigned char _relocation_idx;
 	Coord _before_coord;
+	//int _gold;
 	bool _line_guide_flag;
 };

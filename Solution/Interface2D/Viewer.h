@@ -68,6 +68,12 @@ private:
 	void drawGuideLine( ) const;
 	void drawLine( ) const;
 	void drawPacket( ) const;
+	void drawGoldMines( ) const;
+	void drawForests( ) const;
+	void drawEnemies( ) const;
+	void drawGuadians( ) const;
+	void drawMiners( ) const;
+	void drawPioneers( ) const;
 	unsigned char reverseDir( unsigned char start_dir ) const;
 	int convLineTypeToIdx( unsigned char dir ) const;
 	void reflesh( );
