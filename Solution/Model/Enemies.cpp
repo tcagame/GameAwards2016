@@ -35,7 +35,7 @@ int Enemies::getSize( ) {
 
 bool Enemies::create( const Coord& pos ) {
 	if ( _idx < NUM ) {
-		_array[ _idx ] = EnemyPtr( new Enemy( pos, _map, _bulletins, _refineries ) );
+		_array[ _idx ] = EnemyPtr( new Enemy( pos, _map, _bulletins, _refineries, _unit_map ) );
 		_idx++;
 		return true;
 	}

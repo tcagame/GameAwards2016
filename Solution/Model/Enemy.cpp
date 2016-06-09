@@ -14,7 +14,7 @@ const int HEIGHT = 2;
 const int HP = 100;
 static const int SEARCH_RANGE = 15;
 
-Enemy::Enemy( const Coord& pos, MapPtr map, BulletinsPtr bulletins, RefineriesPtr refineries  ) :
+Enemy::Enemy( const Coord& pos, MapPtr map, BulletinsPtr bulletins, RefineriesPtr refineries, UnitMapPtr unit_map ) :
 _width( WIDTH ),
 _height( HEIGHT ),
 _pos( pos ) {
@@ -22,12 +22,13 @@ _pos( pos ) {
 	_speed = RATIO_MAX / 10;
 	_hp = HP;
 	setCoord( pos );
-	erased = false;
+	_erased = false;
 	_target = _pos.getCoordWithRatio( );
 
 	_map = map;
 	_bulletins = bulletins;
 	_refineries = refineries;
+	_unit_map = unit_map;
 }
 
 Enemy::~Enemy( ) {
@@ -79,21 +80,19 @@ void Enemy::move( ) {
 }
 
 void Enemy::death( ) {
-	if ( erased ) {
+	if ( _erased ) {
 		return;
 	}
-	AppPtr app = App::getTask( );
-	UnitMapPtr unit_map = app->getUnitMap( );
 	UnitMap::Chip chip;
 	chip.type = CHARACTER_TYPE_NONE;
 	chip.value = 0;
 	for ( int i = 0;i < HEIGHT; i++ ) {
 		for ( int j = 0; j < WIDTH; j++ ) {
 			Coord pos = Coord( getCoord( ).x + j, getCoord( ).y + i );
-			unit_map->setChip( pos, chip );
+			_unit_map->setChip( pos, chip );
 		}
 	}
-	erased = true;
+	_erased = true;
 }
 
 bool Enemy::isExist( ) {
@@ -225,7 +224,7 @@ RatioCoord Enemy::getRatioCoord( ) {
 	return _pos;
 }
 
-int Enemy::getHP( ) {
+int Enemy::getHP( ) const{
 	return _hp;
 }
 

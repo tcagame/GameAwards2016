@@ -10,14 +10,18 @@ PTR( Facility );
 PTR( Refineries );
 PTR( Bulletins );
 PTR( Map );
+PTR( UnitMap );
 
 class Enemy : public Object {
 public:
-	Enemy( const Coord& pos, MapPtr map, BulletinsPtr bulletins, RefineriesPtr refineries );
+	Enemy( const Coord& pos, MapPtr map, BulletinsPtr bulletins, RefineriesPtr refineries, UnitMapPtr unit_map );
 	virtual ~Enemy();
 public:
 	void update( );
 	bool isExist( );
+	int getHP( ) const;
+	void damage( int damage );
+	void death( );
 	RatioCoord getRatioCoord( );
 private:
 	void getRootPoint( );
@@ -34,9 +38,11 @@ private:
 	Vector _target;
 	FacilityWeakPtr _facility;
 	RatioCoord _pos;
+	bool _erased;
 
 	MapPtr _map;
 	RefineriesPtr _refineries;
 	BulletinsPtr _bulletins;
+	UnitMapPtr _unit_map;
 };
 

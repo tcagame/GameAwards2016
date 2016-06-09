@@ -10,10 +10,11 @@ PTR( Enemy );
 
 PTR( Map );
 PTR( Enemies );
+PTR( UnitMap )
 
 class Guardian : public Object {
 public:
-	Guardian( const std::vector< Coord >& root, const Coord& factory_pos, EnemiesPtr enemies, MapPtr map );
+	Guardian( const std::vector< Coord >& root, const Coord& factory_pos, EnemiesPtr enemies, MapPtr map, UnitMapPtr unit_map );
 	virtual ~Guardian( );
 public:
 	void update( );
@@ -35,4 +36,5 @@ private:
 
 	MapPtr _map;
 	EnemiesPtr _enemies;
+	UnitMapPtr _unit_map;
 };

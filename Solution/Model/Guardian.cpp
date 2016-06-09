@@ -5,13 +5,13 @@
 #include "UnitMap.h"
 #include "Enemies.h"
 #include "Enemy.h"
-#include "CharacterType.cpp"
+#include "CharacterType.h"
 
 static const int POWER = 1000;
 static const Coord FACTORY_DIFF = Coord( 1, 3 );
 static const int SEARCH_RANGE = 1;
 
-Guardian::Guardian( const std::vector<Coord>& root, const Coord& factory_pos, EnemiesPtr enemies, MapPtr map ) :
+Guardian::Guardian( const std::vector<Coord>& root, const Coord& factory_pos, EnemiesPtr enemies, MapPtr map, UnitMapPtr unit_map ) :
 _pos( root[ 0 ] ),
 _factory_pos( factory_pos ) {
 	int RATIO_MAX = _pos.getRatio( ).x.ACCURACY;
@@ -23,20 +23,18 @@ _factory_pos( factory_pos ) {
 
 	_enemies = enemies;
 	_map = map;
+	_unit_map = unit_map;
 }
 
 Guardian::~Guardian( ) {
 }
 
 void Guardian::action( ) {
-	AppPtr app = App::getTask( );
-	UnitMapPtr unit_map = app->getUnitMap( );
-	UnitMap::Chip chip = unit_map->getChip( _pos.getCoord( ) );
+	UnitMap::Chip chip = _unit_map->getChip( _pos.getCoord( ) );
 
-	EnemiesPtr enemies = app->getEnemies( );
-	for ( int i = 0; i < ( int )enemies->getSize( ); i++ ) {
+	for ( int i = 0; i < ( int )_enemies->getSize( ); i++ ) {
 		if ( chip.type == CHARACTER_TYPE_ENEMY && chip.value == i ) {
-			EnemyPtr enemy = enemies->get( i );
+			EnemyPtr enemy = _enemies->get( i );
 			 enemy->damage( POWER );
 		}
 	}
