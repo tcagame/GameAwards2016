@@ -8,13 +8,13 @@
 #include "Chip.h"
 #include <queue>
 
-static const int WIDTH = 3;
-static const int HEIGHT = 3;
+static const int WIDTH = 5;
+static const int HEIGHT = 5;
 static const int SEARCH_RANGE = 7;
 static const int DIV = SEARCH_RANGE * 16;
 
 Base::Base( MapPtr map, GuardiansPtr guardians, EnemiesPtr enemies ) :
-Facility( CHIP_TYPE_GUARDIAN, WIDTH, HEIGHT, map ) {
+Facility( CHIP_TYPE_BASE, WIDTH, HEIGHT, map ) {
 	_max = 1;
 	_num = 0;
 
@@ -52,7 +52,7 @@ std::vector< Coord > Base::searchRoot( ) {
 		Coord target_pos = Coord( ( int )vec.x, ( int )vec.y );
 		chip = _map->getChip( target_pos );
 
-		while ( chip.type == CHIP_TYPE_NONE || chip.type == CHIP_TYPE_GUARDIAN ) {
+		while ( chip.type == CHIP_TYPE_NONE || chip.type == CHIP_TYPE_BASE ) {
 			double length = ( vec - pos ).getLength( );
 			if ( length + 1 > SEARCH_RANGE ) {
 				break;
@@ -63,7 +63,7 @@ std::vector< Coord > Base::searchRoot( ) {
 				continue;
 			}
 			chip = _map->getChip( temp );
-			if ( chip.type == CHIP_TYPE_NONE || chip.type == CHIP_TYPE_GUARDIAN ) {
+			if ( chip.type == CHIP_TYPE_NONE || chip.type == CHIP_TYPE_BASE ) {
 				target_pos = temp;
 			}
 		}

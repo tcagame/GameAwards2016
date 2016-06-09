@@ -82,7 +82,7 @@ void Guardian::move( ) {
 	RatioCoord after_pos( _pos.getCoord( ) );
 	after_pos.increase( Coord( ( int )( dir.x * _speed ), ( int )( dir.y * _speed ) ) );
 	Map::Chip chip = _map->getChip( after_pos.getCoord( ) );
-	if ( chip.type != CHIP_TYPE_NONE && chip.type != CHIP_TYPE_GUARDIAN ) {
+	if ( chip.type != CHIP_TYPE_NONE && chip.type != CHIP_TYPE_BASE ) {
 		Vector factory_pos = _factory_pos.getCoordWithRatio( );
 		Vector dir_for_factory = factory_pos - _pos.getCoordWithRatio( );
 		dir =dir_for_factory.normalize( );

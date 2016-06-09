@@ -11,7 +11,6 @@ const unsigned char CHIP_TYPE_CHARGER    = 0x22;
 const unsigned char CHIP_TYPE_BASE       = 0x23;
 const unsigned char CHIP_TYPE_REFINERY   = 0x24;
 const unsigned char CHIP_TYPE_BULLETIN   = 0x25;
-const unsigned char CHIP_TYPE_GUARDIAN	 = 0x26;
 const unsigned char CHIP_TYPE_MATERIAL	 = 0x30;
 const unsigned char CHIP_TYPE_FOREST	 = 0x31;
 const unsigned char CHIP_TYPE_GOLD_MINE	 = 0x32;

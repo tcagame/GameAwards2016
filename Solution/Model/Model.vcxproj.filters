@@ -33,8 +33,6 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Guardian.cpp" />
     <ClCompile Include="Guardians.cpp" />
-    <ClCompile Include="GuardiansFactories.cpp" />
-    <ClCompile Include="GuardiansFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base.h" />
@@ -73,7 +71,5 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Guardian.h" />
     <ClInclude Include="Guardians.h" />
-    <ClInclude Include="GuardiansFactories.h" />
-    <ClInclude Include="GuardiansFactory.h" />
   </ItemGroup>
 </Project>
