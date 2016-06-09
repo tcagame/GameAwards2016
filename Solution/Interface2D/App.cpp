@@ -220,7 +220,7 @@ void App::doLinePlacementOperation( ) {
 	}
 
 	if ( _line_guide_flag ) {
-		if( !_line->setGuideAlongMouse( coord ) ) {
+		if ( !_line->setGuideAlongMouse( coord ) ) {
 			_line_guide_flag = !_line_guide_flag;
 			_line->cancelGuide( );
 		}
@@ -367,10 +367,6 @@ MinersPtr App::getMiners( ) {
 
 PioneersConstPtr App::getPioneers( ) const {
 	return _pioneers;
-}
-
-PacketsConstPtr App::getPackets( ) const {
-	return _packets;
 }
 
 EnemiesPtr App::getEnemies( ) const {

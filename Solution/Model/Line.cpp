@@ -11,7 +11,6 @@
 #include "Chargers.h"
 #include "Charger.h"
 #include "Facility.h"
-#include "Packet.h"
 #include "Coord.h"
 #include "Chip.h"
 #include <assert.h>
@@ -27,6 +26,7 @@ _chargers( chargers ),
 _bases( bases ),
 _refineries( refineries ),
 _bulletins( bulletins ),
+_circuit( false ),
 _packets_create_count( 0 ),
 _packets_animation_count( 0 ),
 _packets_around( false ) {
@@ -40,20 +40,25 @@ _packets_around( false ) {
 	_delete_coord_first_conecter  = Coord( -1, -1 );
 	_delete_coord_second_conecter = Coord( -1, -1 );
 	
-	for ( int i = 0; i < PACKET_NUM; i++ ) {
-		_packets[ i ] = PacketPtr( new Packet( ) );
-	}
+	initPackets( );
 }
 
 Line::~Line( ) {
 
 }
 
-PacketPtr Line::getPacket( int idx ) const {
+const Line::PACKET& Line::getPacket( int idx ) const {
 	return _packets[ idx ];
 }
 
-Ratio Line::getAnimationRatio( ) const {
+void Line::initPackets( ) {
+	_packets_around = false;
+	for ( int i = 0; i < PACKET_NUM; i++ ) {
+		_packets[ i ].waiting = true;
+	}
+}
+
+Ratio Line::getPacketAnimationRatio( ) const {
 	return Ratio( _packets_animation_count, PACKET_ANIMATION_COUNT );
 }
 
@@ -78,19 +83,34 @@ void Line::updatePackets( ) {
 
 	// パケット更新
 	for ( int i = 0; i < PACKET_NUM; i++ ) {
-		if ( _packets[ i ]->isWaiting( ) ) {
+		if ( _packets[ i ].waiting ) {
 			continue;
 		}
 
-		Coord coord_target = _packets[ i ]->getCoord( );
+		Coord coord_target = _packets[ i ].coord; // 現在の位置
 		Coord coord_powerplant = _powerplant->getLineFixationRight( );
 
 		if ( coord_target.getIdx( ) == coord_powerplant.getIdx( ) ) {
-			_packets[ i ]->wait( );
+			_packets[ i ].waiting = true;
 			_packets_around = true;
 		} else {
-			unsigned char dir = getNextDir( coord_target );
-			_packets[ i ]->nextChip( dir );
+			switch( _packets[ i ].dir_out ) {
+			case Line::DIR_U___:
+				_packets[ i ].coord.y--;
+				break;
+			case Line::DIR__D__:
+				_packets[ i ].coord.y++;
+				break;
+			case Line::DIR___L_:
+				_packets[ i ].coord.x--;
+				break;
+			case Line::DIR____R:
+				_packets[ i ].coord.x++;
+				break;
+			}
+
+			_packets[ i ].dir_in  = _packets[ i ].dir_out;
+			_packets[ i ].dir_out = getNextDir( _packets[ i ].coord );
 		}
 	}
 
@@ -100,27 +120,31 @@ void Line::updatePackets( ) {
 	if ( n == 0 ) {
 		int idx = -1;
 		for ( int i = 0; i < PACKET_NUM; i++ ) {
-			if ( _packets[ i ]->isWaiting( ) ) {
+			if ( _packets[ i ].waiting ) {
 				idx = i;
 				break;
 			}
 		}
 		if ( idx >= 0 ) {
 			const Coord& start_coord = _powerplant->getLineFixationLeft( );
-			_packets[ idx ]->set( start_coord );
+			unsigned char dir = getNextDir( start_coord );
+			_packets[ idx ].waiting = false;
+			_packets[ idx ].coord = start_coord;
+			_packets[ idx ].dir_in  = dir;
+			_packets[ idx ].dir_out = dir;
 		}
 	}
 }
 
 void Line::makeCircuit( ) {
-	_circuit = false;
-	_packets_around = false;
 
 	// 循環経路削除
+	_circuit = false;
 	for ( int i = 0; i < COORD_WIDTH * COORD_HEIGHT; i++ ) {
 		_chips[ i ].circuit_dir = DIR_NONE;
 		_chips[ i ].is_check = false;
 	}
+	initPackets( );
 	
 	// パワープラントにつながっているか？
 	Coord start_coord = _powerplant->getLineFixationLeft( );
@@ -180,7 +204,7 @@ void Line::startGuide( const Coord& coord ) {
 	if ( chip.type == CHIP_TYPE_NONE  ) {
 		return;
 	}
-	FacilityConstPtr facility = getChipType( chip.type, chip.value );
+	FacilityConstPtr facility = getFacilityOnMapChip( chip );
 
 	if ( facility != NULL ) {
 		Coord left = facility->getLineFixationLeft( );
@@ -201,21 +225,29 @@ void Line::startGuide( const Coord& coord ) {
 }
 
 bool Line::setGuideAlongMouse( const Coord& coord ) {
-	if ( coord.getIdx( ) < 0 ) { 
+	Coord target = coord;
+
+	// 範囲外
+	if ( target.getIdx( ) < 0 ) { 
 		return false;
 	}
 
-	Map::Chip chip = _map->getChip( coord );
-	if ( !isGuidingLength( coord ) && chip.type == CHIP_TYPE_NONE ) {
+	Map::Chip chip = _map->getChip( target );
+
+	// ファシリティーだったら
+	if ( ( chip.type & 0xf0 ) == CHIP_TYPE_FACILITY ) {
+		FacilityConstPtr fasility = getFacilityOnMapChip( chip );
+		target = fasility->getLineFixationRight( );
+		target.x--;
+	}
+
+	// ラインを範囲内まで延ばした
+	if ( !isGuidingLength( target ) ) {
 		return true;
 	}
-	Coord mouse_coord = coord;
-	if ( chip.type != CHIP_TYPE_NONE && _guide_line_coord.getIdx( ) != _guide_start_coord.getIdx( ) ) {
-		mouse_coord = getChipType( chip.type, chip.value )->getLineFixationRight( );
-		mouse_coord.x--;
-	}
-	int diff_x = mouse_coord.x - _guide_line_coord.x;
-	int diff_y = mouse_coord.y - _guide_line_coord.y;
+
+	int diff_x = target.x - _guide_line_coord.x;
+	int diff_y = target.y - _guide_line_coord.y;
 	Coord diff_target_coord = _guide_line_coord;
 	
 
@@ -318,7 +350,7 @@ void Line::endGuide( const Coord& coord ) {
 	Map::Chip start_chip = _map->getChip( _guide_start_coord );
 	Map::Chip end_chip = _map->getChip( coord );
 	
-	FacilityConstPtr facility = getChipType( end_chip.type, end_chip.value );
+	FacilityConstPtr facility = getFacilityOnMapChip( end_chip );
 
 	if ( facility != NULL ) {
 		Coord left = facility->getLineFixationLeft( );
@@ -357,23 +389,23 @@ void Line::endGuide( const Coord& coord ) {
 	_guide_store_circuit_dir = DIR_NONE;
 }
 
-FacilityConstPtr Line::getChipType( CHIP_TYPE chip_type, unsigned char value  ) {
+FacilityConstPtr Line::getFacilityOnMapChip( const Map::Chip& chip ) const {
 	FacilityConstPtr facility;
-	switch( chip_type ) {
+	switch( chip.type ) {
 	case CHIP_TYPE_POWERPLANT:
 		facility = _powerplant;
 		break;
 	case CHIP_TYPE_CHARGER:
-		facility = _chargers->get( value );
+		facility = _chargers->get( chip.value );
 		break;
 	case CHIP_TYPE_BASE:
-		facility = _bases->get( value );
+		facility = _bases->get( chip.value );
 		break;
 	case CHIP_TYPE_REFINERY:
-		facility = _refineries->get( value );
+		facility = _refineries->get( chip.value );
 		break;
 	case CHIP_TYPE_BULLETIN:
-		facility = _bulletins->get( value );
+		facility = _bulletins->get( chip.value );
 		break;
 	case CHIP_TYPE_LINE:
 		facility = NULL;

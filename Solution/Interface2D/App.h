@@ -40,7 +40,6 @@ public:
 	BasesConstPtr getBases( ) const;
 	RefineriesConstPtr getRefineries( ) const;
 	BulletinsConstPtr getBulletins( ) const;
-	PacketsConstPtr getPackets( ) const ;
 	GoldMinesPtr getGoldMines( );
 	MinersConstPtr getMiners( ) const;
 	MinersPtr getMiners( );

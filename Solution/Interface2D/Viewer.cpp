@@ -388,61 +388,44 @@ void Viewer::drawPacket( ) const {
 	}
 	DrawerPtr drawer = Drawer::getTask( );
 	LineConstPtr line = app->getLine( );
-	Ratio ratio = line->getAnimationRatio( );
+	Ratio ratio = line->getPacketAnimationRatio( );
 	for ( int i = 0; i < Line::PACKET_NUM; i++ ) {
-		PacketPtr packet = line->getPacket( i );
-		if ( packet->isWaiting( ) ) {
+		const Line::PACKET& packet = line->getPacket( i );
+		if ( packet.waiting ) {
 			continue;
 		}
-		const Coord& coord = packet->getCoord( );
-		const Line::Chip& chip = line->getChip( coord );
 
 		// animation_ratio‚ð‚Â‚©‚Á‚Ä•`‰æˆÊ’u‚ðŒvŽZ‚·‚é
-		int sx = int ( coord.x * CHIP_SIZE + CHIP_SIZE * 0.5 - 25 );
-		int sy = int ( coord.y * CHIP_SIZE + CHIP_SIZE * 0.5 - 25 );
-
-		setPacketAnimation( sx, sy, chip.circuit_dir, chip.form_dir, ratio );
+		int sx = int ( packet.coord.x * CHIP_SIZE + CHIP_SIZE * 0.5 - 25 );
+		int sy = int ( packet.coord.y * CHIP_SIZE + CHIP_SIZE * 0.5 - 25 );
+		setPacketAnimation( sx, sy, packet.dir_in, packet.dir_out, ratio );
 
 		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy ), RES_PACKET ) );
 	}
 }
 
-void Viewer::setPacketAnimation( int& sx, int& sy, unsigned char circuit_dir, unsigned char form_dir, Ratio ratio ) const {
+void Viewer::setPacketAnimation( int& sx, int& sy, unsigned char dir_in, unsigned char dir_out, Ratio ratio ) const {
 	int length = ratio.cal( CHIP_SIZE );
+	unsigned char dir = dir_in;
 	if ( ratio.isPassedHalf( ) ) {
-		switch ( circuit_dir ) {
-		case Line::DIR_U___:
-			sy +=  length - CHIP_SIZE / 2;
-			break;
-		case Line::DIR__D__:
-			sy += -length + CHIP_SIZE / 2;
-			break;
-		case Line::DIR___L_:
-			sx +=  length - CHIP_SIZE / 2;
-			break;
-		case Line::DIR____R:
-			sx += -length + CHIP_SIZE / 2;
-			break;
-		default:
-			assert( true );
-		}
-	} else {
-		switch ( form_dir & ~circuit_dir ) {
-		case Line::DIR_U___:
-			sy += -length + CHIP_SIZE / 2;
-			break;
-		case Line::DIR__D__:
-			sy +=  length - CHIP_SIZE / 2;
-			break;
-		case Line::DIR___L_:
-			sx += -length + CHIP_SIZE / 2;
-			break;
-		case Line::DIR____R:
-			sx +=  length - CHIP_SIZE / 2;
-			break;
-		default:
-			assert( true );
-		}
+		dir = dir_out;
+	}
+
+	switch ( dir ) {
+	case Line::DIR_U___:
+		sy += -length + CHIP_SIZE / 2;
+		break;
+	case Line::DIR__D__:
+		sy +=  length - CHIP_SIZE / 2;
+		break;
+	case Line::DIR___L_:
+		sx += -length + CHIP_SIZE / 2;
+		break;
+	case Line::DIR____R:
+		sx +=  length - CHIP_SIZE / 2;
+		break;
+	default:
+		assert( true );
 	}
 }
 

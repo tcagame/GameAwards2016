@@ -3,6 +3,7 @@
 #include "Ratio.h"
 #include "Chip.h"
 #include "smart_ptr.h"
+#include "Map.h"
 #include <array>
 #include <vector>
 
@@ -14,7 +15,6 @@ PTR( Chargers );
 PTR( Bases );
 PTR( Refineries );
 PTR( Bulletins );
-PTR( Packet );
 
 
 class Line {
@@ -51,7 +51,13 @@ public:
 	static const unsigned char DIR_UD_R = DIR_U___ + DIR__D__ + DIR____R;
 	static const unsigned char DIR_UDL_ = DIR_U___ + DIR__D__ + DIR___L_;
 	static const unsigned char DIR_UDLR = DIR_U___ + DIR__D__ + DIR___L_ + DIR____R;
-
+	
+	struct PACKET {
+		bool waiting;
+		Coord coord;
+		unsigned char dir_in;
+		unsigned char dir_out;
+	};
 public:
 	Line( MapPtr map, PowerplantPtr powerplant, ChargersPtr chargers, BasesPtr bases, RefineriesPtr refineries, BulletinsPtr bulletins );
 	virtual ~Line( );
@@ -67,11 +73,11 @@ public:
 	bool setDeleteGuide( const Coord& coord );
 	void deleteAlongGuide( const Coord& coord );
 	unsigned char getNextDir( const Coord& coord ) const;
-	PacketPtr getPacket( int idx ) const;
+	const PACKET& getPacket( int idx ) const;
 	bool setGuideAlongMouse( const Coord& coord );
-	Ratio getAnimationRatio( ) const;
+	Ratio getPacketAnimationRatio( ) const;
 private:
-	FacilityConstPtr getChipType( CHIP_TYPE chip_type, unsigned char value );
+	FacilityConstPtr getFacilityOnMapChip( const Map::Chip& chip ) const;
 	bool checkDelete( const Coord& coord, const Coord& old_coord );
 	bool makeCircuitNext( const Coord& coord, const Coord& old_coord );
 	bool setConnectNew( const Coord& coord, const Coord& old_coord );
@@ -86,6 +92,7 @@ private:
 	bool destroyLineDir( CHIP_TYPE type, const Coord& coord );
 	void updatePackets( );
 	bool isGuidingLength( const Coord& coord );
+	void initPackets( );
 private:
 	MapPtr _map;
 	PowerplantPtr _powerplant;
@@ -96,7 +103,6 @@ private:
 	std::array< Chip, COORD_WIDTH * COORD_HEIGHT > _chips;
 	Coord _old_coord;
 	bool _guide_mode;
-	bool _circuit;
 	unsigned char _guide_store_from_dir;
 	unsigned char _guide_store_circuit_dir;
 	STATE _guide_store_state;
@@ -106,7 +112,9 @@ private:
 	Coord _delete_coord_second_conecter;
 	Coord _guide_line_coord;
 
-	std::array< PacketPtr, PACKET_NUM > _packets;
+	bool _circuit;
+
+	std::array< PACKET, PACKET_NUM > _packets;
 	unsigned int _packets_create_count;
 	unsigned int _packets_animation_count;
 	bool _packets_around;

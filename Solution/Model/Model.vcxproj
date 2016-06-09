@@ -40,7 +40,6 @@
     <ClCompile Include="Miner.cpp" />
     <ClCompile Include="Miners.cpp" />
     <ClCompile Include="Object.cpp" />
-    <ClCompile Include="Packet.cpp" />
     <ClCompile Include="Pioneer.cpp" />
     <ClCompile Include="Pioneers.cpp" />
     <ClCompile Include="Powerplant.cpp" />
@@ -77,7 +76,6 @@
     <ClInclude Include="Miner.h" />
     <ClInclude Include="Miners.h" />
     <ClInclude Include="Object.h" />
-    <ClInclude Include="Packet.h" />
     <ClInclude Include="Pioneer.h" />
     <ClInclude Include="Pioneers.h" />
     <ClInclude Include="Powerplant.h" />

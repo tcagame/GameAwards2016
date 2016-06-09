@@ -19,8 +19,8 @@ bool Packet::isWaiting( ) const {
 	return _waiting;
 }
 
-void Packet::nextChip( unsigned char dir ) {
-	switch( dir ) {
+void Packet::nextChip( unsigned char dir_in, unsigned char dir_out ) {
+	switch( dir_in ) {
 	case Line::DIR_U___:
 		_coord.y--;
 		break;
@@ -36,6 +36,9 @@ void Packet::nextChip( unsigned char dir ) {
 	default:
 		assert( false );
 	}
+
+	_dir_in  = dir_in;
+	_dir_out = dir_out;
 }
 
 void Packet::set( const Coord& coord ) {
@@ -45,4 +48,12 @@ void Packet::set( const Coord& coord ) {
 
 void Packet::wait( ) {
 	_waiting = true;
+}
+
+Packet::DIR Packet::getDirIn( ) const {
+	return _dir_in;
+}
+
+Packet::DIR Packet::getDirOut( ) const {
+	return _dir_out;
 }
