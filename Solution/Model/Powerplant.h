@@ -10,7 +10,5 @@ class Powerplant : public Facility {
 public:
 	Powerplant( MapPtr map );
 	virtual ~Powerplant( );
-public:
-	Coord getStartCoord( ) const;
 };
 

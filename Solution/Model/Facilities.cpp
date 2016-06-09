@@ -33,8 +33,12 @@ void Facilities::relocation( const Coord& coord, unsigned char idx ) {
 	}
 
 	FacilityPtr facility = _array[ idx ];
-	facility->destroy( facility->getCoord( ) );
-	facility->install( coord, idx );
+	Coord deleteCoord = facility->getCoord( );
+	if ( !facility->install( coord, idx ) ) {
+		return;
+	}
+	facility->destroy( deleteCoord );
+	
 }
 
 int Facilities::getSize( ) const {

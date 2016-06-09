@@ -14,7 +14,3 @@ Powerplant::~Powerplant( ) {
 
 }
 
-
-Coord Powerplant::getStartCoord( ) const {
-	return Coord( Facility::getLineFixationLeft( ).x - 1, Facility::getLineFixationLeft( ).y );
-}
