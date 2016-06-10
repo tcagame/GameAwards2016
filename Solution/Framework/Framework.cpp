@@ -28,7 +28,19 @@ Framework::Framework( ) {
 	if ( DxLib_Init( ) == -1 ) {
 		return;
 	}
+	//SetUseSetDrawScreenSettingReset(FALSE);
+	SetUseLighting( FALSE );
+	SetLightEnable( FALSE );
+	SetUseZBuffer3D( TRUE );
+	SetWriteZBuffer3D( TRUE );
 	SetDrawScreen( DX_SCREEN_BACK );
+	SetupCamera_Perspective( 12.0f * DX_PI_F / 180.0f );
+	SetCameraNearFar( 10.0f, 10000.0f );
+	SetAlwaysRunFlag( TRUE ) ;
+	SetUseBackCulling( TRUE ) ;
+    SetTextureAddressModeUV( DX_TEXADDRESS_WRAP, DX_TEXADDRESS_WRAP );
+
+
 }
 
 Framework::~Framework( ) {

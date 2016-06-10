@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Model", "Model\Model.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Framework", "Framework\Framework.vcxproj", "{C3D3FCF4-9678-4290-A376-C23ADF6BDEFE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModelMaker", "ModelMaker\ModelMaker.vcxproj", "{CFC297B7-10E6-4F59-AA8E-8B86C532AAD1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -33,6 +35,10 @@ Global
 		{C3D3FCF4-9678-4290-A376-C23ADF6BDEFE}.Debug|Win32.Build.0 = Debug|Win32
 		{C3D3FCF4-9678-4290-A376-C23ADF6BDEFE}.Release|Win32.ActiveCfg = Release|Win32
 		{C3D3FCF4-9678-4290-A376-C23ADF6BDEFE}.Release|Win32.Build.0 = Release|Win32
+		{CFC297B7-10E6-4F59-AA8E-8B86C532AAD1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CFC297B7-10E6-4F59-AA8E-8B86C532AAD1}.Debug|Win32.Build.0 = Debug|Win32
+		{CFC297B7-10E6-4F59-AA8E-8B86C532AAD1}.Release|Win32.ActiveCfg = Release|Win32
+		{CFC297B7-10E6-4F59-AA8E-8B86C532AAD1}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
