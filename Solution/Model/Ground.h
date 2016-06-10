@@ -1,8 +1,7 @@
 #pragma once
-#include "Coord.h"
 #include "GroundChip.h"
 #include "smart_ptr.h"
-#include <array>
+#include <vector>
 
 PTR( Ground );
 
@@ -11,12 +10,13 @@ public:
 	Ground( );
 	virtual ~Ground( );
 public:
-	GROUND_CHIP_TYPE getGroundChip( const Coord& coord ) const;
 	GROUND_CHIP_TYPE getGroundChip( int idx ) const;
-	void setGroundChip( const Coord& coord, const GROUND_CHIP_TYPE& ground_chip );
-	void setGroundChip( int idx, const GROUND_CHIP_TYPE& ground_chip );
+	int getWidth( ) const;
+	int getHeight( ) const;
 private:
-	std::array< GROUND_CHIP_TYPE, COORD_WIDTH * COORD_HEIGHT > _data;
+	virtual void load( );
+protected:
+	std::vector< GROUND_CHIP_TYPE > _data;
+	int _width;
+	int _height;
 };
-
-
