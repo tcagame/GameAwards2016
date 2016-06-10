@@ -26,6 +26,8 @@
 #include "Enemy.h"
 #include "Guardians.h"
 #include "Guardian.h"
+#include "Ground.h"
+#include "GroundChip.h"
 #include "Coord.h"
 #include "Chip.h"
 #include "Ratio.h"
@@ -61,6 +63,10 @@ enum RES {
 	RES_LINE_DELETE,
 	RES_PACKET,
 	RES_GROUND,
+	RES_PLAIN,
+	RES_RIVER,
+	RES_MOUNTAIN,
+	RES_DESERT,
 	MAX_RES,
 };
 
@@ -95,7 +101,10 @@ void Viewer::initialize( ) {
 	drawer->load( RES_FORESTS		 , "forest.png" );
 	drawer->load( RES_ENEMY			 , "Enemy.png" );
 	drawer->load( RES_GUARDIAN		 , "Gaudian.png" );
-
+	drawer->load( RES_PLAIN			 , "Plain.png" );
+	drawer->load( RES_RIVER			 , "River.png" );
+	drawer->load( RES_MOUNTAIN		 , "Mountain.png" );
+	drawer->load( RES_DESERT		 , "Desert.png" );
 	_click_left = CLICK_NONE;
 	_click_right = CLICK_NONE;
 	_count = 0;
@@ -179,10 +188,33 @@ void Viewer::updateClick( ) {
 }
 
 void Viewer::drawGround( ) {
+	AppPtr app = App::getTask( );
+	if( !app ) {
+		return;
+	}
 	DrawerPtr drawer = Drawer::getTask( );
-	for ( int j = 0; j < COORD_HEIGHT; j++ ) {
-		for ( int i = j % 2; i < COORD_WIDTH; i += 2 ) {
-			Drawer::Sprite sprite( Drawer::Transform( i * CHIP_SIZE - CHIP_SIZE, j * CHIP_SIZE ), RES_GROUND );
+	GroundPtr ground = app->getGround( );
+
+	for ( int i = 0; i < COORD_HEIGHT; i++ ) {
+		for ( int j = 0; j < COORD_WIDTH; j++ ) {
+			RES resource;
+			Coord coord = Coord( j, i );
+			GROUND_CHIP_TYPE chip = ground->getGroundChip( coord.getIdx( ) );
+			switch( chip ) {
+			case GROUND_CHIP_TYPE_PLAIN:
+					resource = RES_PLAIN;
+					break;
+			case GROUND_CHIP_TYPE_RIVER:
+					resource = RES_RIVER;
+					break;
+			case GROUND_CHIP_TYPE_MOUNTAIN:
+					resource = RES_MOUNTAIN;
+					break;
+			case GROUND_CHIP_TYPE_DESERT:
+					resource = RES_DESERT;
+					break;
+				}
+			Drawer::Sprite sprite( Drawer::Transform( j * CHIP_SIZE - CHIP_SIZE, i * CHIP_SIZE ), resource );
 			drawer->set( sprite );
 		}
 	}

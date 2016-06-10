@@ -21,6 +21,7 @@
 #include "Guardians.h"
 #include "Viewer.h"
 #include "Powerplant.h"
+#include "Ground.h"
 #include "Framework.h"
 #include "Keyboard.h"
 #include "Coord.h"
@@ -50,9 +51,9 @@ App::App( ) {
 	_refineries = RefineriesPtr( new Refineries( _gold_mines, _miners ) );
 	_bulletins  = BulletinsPtr ( new Bulletins ( _forests, _pioneers ) );
 	_enemies    = EnemiesPtr   ( new Enemies   ( _unit_map, _map, _bulletins, _refineries ) );
-	_guardians  = GuardiansPtr  ( new Guardians ( _unit_map, _enemies, _map ) );
+	_guardians  = GuardiansPtr ( new Guardians ( _unit_map, _enemies, _map ) );
 	_bases      = BasesPtr     ( new Bases     ( _enemies, _guardians ) );
-
+	_ground		= GroundPtr    ( new Ground( ) );
 	_chargers->initialize( _map );
 	_bases->initialize( _map );
 	_refineries->initialize( _map );
@@ -375,6 +376,10 @@ EnemiesPtr App::getEnemies( ) const {
 
 GuardiansPtr App::getGuardians( ) const {
 	return _guardians;
+}
+
+GroundPtr App::getGround( ) const {
+	return _ground;
 }
 
 bool App::isModeDeleteLine( ) const {

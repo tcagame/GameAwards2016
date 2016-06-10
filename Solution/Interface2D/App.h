@@ -20,6 +20,7 @@ PTR( Miners );
 PTR( Pioneers );
 PTR( Guardians );
 PTR( Enemies );
+PTR( Ground );
 
 class App : public Task {
 public:
@@ -47,6 +48,7 @@ public:
 	ForestsPtr getForests( );
 	EnemiesPtr getEnemies( ) const;
 	GuardiansPtr getGuardians( ) const;
+	GroundPtr getGround( ) const;
 	bool isModeDeleteLine( ) const;
 	
 	//void addGold( int gold );
@@ -91,6 +93,7 @@ private:
 	Coord _click_push_coord;
 	FACILITY _placement_facility;
 	PacketsPtr _packets;
+	GroundPtr _ground;
 	bool _operating_relocation;
 	unsigned char _relocation_idx;
 	Coord _before_coord;
