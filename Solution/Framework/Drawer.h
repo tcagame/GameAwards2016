@@ -48,7 +48,7 @@ private:
 	void drawSprite( );
 private:
 	static const int ID_NUM = 100;
-	static const int SPRITE_NUM = 2000;
+	static const int SPRITE_NUM = 20000;
 	const char * _directory;
 	std::array< Sprite, SPRITE_NUM > _sprite;
 	std::array< int, ID_NUM > _id;

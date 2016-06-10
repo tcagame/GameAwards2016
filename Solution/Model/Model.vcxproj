@@ -31,6 +31,7 @@
     <ClCompile Include="Forests.cpp" />
     <ClCompile Include="GoldMine.cpp" />
     <ClCompile Include="GoldMines.cpp" />
+    <ClCompile Include="Ground.cpp" />
     <ClCompile Include="Guardian.cpp" />
     <ClCompile Include="Guardians.cpp" />
     <ClCompile Include="Line.cpp" />
@@ -67,6 +68,8 @@
     <ClInclude Include="Forests.h" />
     <ClInclude Include="GoldMine.h" />
     <ClInclude Include="GoldMines.h" />
+    <ClInclude Include="Ground.h" />
+    <ClInclude Include="GroundChip.h" />
     <ClInclude Include="Guardian.h" />
     <ClInclude Include="Guardians.h" />
     <ClInclude Include="Line.h" />
