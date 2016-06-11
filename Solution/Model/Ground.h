@@ -13,8 +13,7 @@ public:
 	GROUND_CHIP_TYPE getGroundChip( int idx ) const;
 	int getWidth( ) const;
 	int getHeight( ) const;
-private:
-	virtual void load( );
+	void load( );
 protected:
 	std::vector< GROUND_CHIP_TYPE > _data;
 	int _width;

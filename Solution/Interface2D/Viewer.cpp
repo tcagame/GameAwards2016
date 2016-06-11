@@ -195,11 +195,10 @@ void Viewer::drawGround( ) {
 	DrawerPtr drawer = Drawer::getTask( );
 	GroundPtr ground = app->getGround( );
 
-	for ( int i = 0; i < COORD_HEIGHT; i++ ) {
-		for ( int j = 0; j < COORD_WIDTH; j++ ) {
+	for ( int i = 0; i < ground->getHeight( ); i++ ) {
+		for ( int j = 0; j < ground->getWidth( ); j++ ) {
 			RES resource;
-			Coord coord = Coord( j, i );
-			GROUND_CHIP_TYPE chip = ground->getGroundChip( coord.getIdx( ) );
+			GROUND_CHIP_TYPE chip = ground->getGroundChip( i * ground->getWidth( ) + j );
 			switch( chip ) {
 			case GROUND_CHIP_TYPE_PLAIN:
 					resource = RES_PLAIN;

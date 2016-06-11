@@ -1,7 +1,7 @@
 #include "Ground.h"
 
 Ground::Ground( ) {
-	load( );
+	
 }
 
 Ground::~Ground( ) {
