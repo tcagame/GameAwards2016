@@ -38,21 +38,22 @@ void Model::setPolygonNum( int num ) {
 }
 
 void Model::draw( bool trans ) const {
+
 	int check = DrawPolygon3D( _impl->_vertex, _impl->_polygon_num, _impl->_texture, trans ? TRUE : FALSE );
 }
 
 void Model::translate( Vector move ) {
 	for ( int i = 0; i < _impl->_polygon_num * 3; i++ ) {
-		_impl->_vertex[ i ].pos.y += ( float )move.x;
+		_impl->_vertex[ i ].pos.x += ( float )move.x;
 		_impl->_vertex[ i ].pos.y += ( float )move.y;
-		_impl->_vertex[ i ].pos.y += ( float )move.z;
+		_impl->_vertex[ i ].pos.z += ( float )move.z;
 	}
 }
 
 void Model::set( int n, VERTEX vertex ) {
 
 	VERTEX3D vtx;
-	vtx.pos = VGet( ( float )vertex.pos.x / 10, ( float )vertex.pos.y / 10, ( float )vertex.pos.z / 10 );
+	vtx.pos = VGet( ( float )vertex.pos.x, ( float )vertex.pos.y, ( float )vertex.pos.z );
 	vtx.norm = VGet( 0, 0, 0 );
 	vtx.dif  = GetColorU8( 255, 255, 255, 255 );
 	vtx.spc  = GetColorU8( 0, 0, 0, 0 );

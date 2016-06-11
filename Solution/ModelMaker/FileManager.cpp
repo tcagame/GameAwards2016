@@ -1,16 +1,16 @@
 #include "FileManager.h"
+#include <assert.h>
 #include "DxLib.h"
 
-
-FileManager::FileManager( ) {
-	loadModelData( );
-	setVERTEX( );
+FileManager::FileManager( ) {	
+	_data.polygon_num = 0;
+	_vertex_count = 0;
 }
 
 FileManager::~FileManager( ) {
 }
 
-void FileManager::loadModelData( ) {
+void FileManager::loadXFileModelData( const char * filename) {
 	enum MODE{
 		MODE_SEECK_SEARCH,
 		MODE_READ_POINT,
@@ -21,7 +21,7 @@ void FileManager::loadModelData( ) {
 		MODE_READ_MATERIAL,
 	};
 
-	int fh = FileRead_open( "item_potion_big.x", FALSE );
+	int fh = FileRead_open( filename, FALSE );
 	int _settingCounter = 0;
 	
 	if ( fh == 0 ) {
@@ -29,7 +29,10 @@ void FileManager::loadModelData( ) {
 	}
 
 	int point_num = 0;
+	
+	int nomals_index_num = 0;
 	int nomals_point_num = 0;
+	int texture_num = 0;
 
 	MODE mode = MODE_SEECK_SEARCH;
 
@@ -56,7 +59,8 @@ void FileManager::loadModelData( ) {
 				if ( _settingCounter == point_num ) {
 					FileRead_gets( buf, 1024, fh );
 					mode = MODE_READ_INDEX;
-					sscanf_s( buf, "%d;", &_polygon_num );
+					sscanf_s( buf, "%d;", &_index_num );
+					_data.polygon_num += _index_num;
 					_settingCounter = 0;
 				}
 				}
@@ -73,7 +77,8 @@ void FileManager::loadModelData( ) {
 				_index_array[ _settingCounter ].index[ 1 ] = point_2;
 				_index_array[ _settingCounter ].index[ 2 ] = point_3;
 				_settingCounter++;
-				if (  str.find( "MeshNormals" ) != -1 ) {
+				if ( _index_num == _settingCounter ) {
+					FileRead_gets( buf, 1024, fh );
 					FileRead_gets( buf, 1024, fh );
 					sscanf_s( buf, "%d,", &nomals_point_num );
 					mode = MODE_READ_NORMALS_POINT;
@@ -92,6 +97,7 @@ void FileManager::loadModelData( ) {
 				_settingCounter++;
 				if ( _settingCounter == nomals_point_num ) {
 					FileRead_gets( buf, 1024, fh );
+					sscanf_s( buf, "%d,", &nomals_index_num );
 					mode = MODE_READ_NORMALS_INDEX;
 					_settingCounter = 0;
 				}
@@ -109,8 +115,11 @@ void FileManager::loadModelData( ) {
 				_nomals_index_array[ _settingCounter ].index[ 1 ] = point_2;
 				_nomals_index_array[ _settingCounter ].index[ 2 ] = point_3;
 				_settingCounter++;
-				if (  str.find( "MeshTextureCoords" ) != -1 ) {
+				if (  nomals_index_num == _settingCounter ) {
 					FileRead_gets( buf, 1024, fh );
+					FileRead_gets( buf, 1024, fh );
+					FileRead_gets( buf, 1024, fh );
+					sscanf_s( buf, "%d,", &texture_num );
 					mode = MODE_READ_TEXTURE;
 					_settingCounter = 0;
 				}
@@ -124,7 +133,9 @@ void FileManager::loadModelData( ) {
 				_texture_array[ _settingCounter ].u = u;
 				_texture_array[ _settingCounter ].v = v;
 				_settingCounter++;
-				if (  str.find( "MeshMaterialList " ) != -1 ) {
+				if (  _settingCounter == texture_num ) {
+					FileRead_gets( buf, 1024, fh );
+					FileRead_gets( buf, 1024, fh );
 					mode = MODE_READ_MATERIAL;
 					_settingCounter = 0;
 				}
@@ -150,26 +161,65 @@ void FileManager::loadModelData( ) {
 	FileRead_close( fh );
 }
 
-void FileManager::setVERTEX( ) {
-	int count = 0;
-	for ( int i = 0; i < _polygon_num; i++ ) {
-		for( int j = 0; j < 3; j++ ) {
-			int num = _index_array[ i ].index[ j ];
-			Vector pos = _point_array[ num ];
-			float u = _texture_array[ num ].u;
-			float v = _texture_array[ num ].v;
-
-			_VERTEX_array[ count ] = Model::VERTEX( pos, u, v );
-			count++;
-		}
+void FileManager::loadData( int x, int y ) {
+	char filename[ 256 ];
+	DrawString( 0, 0, "読み込み", 0xaaaa );
+	DrawString( 15, 70, "ファイル名:", 0xaaaa );
+	KeyInputSingleCharString( 115, 70, 256 , (TCHAR * )filename, TRUE );
+	std::string name = "model/";
+	name += filename;
+	if ( name.find( ".mdl" ) != -1 ) {
+		loadMdlModelData( name.c_str( ) );
+	}
+	if ( name.find( ".x" ) != -1 ) {
+		loadXFileModelData( name.c_str( ) );
+		setVERTEX( x, y );
 	}
 }
 
 
+void FileManager::loadMdlModelData( const char * filename ) {
+	int fh = FileRead_open( filename );
+	FileRead_read( ( void * )&_data, sizeof( ModelData ), fh );
+    FileRead_close( fh ) ;
+}
+
+void FileManager::setVERTEX( int x, int y ) {
+	for ( int i = 0; i < _index_num; i++ ) {
+		for( int j = 0; j < 3; j++ ) {
+			int num = _index_array[ i ].index[ j ];
+			Vector pos = _point_array[ num ];
+			pos.x += x;
+			pos.y += y;
+			float u = _texture_array[ num ].u;
+			float v = _texture_array[ num ].v;
+
+			_data.vertex_array[ _vertex_count ] = Model::VERTEX( pos, u, v );
+			_vertex_count++;
+		}
+	}
+}
+
 Model::VERTEX FileManager::getVERTEX( int idx ) {
-	return _VERTEX_array[ idx ];
+	return _data.vertex_array[ idx ];
 }
 
 int FileManager::getPolygonNum( ) {
-	return _polygon_num;
+	return _data.polygon_num;
+}
+
+void FileManager::saveModelData( ) {
+	char filename[ 256 ];
+	DrawString( 0, 0, "ファイル保存", 0xffff );
+	DrawString( 15, 70, "ファイル名:", 0xffff );
+	bool savePossible = KeyInputSingleCharString( 115, 70, 256 , (TCHAR * )filename, TRUE ) == 1;
+	if ( savePossible ) {
+		std::string name = "model/";
+		name += filename;
+		FILE *file;
+		if ( fopen_s( &file, name.c_str( ), "wb" ) == 0 ) {
+			fwrite( &_data, sizeof( ModelData ), 1, file );
+			fclose( file );
+		}
+	}
 }
