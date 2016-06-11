@@ -6,7 +6,6 @@
 #include "Keyboard.h"
 
 void main( ) {
-	
 	FrameworkPtr fw = Framework::getInstance( );
 	AppPtr      app      = AppPtr     ( new App      );
 	ViewerPtr   viewer   = ViewerPtr  ( new Viewer   );

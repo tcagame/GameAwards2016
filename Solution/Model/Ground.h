@@ -10,6 +10,7 @@ public:
 	Ground( );
 	virtual ~Ground( );
 public:
+	GROUND_CHIP_TYPE getGroundChip( int mx, int my ) const;
 	GROUND_CHIP_TYPE getGroundChip( int idx ) const;
 	int getWidth( ) const;
 	int getHeight( ) const;

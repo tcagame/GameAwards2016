@@ -3,19 +3,21 @@
 GroundMaker::GroundMaker( ) {
 	_height = 0;
 	_width = 0;
-	_file_name = "map1-2.csv";
-	loadToCSV( );
+	loadToCSV( "map" );
 	save( );
 }
 
 GroundMaker::~GroundMaker( ) {
 }
 
-void GroundMaker::loadToCSV(  ) {
+void GroundMaker::loadToCSV( std::string file_name  ) {
 	//ÉtÉ@ÉCÉãÇÃì«Ç›çûÇ›
-	_file_name = "../" + _file_name;
+	if ( file_name.find( ".csv" ) == std::string::npos  ) {
+		file_name += ".csv";
+	}
+	file_name = "../resource2D/" + file_name;
 	FILE* fp;
-	fopen_s( &fp, _file_name.c_str( ), "r" );
+	fopen_s( &fp, file_name.c_str( ), "r" );
 	if ( fp == NULL ) {
 		return;
 	}
@@ -42,7 +44,7 @@ void GroundMaker::loadToCSV(  ) {
 
 void GroundMaker::save( ) {
 	FILE* fp;
-	fopen_s( &fp,"../map.grd", "w" );
+	fopen_s( &fp,"../resource2D/map.grd", "w" );
 	fprintf( fp, "%d\n", _width );
 	fprintf( fp, "%d\n", _height );
 	for ( int i = 0; i < _width * _height; i++ ) {

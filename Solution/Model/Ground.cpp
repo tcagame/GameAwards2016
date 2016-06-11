@@ -7,6 +7,10 @@ Ground::Ground( ) {
 Ground::~Ground( ) {
 }
 
+GROUND_CHIP_TYPE Ground::getGroundChip( int mx, int my ) const {
+	return _data[ my * _width + mx ];
+}
+
 GROUND_CHIP_TYPE Ground::getGroundChip( int idx ) const {
 	return _data[ idx ];
 }
@@ -21,7 +25,7 @@ int Ground::getHeight( ) const{
 
 void Ground::load( ) {
 	FILE* fp;
-	fopen_s( &fp,"../map.grd", "r" );
+	fopen_s( &fp,"../resource2D/map.grd", "r" );
 	fscanf_s( fp, "%d", &_width );
 	fscanf_s( fp, "%d", &_height );
 	for ( int i = 0; i < _width * _height; i++ ) {
