@@ -2,6 +2,7 @@
 
 typedef unsigned char MAP_TYPE;
 
+const unsigned char MAP_TYPE_FFFF = 0x00;
 const unsigned char MAP_TYPE_FFFT = 0x01;
 const unsigned char MAP_TYPE_FFTF = 0x02;
 const unsigned char MAP_TYPE_FFTT = 0x03;
