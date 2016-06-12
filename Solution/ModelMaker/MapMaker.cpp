@@ -43,6 +43,7 @@ void MapMaker::mapMake( ) {
 
 void MapMaker::save( ) {
 	_ground_maker->save( );
+	
 }
 
 void MapMaker::makeMountain( int mx, int my ) {

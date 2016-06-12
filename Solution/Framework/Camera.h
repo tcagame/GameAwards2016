@@ -18,8 +18,8 @@ public:
 private:
 	double _angle;
 	double _camera_x = 0;
-	double _camera_y = 0;
-	double _camera_z = -100;
+	double _camera_y = 100;
+	double _camera_z = 5000;
 	double _angle_xz = 0;
 	double _r = 50;
 };

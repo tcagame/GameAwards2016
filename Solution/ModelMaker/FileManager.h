@@ -27,14 +27,15 @@ public:
 public:
 	Model::VERTEX getVERTEX( int idx );
 	int getPolygonNum( );
-	void loadData( int x, int y, const char * filename );
+	ModelData getData( );
+	void createModelData( int x, int z, const char * filename );
 	void saveModelData( const char * filename );
 private:
 	void loadXFileModelData( const char * filename );
 	void loadMdlModelData( const char * filename );
-	void setVERTEX( int x, int y );
-
+	void setVERTEX( int x, int z );
 private:
+	Matrix _matrix;
 	std::array< Vector, 2048 > _point_array;
 	std::array< Vector, 2048 > _nomals_point_array;
 	std::array< Index, 1024 > _index_array;

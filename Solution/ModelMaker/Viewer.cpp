@@ -4,6 +4,8 @@
 #include "MapChip.h"
 #include "GroundChip.h"
 #include "MapMaker.h"
+#include "Model.h"
+#include "FileManager.h"
 #include <assert.h>
 
 const int CHIP_SIZE = 128;
@@ -18,8 +20,10 @@ ViewerPtr Viewer::getTask( ) {
 	return std::dynamic_pointer_cast< Viewer >( fw->getTask( getTag( ) ) );
 }
 
-Viewer::Viewer( MapMakerPtr map_maker ) {
+Viewer::Viewer( MapMakerPtr map_maker, FileManagerPtr file_manager, ModelPtr model ) {
 	_map_maker = map_maker;
+	_file_manager = file_manager;
+	_model = model;
 }
 
 Viewer::~Viewer( ) {
@@ -35,15 +39,17 @@ void Viewer::update( ) {
 }
 
 void Viewer::drawMap( ) const {
-	for ( int i = 0; i < _map_maker->getWidth( ); i++ ) {
+	/*for ( int i = 0; i < _map_maker->getWidth( ); i++ ) {
 		for ( int j = 0; j < _map_maker->getHeight( ); j++ ) {
 			drawPlain( i, j );
 			drawDesert( i, j );
 			drawMountain( i, j );
 			drawRiver( i, j );
 		}
-	}
+	}*/
+	_model->draw( );
 }
+
 
 void Viewer::drawPlain( int mx, int my ) const {
 	/*int idx = 

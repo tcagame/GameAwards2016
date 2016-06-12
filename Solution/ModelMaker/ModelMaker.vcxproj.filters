@@ -3,8 +3,15 @@
   <ItemGroup>
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MapMaker.cpp" />
+    <ClCompile Include="Viewer.cpp" />
+    <ClCompile Include="ModelManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileManager.h" />
+    <ClInclude Include="MapChip.h" />
+    <ClInclude Include="MapMaker.h" />
+    <ClInclude Include="Viewer.h" />
+    <ClInclude Include="ModelManager.h" />
   </ItemGroup>
 </Project>

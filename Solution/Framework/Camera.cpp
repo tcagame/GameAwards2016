@@ -35,6 +35,6 @@ void Camera::update( ) {
 		if ( CheckHitKey( KEY_INPUT_DOWN ) ) {
 			_camera_y--;
 		}
-
-		SetCameraPositionAndTarget_UpVecY( VGet( float( _camera_x ), float( _camera_y ), float( _camera_z ) ), VGet( 0.0f, 0.0f, 0.0f ) );
+		DrawFormatString(  0, 0, 0xffff, "camera x %d, cameara y %d, camera z %d ", _camera_x, _camera_y, _camera_z );
+		SetCameraPositionAndTarget_UpVecY( VGet( float( _camera_x ), float( _camera_y ), float( _camera_z ) ), VGet( 24.0f, 0.0f, 20.0f ) );
 }
