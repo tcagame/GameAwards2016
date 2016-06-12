@@ -24,11 +24,6 @@ int Ground::getHeight( ) const{
 }
 
 void Ground::load( ) {
-	if ( !_data.empty( ) ) {
-		_width = 0;
-		_height = 0;
-		_data.clear( );
-	}
 	FILE* fp;
 	fopen_s( &fp,"../resource2D/map.grd", "r" );
 	fscanf_s( fp, "%d", &_width );
