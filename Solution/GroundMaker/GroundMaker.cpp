@@ -11,6 +11,11 @@ GroundMaker::~GroundMaker( ) {
 }
 
 void GroundMaker::loadToCSV( std::string file_name  ) {
+	if ( !_data.empty( ) ) {
+		_width = 0;
+		_height = 0;
+		_data.clear( );
+	}
 	//ƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
 	if ( file_name.find( ".csv" ) == std::string::npos  ) {
 		file_name += ".csv";

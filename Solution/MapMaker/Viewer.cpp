@@ -7,6 +7,8 @@
 #include <assert.h>
 
 const int CHIP_SIZE = 128;
+const int DIFF_X = CHIP_SIZE / 2;
+const int DIFF_Y = CHIP_SIZE / 2;
 
 enum RES {
 	RES_TEXTURE,
@@ -46,17 +48,25 @@ void Viewer::drawMap( ) const {
 }
 
 void Viewer::drawPlain( int mx, int my ) const {
-	/*int idx = 
-
-	int sx = mx * CHIP_SIZE;
-	int sy = my * CHIP_SIZE;
-	int tx = idx % 8 * CHIP_SIZE;
-	int ty = idx / 2 * CHIP_SIZE;
-	if ( chip.circuit_dir == Line::DIR_NONE ) {
-		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy, tx, ty, CHIP_SIZE,CHIP_SIZE ),RES_LINE_NORMAL ) );
-	} else {
-		drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy, tx, ty, CHIP_SIZE,CHIP_SIZE ),RES_LINE_CIRCUIT ) );
-	}*/
+	
+	int idx = _map_maker->getMapType( mx, my, GROUND_CHIP_TYPE_PLAIN );
+	if ( idx == MAP_TYPE_FFFF ) {
+		return;
+	}
+	DrawerPtr drawer = Drawer::getTask( );
+	int x = mx * CHIP_SIZE;
+	int y = my * CHIP_SIZE;
+	unsigned char key = 0x08;
+	for ( int i = 0 ;i < 4; i++ ) {
+		if ( ( idx | key ) > 0 ) {
+			int tx = i % 2 * ( CHIP_SIZE / 2 );
+			int ty = i / 2 * ( CHIP_SIZE / 2 );
+			int sx = x + tx;
+			int sy = y + ty;
+			drawer->set( Drawer::Sprite( Drawer::Transform( sx + DIFF_X, sy + DIFF_Y, tx, ty, CHIP_SIZE / 2,CHIP_SIZE / 2 ),RES_TEXTURE ) );
+		}
+		key = key >> 1;
+	}
 }
 
 void Viewer::drawDesert( int mx, int my ) const {
@@ -69,7 +79,7 @@ void Viewer::drawDesert( int mx, int my ) const {
 	int sy = my * CHIP_SIZE;
 	int tx = idx % 8 * CHIP_SIZE;
 	int ty = ( GROUND_CHIP_TYPE_DESERT * 2 + idx / 8 ) * CHIP_SIZE;
-	drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy, tx, ty, CHIP_SIZE,CHIP_SIZE ),RES_TEXTURE ) );
+	drawer->set( Drawer::Sprite( Drawer::Transform( sx + DIFF_X, sy + DIFF_Y, tx, ty, CHIP_SIZE,CHIP_SIZE ),RES_TEXTURE ) );
 }
 
 void Viewer::drawMountain( int mx, int my ) const {
@@ -82,7 +92,7 @@ void Viewer::drawMountain( int mx, int my ) const {
 	int sy = my * CHIP_SIZE;
 	int tx = idx % 8 * CHIP_SIZE;
 	int ty = ( GROUND_CHIP_TYPE_MOUNTAIN * 2 + idx / 8 ) * CHIP_SIZE;
-	drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy, tx, ty, CHIP_SIZE,CHIP_SIZE ),RES_TEXTURE ) );
+	drawer->set( Drawer::Sprite( Drawer::Transform( sx + DIFF_X, sy + DIFF_Y, tx, ty, CHIP_SIZE,CHIP_SIZE ),RES_TEXTURE ) );
 }
 
 void Viewer::drawRiver( int mx, int my ) const {
@@ -95,5 +105,5 @@ void Viewer::drawRiver( int mx, int my ) const {
 	int sy = my * CHIP_SIZE;
 	int tx = idx % 8 * CHIP_SIZE;
 	int ty = ( GROUND_CHIP_TYPE_RIVER * 2 + idx / 8 ) * CHIP_SIZE;
-	drawer->set( Drawer::Sprite( Drawer::Transform( sx, sy, tx, ty, CHIP_SIZE,CHIP_SIZE ),RES_TEXTURE ) );
+	drawer->set( Drawer::Sprite( Drawer::Transform( sx + DIFF_X, sy + DIFF_Y, tx, ty, CHIP_SIZE,CHIP_SIZE ),RES_TEXTURE ) );
 }
