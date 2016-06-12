@@ -161,11 +161,8 @@ void FileManager::loadXFileModelData( const char * filename) {
 	FileRead_close( fh );
 }
 
-void FileManager::loadData( int x, int y ) {
-	char filename[ 256 ];
-	DrawString( 0, 0, "読み込み", 0xaaaa );
-	DrawString( 15, 70, "ファイル名:", 0xaaaa );
-	KeyInputSingleCharString( 115, 70, 256 , (TCHAR * )filename, TRUE );
+void FileManager::loadData( int x, int y, const char * filename ) {
+	
 	std::string name = "model/";
 	name += filename;
 	if ( name.find( ".mdl" ) != -1 ) {
@@ -208,18 +205,12 @@ int FileManager::getPolygonNum( ) {
 	return _data.polygon_num;
 }
 
-void FileManager::saveModelData( ) {
-	char filename[ 256 ];
-	DrawString( 0, 0, "ファイル保存", 0xffff );
-	DrawString( 15, 70, "ファイル名:", 0xffff );
-	bool savePossible = KeyInputSingleCharString( 115, 70, 256 , (TCHAR * )filename, TRUE ) == 1;
-	if ( savePossible ) {
-		std::string name = "model/";
-		name += filename;
-		FILE *file;
-		if ( fopen_s( &file, name.c_str( ), "wb" ) == 0 ) {
-			fwrite( &_data, sizeof( ModelData ), 1, file );
-			fclose( file );
-		}
+void FileManager::saveModelData( const char * filename ) {
+	std::string name = "model/";
+	name += filename;
+	FILE *file;
+	if ( fopen_s( &file, name.c_str( ), "wb" ) == 0 ) {
+		fwrite( &_data, sizeof( ModelData ), 1, file );
+		fclose( file );
 	}
 }
