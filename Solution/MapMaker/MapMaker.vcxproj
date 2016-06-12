@@ -95,9 +95,6 @@
     <ProjectReference Include="..\GroundMaker\GroundMaker.vcxproj">
       <Project>{46fdf3d5-f66b-434c-82f3-2a2252e1057c}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\ModelMaker\ModelMaker.vcxproj">
-      <Project>{cfc297b7-10e6-4f59-aa8e-8b86c532aad1}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Model\Model.vcxproj">
       <Project>{f2c1170c-3fbb-4e1d-a9fa-ffcd5892b6c4}</Project>
     </ProjectReference>
