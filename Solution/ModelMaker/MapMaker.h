@@ -5,7 +5,6 @@
 #include <string>
 
 PTR( GroundMaker );
-PTR( ModelMaker );
 PTR( MapMaker );
 
 class MapMaker {
@@ -27,7 +26,6 @@ private:
 	void makeDesert( int mx, int my );
 private:
 	std::string _file_name;
-	ModelMakerPtr _model_maker;
 	GroundMakerPtr _ground_maker;
 
 	int _map_width;

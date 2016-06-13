@@ -1,6 +1,5 @@
 #include "MapMaker.h"
 #include "GroundMaker.h"
-//#include "ModelMaker.h"
 
 const std::pair< int, int > DIR[ 4 ] = {
 	std::make_pair( 1, 1 ),

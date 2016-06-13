@@ -28,12 +28,12 @@ public:
 	Model::VERTEX getVERTEX( int idx );
 	int getPolygonNum( );
 	ModelData getData( );
-	void createModelData( int x, int z, const char * filename );
+	void loadModelData( const char * filename );
 	void saveModelData( const char * filename );
+	void setModelPos( int x, int z );
 private:
 	void loadXFileModelData( const char * filename );
 	void loadMdlModelData( const char * filename );
-	void setVERTEX( int x, int z );
 private:
 	Matrix _matrix;
 	std::array< Vector, 2048 > _point_array;

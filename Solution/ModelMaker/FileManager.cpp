@@ -47,8 +47,6 @@ void FileManager::loadXFileModelData( const char * filename) {
 			
 			case MODE_SEECK_SEARCH:
 				if ( str.find( "FrameTransformMatrix" ) != -1 ) {
-					/*FileRead_gets( buf, 1024, fh );
-					sscanf_s( buf, "%d,", &point_num );*/
 					mode = MODE_READ_MATRIX;
 				}
 				break;
@@ -185,16 +183,15 @@ void FileManager::loadXFileModelData( const char * filename) {
 	FileRead_close( fh );
 }
 
-void FileManager::createModelData( int x, int z, const char * filename ) {
+void FileManager::loadModelData( const char * filename ) {
 	
-	std::string name = "model/";
-	name += filename;
+	std::string name;
+	name = filename;
 	if ( name.find( ".mdl" ) != -1 ) {
 		loadMdlModelData( name.c_str( ) );
 	}
 	if ( name.find( ".x" ) != -1 ) {
 		loadXFileModelData( name.c_str( ) );
-		setVERTEX( x, z );
 	}
 }
 
@@ -205,7 +202,7 @@ void FileManager::loadMdlModelData( const char * filename ) {
     FileRead_close( fh ) ;
 }
 
-void FileManager::setVERTEX( int x, int z ) {
+void FileManager::setModelPos( int x, int z ) {
 	for ( int i = 0; i < _index_num; i++ ) {
 		for( int j = 0; j < 3; j++ ) {
 			int num = _index_array[ i ].index[ j ];

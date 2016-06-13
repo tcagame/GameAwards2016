@@ -7,7 +7,7 @@
 #include "DxLib.h"
 
 const int CHIP_SIZE = 10;
-const char * FILE_NAME = "model/texture.png";
+const char * FILE_NAME = "../resource3D/model(dummy)/texture.png";
 
 ModelManager::ModelManager( MapMakerPtr map_maker, FileManagerPtr file_manager, ModelPtr model ) {
 	_map_maker = map_maker;
@@ -15,6 +15,7 @@ ModelManager::ModelManager( MapMakerPtr map_maker, FileManagerPtr file_manager, 
 	_model = model;
 	loadModel( );
 	setDrawModel( );
+	_file_manager->saveModelData( "../resource3D/model(dummy)/Map.mdl" );
 }
 
 ModelManager::ModelManager() {
@@ -28,7 +29,6 @@ ModelManager::~ModelManager() {
 void ModelManager::loadModel( ){
 	int width = _map_maker->getWidth( );
 	int height = _map_maker->getHeight( );
-
 	for ( int i = 0; i < width; i++ ) {
 		for ( int j = 0; j < height; j++ ) {
 			loadPlainModel( i, j );
@@ -37,6 +37,9 @@ void ModelManager::loadModel( ){
 			loadRiverModel( i, j );
 		}
 	}
+	
+/*	_file_manager->loadModelData( "Map.mdl" );
+	_file_manager->setModelPos( 0, 0 );*/
 }
 
 void ModelManager::setDrawModel( ) {
@@ -59,7 +62,8 @@ void ModelManager::loadMountainModel( int mx, int my ) {
 	int sx = mx * CHIP_SIZE;
 	int sz = -my * CHIP_SIZE;
 	std::string name = getModelFile( idx, GROUND_CHIP_TYPE_MOUNTAIN );
-	_file_manager->createModelData( sx, sz, name.c_str( ) );
+	_file_manager->loadModelData( name.c_str( ) );
+	_file_manager->setModelPos( sx, sz );
 }
 
   
@@ -69,9 +73,10 @@ void ModelManager::loadPlainModel( int mx, int my ) {
 		return;
 	}
 	int sx = mx * CHIP_SIZE;
-	int sy = -my * CHIP_SIZE;
+	int sz = -my * CHIP_SIZE;
 	std::string name = getModelFile( idx, GROUND_CHIP_TYPE_PLAIN );
-	_file_manager->createModelData( sx, sy, name.c_str( ) );
+	_file_manager->loadModelData( name.c_str( ) );
+	_file_manager->setModelPos( sx, sz );
 }
 
 void ModelManager::loadDesertModel( int mx, int my ) {
@@ -80,9 +85,10 @@ void ModelManager::loadDesertModel( int mx, int my ) {
 		return;
 	}
 	int sx = mx * CHIP_SIZE;
-	int sy = -my * CHIP_SIZE;
+	int sz = -my * CHIP_SIZE;
 	std::string name = getModelFile( idx, GROUND_CHIP_TYPE_DESERT );
-	_file_manager->createModelData( sx, sy, name.c_str( ) );
+	_file_manager->loadModelData( name.c_str( ) );
+	_file_manager->setModelPos( sx, sz );
 }
 
 void ModelManager::loadRiverModel( int mx, int my ) {
@@ -91,27 +97,28 @@ void ModelManager::loadRiverModel( int mx, int my ) {
 		return;
 	}
 	int sx = mx * CHIP_SIZE;
-	int sy = -my * CHIP_SIZE;
+	int sz = -my * CHIP_SIZE;
 	std::string name = getModelFile( idx, GROUND_CHIP_TYPE_RIVER );
-	_file_manager->createModelData( sx, sy, name.c_str( ) );
+	_file_manager->loadModelData( name.c_str( ) );
+	_file_manager->setModelPos( sx, sz );
 }
 
 
 
 std::string ModelManager::getModelFile( int idx, unsigned char type ) {
-	std::string filename;
+	std::string filename = "../resource3D/model(dummy)/";
 	switch( type ){
 	case GROUND_CHIP_TYPE_PLAIN:
-		filename = "p_";
+		filename += "p_";
 		break;
 	case GROUND_CHIP_TYPE_DESERT: 
-		filename = "d_";
+		filename += "d_";
 		break;
 	case GROUND_CHIP_TYPE_MOUNTAIN:
-		filename = "g_";
+		filename += "g_";
 		break;
 	case GROUND_CHIP_TYPE_RIVER:
-		filename = "water_";
+		filename += "water_";
 		break;
 	default:
 		break;
