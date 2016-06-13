@@ -87,22 +87,30 @@ void ModelManager::loadPlainModel( int mx, int my ) {
 			int v = i / 2 * ( TEXTURE_CHIP_SIZE / 2 );
 			setQuadranglePolygon( sx, sz, u, v );
 		}
-		key = key * 2;
+		key = key << 1;
 	}
 }
 
 void ModelManager::loadDesertModel( int mx, int my ) {
-	/*
 	int idx = _map_maker->getMapType( mx, my, GROUND_CHIP_TYPE_DESERT );
 	if ( idx == MAP_TYPE_FFFF ) {
 		return;
 	}
-	int sx = mx * CHIP_SIZE;
-	int sz = -my * CHIP_SIZE;
-	std::string name = getModelFile( idx, GROUND_CHIP_TYPE_DESERT );
-	_file_manager->loadModelData( name.c_str( ) );
-	_file_manager->setModelPos( sx, sz );
-	*/
+	int x = mx * CHIP_SIZE;
+	int z = -my * CHIP_SIZE;
+	int tx = idx % 8 * TEXTURE_CHIP_SIZE;
+	int ty = ( GROUND_CHIP_TYPE_DESERT * 2 + idx / 8 ) * TEXTURE_CHIP_SIZE;
+	unsigned char key = 0x01;
+	for ( int i = 0 ;i < 4; i++ ) {
+		if ( ( idx & key ) > 0 ) {
+			int sx = x + i % 2 * ( CHIP_SIZE / 2 );
+			int sz = z - i / 2 * ( CHIP_SIZE / 2 );
+			int u = tx + i % 2 * ( TEXTURE_CHIP_SIZE / 2 );
+			int v = ty + i / 2 * ( TEXTURE_CHIP_SIZE / 2 );
+			setQuadranglePolygon( sx, sz, u, v );
+		}
+		key = key << 1;
+	}
 }
 
 void ModelManager::loadRiverModel( int mx, int my ) {
@@ -202,8 +210,8 @@ void ModelManager::setQuadranglePolygon( int sx, int sz, int u, int v ) {
 
 	for ( int i = 0; i < 4; i++ ) {
 		vertex[ i ].pos = Vector( ( double )sx, 0.0, ( double ) sz ) + quad_point[ i ] * ( CHIP_SIZE / 2 );
-		vertex[ i ].u = ( u + i % 2 * ( TEXTURE_CHIP_SIZE / 2 ) ) / TEXTURE_SIZE;
-		vertex[ i ].v = ( v + i / 2 * ( TEXTURE_CHIP_SIZE / 2 ) ) / TEXTURE_SIZE;
+		vertex[ i ].u = ( double )( u + i % 2 * ( TEXTURE_CHIP_SIZE / 2 ) ) / TEXTURE_SIZE;
+		vertex[ i ].v = ( double )( v + i / 2 * ( TEXTURE_CHIP_SIZE / 2 ) ) / TEXTURE_SIZE;
 	}
 
 	Model::VERTEX quad_vertex[ 6 ] = {
