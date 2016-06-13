@@ -237,3 +237,9 @@ void FileManager::saveModelData( const char * filename ) {
 FileManager::ModelData FileManager::getData( ) { 
 	return _data;
 }
+
+void FileManager::setVertex( Model::VERTEX vertex ) {
+	_data.vertex_array[ _vertex_count ] = vertex;
+	_vertex_count++;
+	_data.polygon_num++;
+}

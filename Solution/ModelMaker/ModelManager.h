@@ -21,6 +21,8 @@ private:
 	void loadRiverModel( int mx, int my );
 	void setDrawModel( );
 	std::string getModelFile( int idx, unsigned char type );
+	void setQuadranglePolygon( int sx, int sz, int u, int v );
+
 
 private:
 	MapMakerPtr _map_maker;

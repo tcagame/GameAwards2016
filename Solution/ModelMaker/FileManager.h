@@ -31,6 +31,7 @@ public:
 	void loadModelData( const char * filename );
 	void saveModelData( const char * filename );
 	void setModelPos( int x, int z );
+	void setVertex( Model::VERTEX vertex );
 private:
 	void loadXFileModelData( const char * filename );
 	void loadMdlModelData( const char * filename );

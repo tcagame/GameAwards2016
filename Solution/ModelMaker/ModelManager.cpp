@@ -7,6 +7,8 @@
 #include "DxLib.h"
 
 const int CHIP_SIZE = 10;
+const int TEXTURE_SIZE = 1024;
+const int TEXTURE_CHIP_SIZE = TEXTURE_SIZE / 8;
 const char * FILE_NAME = "../resource3D/model(dummy)/texture.png";
 
 ModelManager::ModelManager( MapMakerPtr map_maker, FileManagerPtr file_manager, ModelPtr model ) {
@@ -55,6 +57,7 @@ void ModelManager::setDrawModel( ) {
 }
 
 void ModelManager::loadMountainModel( int mx, int my ) {
+
 	int idx = _map_maker->getMapType( mx, my, GROUND_CHIP_TYPE_MOUNTAIN );
 	if ( idx == MAP_TYPE_FFFF ) {
 		return;
@@ -68,18 +71,28 @@ void ModelManager::loadMountainModel( int mx, int my ) {
 
   
 void ModelManager::loadPlainModel( int mx, int my ) {
+
 	int idx = _map_maker->getMapType( mx, my, GROUND_CHIP_TYPE_PLAIN );
 	if ( idx == MAP_TYPE_FFFF ) {
 		return;
 	}
-	int sx = mx * CHIP_SIZE;
-	int sz = -my * CHIP_SIZE;
-	std::string name = getModelFile( idx, GROUND_CHIP_TYPE_PLAIN );
-	_file_manager->loadModelData( name.c_str( ) );
-	_file_manager->setModelPos( sx, sz );
+	int x = mx * CHIP_SIZE;
+	int z = -my * CHIP_SIZE;
+	unsigned char key = 0x01;
+	for ( int i = 0 ;i < 4; i++ ) {
+		if ( ( idx & key ) > 0 ) {
+			int sx = x + i % 2 * ( CHIP_SIZE / 2 );
+			int sz = z - i / 2 * ( CHIP_SIZE / 2 );
+			int u = i % 2 * ( TEXTURE_CHIP_SIZE / 2 );
+			int v = i / 2 * ( TEXTURE_CHIP_SIZE / 2 );
+			setQuadranglePolygon( sx, sz, u, v );
+		}
+		key = key * 2;
+	}
 }
 
 void ModelManager::loadDesertModel( int mx, int my ) {
+	/*
 	int idx = _map_maker->getMapType( mx, my, GROUND_CHIP_TYPE_DESERT );
 	if ( idx == MAP_TYPE_FFFF ) {
 		return;
@@ -89,6 +102,7 @@ void ModelManager::loadDesertModel( int mx, int my ) {
 	std::string name = getModelFile( idx, GROUND_CHIP_TYPE_DESERT );
 	_file_manager->loadModelData( name.c_str( ) );
 	_file_manager->setModelPos( sx, sz );
+	*/
 }
 
 void ModelManager::loadRiverModel( int mx, int my ) {
@@ -175,4 +189,32 @@ std::string ModelManager::getModelFile( int idx, unsigned char type ) {
 		break;
 	} 
 	return filename;
+}
+
+void ModelManager::setQuadranglePolygon( int sx, int sz, int u, int v ) {
+	Model::VERTEX vertex[ 4 ];
+	Vector quad_point[ 4 ] = {
+		Vector( 0, 0, 0 ),
+		Vector( 1, 0, 0 ),
+		Vector( 0, 0, -1 ),
+		Vector( 1, 0, -1 ),
+	};
+
+	for ( int i = 0; i < 4; i++ ) {
+		vertex[ i ].pos = Vector( ( double )sx, 0.0, ( double ) sz ) + quad_point[ i ] * ( CHIP_SIZE / 2 );
+		vertex[ i ].u = ( u + i % 2 * ( TEXTURE_CHIP_SIZE / 2 ) ) / TEXTURE_SIZE;
+		vertex[ i ].v = ( v + i / 2 * ( TEXTURE_CHIP_SIZE / 2 ) ) / TEXTURE_SIZE;
+	}
+
+	Model::VERTEX quad_vertex[ 6 ] = {
+		vertex[ 0 ],
+		vertex[ 1 ],
+		vertex[ 3 ],
+		vertex[ 0 ],
+		vertex[ 3 ],
+		vertex[ 2 ]
+	};
+	for ( int i = 0; i < 6; i++ ) {
+		_file_manager->setVertex( quad_vertex[ i ] );
+	}
 }
