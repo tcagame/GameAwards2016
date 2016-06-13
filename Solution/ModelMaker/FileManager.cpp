@@ -226,10 +226,8 @@ int FileManager::getPolygonNum( ) {
 }
 
 void FileManager::saveModelData( const char * filename ) {
-	std::string name = "model/";
-	name += filename;
 	FILE *file;
-	if ( fopen_s( &file, name.c_str( ), "wb" ) == 0 ) {
+	if ( fopen_s( &file, filename, "wb" ) == 0 ) {
 		fwrite( &_data, sizeof( ModelData ), 1, file );
 		fclose( file );
 	}

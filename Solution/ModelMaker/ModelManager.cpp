@@ -9,6 +9,7 @@
 const int CHIP_SIZE = 10;
 const int TEXTURE_SIZE = 1024;
 const int TEXTURE_CHIP_SIZE = TEXTURE_SIZE / 8;
+const int MODEL_DIFF = CHIP_SIZE / 2;
 const char * FILE_NAME = "../resource3D/model(dummy)/texture.png";
 
 ModelManager::ModelManager( MapMakerPtr map_maker, FileManagerPtr file_manager, ModelPtr model ) {
@@ -29,6 +30,7 @@ ModelManager::~ModelManager() {
 
 
 void ModelManager::loadModel( ){
+	
 	int width = _map_maker->getWidth( );
 	int height = _map_maker->getHeight( );
 	for ( int i = 0; i < width; i++ ) {
@@ -39,9 +41,10 @@ void ModelManager::loadModel( ){
 			loadRiverModel( i, j );
 		}
 	}
-	
-/*	_file_manager->loadModelData( "Map.mdl" );
-	_file_manager->setModelPos( 0, 0 );*/
+	/*
+	_file_manager->loadModelData( "../resource3D/model(dummy)/Map.mdl" );
+	_file_manager->setModelPos( 0, 0 );
+	*/
 }
 
 void ModelManager::setDrawModel( ) {
@@ -66,7 +69,7 @@ void ModelManager::loadMountainModel( int mx, int my ) {
 	int sz = -my * CHIP_SIZE;
 	std::string name = getModelFile( idx, GROUND_CHIP_TYPE_MOUNTAIN );
 	_file_manager->loadModelData( name.c_str( ) );
-	_file_manager->setModelPos( sx, sz );
+	_file_manager->setModelPos( sx + MODEL_DIFF, sz - MODEL_DIFF );
 }
 
   
@@ -122,7 +125,7 @@ void ModelManager::loadRiverModel( int mx, int my ) {
 	int sz = -my * CHIP_SIZE;
 	std::string name = getModelFile( idx, GROUND_CHIP_TYPE_RIVER );
 	_file_manager->loadModelData( name.c_str( ) );
-	_file_manager->setModelPos( sx, sz );
+	_file_manager->setModelPos( sx + MODEL_DIFF, sz - MODEL_DIFF );
 }
 
 
