@@ -84,13 +84,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ModelManager.cpp" />
     <ClCompile Include="GroundMaker.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ModelMake.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ModelManager.h" />
     <ClInclude Include="GroundMaker.h" />
     <ClInclude Include="MapChip.h" />
     <ClInclude Include="ModelMake.h" />

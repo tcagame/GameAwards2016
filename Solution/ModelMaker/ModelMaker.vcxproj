@@ -84,26 +84,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="FileManager.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="MapMaker.cpp" />
-    <ClCompile Include="ModelManager.cpp" />
-    <ClCompile Include="Viewer.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="FileManager.h" />
-    <ClInclude Include="MapChip.h" />
-    <ClInclude Include="MapMaker.h" />
-    <ClInclude Include="ModelManager.h" />
-    <ClInclude Include="Viewer.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Framework\Framework.vcxproj">
       <Project>{c3d3fcf4-9678-4290-a376-c23adf6bdefe}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Model\Model.vcxproj">
       <Project>{f2c1170c-3fbb-4e1d-a9fa-ffcd5892b6c4}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="ModelMaker.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ModelMaker.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -16,6 +16,7 @@
     <ClCompile Include="Framework.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="ModelManager.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="Task.cpp" />
@@ -29,6 +30,7 @@
     <ClInclude Include="mathConst.h" />
     <ClInclude Include="mathmatics.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelManager.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="smart_ptr.h" />
     <ClInclude Include="Task.h" />
