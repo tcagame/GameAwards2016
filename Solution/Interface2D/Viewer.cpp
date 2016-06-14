@@ -188,6 +188,7 @@ void Viewer::updateClick( ) {
 }
 
 void Viewer::drawGround( ) {
+
 	AppPtr app = App::getTask( );
 	if( !app ) {
 		return;
@@ -217,6 +218,7 @@ void Viewer::drawGround( ) {
 			drawer->set( sprite );
 		}
 	}
+
 }
 
 void Viewer::drawPowerplant( ) const {

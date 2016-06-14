@@ -101,9 +101,6 @@
     <ProjectReference Include="..\Framework\Framework.vcxproj">
       <Project>{c3d3fcf4-9678-4290-a376-c23adf6bdefe}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\GroundMaker\GroundMaker.vcxproj">
-      <Project>{46fdf3d5-f66b-434c-82f3-2a2252e1057c}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Model\Model.vcxproj">
       <Project>{f2c1170c-3fbb-4e1d-a9fa-ffcd5892b6c4}</Project>
     </ProjectReference>
