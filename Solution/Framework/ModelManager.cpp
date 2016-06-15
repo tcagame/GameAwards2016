@@ -221,7 +221,7 @@ Model::VERTEX ModelManager::getVERTEX( int idx ) {
 	return _data.vertex_array[ idx ];
 }
 
-int ModelManager::getPolygonNum( ) {
+int ModelManager::getVertexNum( ) {
 	return _data.vertex_count;
 }
 

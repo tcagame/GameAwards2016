@@ -26,7 +26,7 @@ public:
 	virtual ~ModelManager( );
 public:
 	Model::VERTEX getVERTEX( int idx );
-	int getPolygonNum( );
+	int getVertexNum( );
 	ModelData getData( );
 	void loadModelData( const char * filename );
 	void saveModelData( const char * filename );

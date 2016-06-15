@@ -7,12 +7,14 @@
 
 PTR( GroundMaker );
 PTR( ModelMake );
+PTR( Viewer );
 
 enum STATE {
 	STATE_INPUT,
 	STATE_LOAD,
 	STATE_MAKE,
 	STATE_SAVE,
+	STATE_END,
 	STATE_MAX,
 };
 
@@ -29,7 +31,7 @@ public:
 	int getMapWidth( );
 	int getMapHeight( );
 private:
-	void inputFileName( );
+	bool inputFileName( );
 	void loadToCSV( );
 	void mapMake( );
 	void mdlMake( );
@@ -43,6 +45,7 @@ private:
 	std::string _file_name;
 	STATE _state;
 	ModelMakePtr _model_make;
+	ViewerPtr _viewer;
 
 	int _map_width;
 	int _map_height;

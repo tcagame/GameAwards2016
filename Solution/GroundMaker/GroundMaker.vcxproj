@@ -87,11 +87,13 @@
     <ClCompile Include="GroundMaker.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ModelMake.cpp" />
+    <ClCompile Include="Viewer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GroundMaker.h" />
     <ClInclude Include="MapChip.h" />
     <ClInclude Include="ModelMake.h" />
+    <ClInclude Include="Viewer.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Framework\Framework.vcxproj">

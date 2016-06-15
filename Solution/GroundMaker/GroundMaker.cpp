@@ -1,6 +1,14 @@
 #include "Framework.h"
 #include "GroundMaker.h"
 #include "ModelMake.h"
+#include "Viewer.h"
+#include "DxLib.h"
+#include <assert.h>
+
+const int INPUT_X = 100;
+const int INPUT_Y = 100;
+const int MAX_STRING = 1024;
+const char DIRECTORY[] = "../resource2D/";
 
 const std::pair< int, int > DIR[ 4 ] = {
 	std::make_pair( 1, 1 ),
@@ -19,6 +27,7 @@ GroundMaker::GroundMaker( ) {
 	_width = 0;
 	_state = STATE_INPUT;
 	_model_make = ModelMakePtr( new ModelMake( ) );
+	_viewer = ViewerPtr( new Viewer( ) );
 }
 
 GroundMaker::~GroundMaker( ) {
@@ -27,8 +36,9 @@ GroundMaker::~GroundMaker( ) {
 void GroundMaker::update( ) {
 	switch ( _state ) {
 		case STATE_INPUT:
-		inputFileName( );
-		_state = STATE_LOAD;
+		if ( inputFileName( ) ) {
+			_state = STATE_LOAD;
+		}
 		break;
 		case STATE_LOAD:
 		loadToCSV( );
@@ -41,12 +51,26 @@ void GroundMaker::update( ) {
 		break;
 		case STATE_SAVE:
 		save( );
+		_viewer->setModel( );
+		_state = STATE_END;
+		break;
+		case STATE_END:
+		_viewer->draw( );
 		break;
 	}
 }
 
-void GroundMaker::inputFileName( ) {
-	_file_name = "map";
+bool GroundMaker::inputFileName( ) {
+	char buf[ MAX_STRING ];
+	bool result = ( KeyInputString( INPUT_X, INPUT_Y, MAX_STRING, buf, TRUE ) == TRUE );
+	if ( result ) {
+		_file_name = buf;
+		_file_name = DIRECTORY + _file_name;
+		if ( _file_name.find( ".csv" ) == std::string::npos ) {
+			_file_name += ".csv";
+		}
+	}
+	return result;
 }
 
 void GroundMaker::loadToCSV( ) {
@@ -59,10 +83,12 @@ void GroundMaker::loadToCSV( ) {
 	if ( _file_name.find( ".csv" ) == std::string::npos  ) {
 		_file_name += ".csv";
 	}
-	_file_name = "../resource2D/" + _file_name;
+	_file_name = DIRECTORY + _file_name;
 	FILE* fp;
-	fopen_s( &fp, _file_name.c_str( ), "r" );
-	if ( fp == NULL ) {
+	errno_t err = fopen_s( &fp, _file_name.c_str( ), "r" );
+	if ( err != 0 ) {
+		const bool NotFile = !( err != 0 );
+		assert( NotFile );
 		return;
 	}
     //csvファイルを1行ずつ読み込む
@@ -101,18 +127,20 @@ void GroundMaker::mapMake( ) {
 
 void GroundMaker::mdlMake( ) {
 	_model_make->setModel( );
-	_model_make->saveModel( ); 
 }
 
 void GroundMaker::save( ) {
 	FILE* fp;
-	fopen_s( &fp,"../resource2D/map.grd", "w" );
+	std::string file_name = DIRECTORY;
+	file_name += "map.grd";
+	fopen_s( &fp, file_name.c_str( ), "w" );
 	fprintf( fp, "%d\n", _width );
 	fprintf( fp, "%d\n", _height );
 	for ( int i = 0; i < _width * _height; i++ ) {
 		fprintf( fp, "%d\n", _data[ i ] );
 	}
 	fclose( fp );
+	_model_make->saveModel( ); 
 }
 
 void GroundMaker::makeMountain( int mx, int my ) {

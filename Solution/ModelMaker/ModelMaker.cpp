@@ -25,7 +25,6 @@ void ModelMaker::update( ) {
 	switch ( _state ) {
 		case STATE_INPUT:
 			if ( inputFileName( ) ) {
-				_file_name = DIRECTORY + _file_name;
 				_state = STATE_LOAD;
 			}
 			break;
@@ -54,6 +53,7 @@ bool ModelMaker::inputFileName( ) {
 	bool result = ( KeyInputString( INPUT_X, INPUT_Y, MAX_STRING, buf, TRUE ) == TRUE );
 	if ( result ) {
 		_file_name = buf;
+		_file_name = DIRECTORY + _file_name;
 	}
 	return result;
 }
