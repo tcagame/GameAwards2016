@@ -1,7 +1,13 @@
 #include "ModelManager.h"
-#include <assert.h>
 #include "DxLib.h"
 #include "mathmatics.h"
+#include <assert.h>
+
+void assertMassage( std::string filename ) {
+	int fh = FileRead_open( filename.c_str( ) );
+	const bool NotFile = !( fh == 0 );
+	assert( NotFile );
+}
 
 ModelManager::ModelManager( ) {	
 	_data.vertex_count = 0;
@@ -23,12 +29,8 @@ void ModelManager::loadXFileModelData( const char * filename) {
 		MODE_READ_MATERIAL,
 	};
 
-	int fh = FileRead_open( filename, FALSE );
+	int fh = FileRead_open( filename );
 	int _settingCounter = 0;
-	
-	if ( fh == 0 ) {
-		return;
-	}
 
 	int point_num = 0;
 	
@@ -182,7 +184,7 @@ void ModelManager::loadXFileModelData( const char * filename) {
 }
 
 void ModelManager::loadModelData( const char * filename ) {
-	
+	assertMassage( filename );
 	std::string name;
 	name = filename;
 	if ( name.find( ".mdl" ) != -1 ) {

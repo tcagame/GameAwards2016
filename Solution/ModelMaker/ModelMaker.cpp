@@ -31,7 +31,7 @@ void ModelMaker::update( ) {
 			break;
 		case STATE_LOAD:
 			if ( _file_name.find( ".x" ) == std::string::npos ) {
-				std::string file_name = _file_name + ".x";
+				_file_name = _file_name + ".x";
 			}
 			_model_manager->loadModelData( _file_name.c_str( ) );
 			_state = STATE_SAVE;
