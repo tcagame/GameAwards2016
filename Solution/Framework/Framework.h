@@ -23,6 +23,7 @@ public:
 	int getWindowHeight( ) const;
 	void loadBinary( const char * filename, BinaryPtr binary );
 	void saveBinary( const char * filename, BinaryPtr binary );
+	bool inputString( int sx, int sy, char *buf, int size );
 public:
 	static FrameworkPtr _instance;
 private:

@@ -66,8 +66,6 @@ App::App( ) {
 	_refineries->initialize( _map );
 	_bulletins->initialize( _map );
 
-
-	_ground->load( );
 	// ”­“dŠ‚ÍÅ‰‚©‚çÝ’u‚³‚ê‚Ä‚¢‚é
 	bool result_powerplant_installation = _powerplant->install( Coord( POWERPLANT_POS_X, POWERPLANT_POS_Y ), 0 );
 	assert( result_powerplant_installation );

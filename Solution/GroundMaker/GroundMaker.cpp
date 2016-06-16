@@ -3,8 +3,20 @@
 #include "ModelMake.h"
 #include "Viewer.h"
 #include "Ground.h"
-#include "DxLib.h"
+#include "Binary.h"
 #include <assert.h>
+
+const int CSV_PLAIN    = 0;
+const int CSV_DESERT   = 1;
+const int CSV_MOUNTAIN = 2;
+const int CSV_RIVER    = 3;
+
+const GROUND_CHIP_TYPE CONVERT[ 4 ] = {
+	GROUND_CHIP_TYPE_PLAIN    , // 0
+	GROUND_CHIP_TYPE_DESERT   , // 1
+	GROUND_CHIP_TYPE_MOUNTAIN , // 2
+	GROUND_CHIP_TYPE_RIVER    , // 3
+};
 
 const int INPUT_X = 100;
 const int INPUT_Y = 100;
@@ -44,7 +56,7 @@ void GroundMaker::update( ) {
 		_state = STATE_MAKE;
 		break;
 	case STATE_MAKE:
-		mapMake( );
+		makeGroundModel( );
 		mdlMake( );
 		_state = STATE_SAVE;
 		break;
@@ -60,41 +72,37 @@ void GroundMaker::update( ) {
 }
 
 bool GroundMaker::inputFileName( ) {
+	FrameworkPtr fw = Framework::getInstance( );
 	char buf[ MAX_STRING ];
-	bool result = ( KeyInputString( INPUT_X, INPUT_Y, MAX_STRING, buf, TRUE ) == TRUE );
-	if ( result ) {
-		_file_name = buf;
-		_file_name = DIRECTORY + _file_name;
-		if ( _file_name.find( ".csv" ) == std::string::npos ) {
-			_file_name += ".csv";
-		}
+	if ( !fw->inputString( INPUT_X, INPUT_Y, buf, MAX_STRING ) ) {
+		return false;
 	}
-	return result;
+
+	_file_name = buf;
+
+	return true;
 }
 
 void GroundMaker::loadToCSV( ) {
 	//ファイルの読み込み
-	if ( _file_name.find( ".csv" ) == std::string::npos  ) {
-		_file_name += ".csv";
-	}
-	_file_name = DIRECTORY + _file_name;
+	std::string file = DIRECTORY + _file_name + ".csv";
 	FILE* fp;
-	errno_t err = fopen_s( &fp, _file_name.c_str( ), "r" );
+	errno_t err = fopen_s( &fp, file.c_str( ), "r" );
 	if ( err != 0 ) {
-		const bool NotFile = !( err != 0 );
-		assert( NotFile );
+		assert( false );
 		return;
 	}
+	
+	char buf[ 2048 ];
 
     //　カウントする
 	int width = 0;
 	int height = 0;
-	char buf[ 2048 ];
 	while ( fgets( buf, 2048, fp ) != NULL ) {
 		int w = 0;
 		std::string str = buf;
 		while ( true ) {
-			width++;
+			w++;
 			std::string::size_type index = str.find( "," );
 			if ( index == std::string::npos ) {
 				break;
@@ -114,35 +122,56 @@ void GroundMaker::loadToCSV( ) {
 	_ground = GroundPtr( new Ground( width, height ) );
 
 	// 読み込む
-	char buf[ 2048 ];
 	int idx = 0;
+	fseek( fp, 0, SEEK_SET );
 	while ( fgets( buf, 2048, fp ) != NULL ) {
-		int x = 0;
 		std::string str = buf;
 		while ( true ) {
 			std::string::size_type index = str.find( "," );
 			if ( index == std::string::npos ) {
-				setGroundTypeFromCSV( idx, str.c_str( ) );
+				_ground->setType( idx++, CONVERT[ atoi( str.c_str( ) ) ] );
 				break;
 			}
-			setGroundTypeFromCSV( idx, str.c_str( ) );
 			std::string substr = str.substr( 0, index );
+			_ground->setType( idx++, CONVERT[ atoi( substr.c_str( ) ) ]  );
 			str = str.substr( index + 1 );
 		}
 	}
 }
 
-void GroundMaker::mapMake( ) {
-	_map_height = getHeight( ) -1;
-	_map_width = getWidth( ) -1;
-	for ( int i = 0; i < _map_height; i++ ) {
-		for ( int j = 0; j < _map_width; j++ ) {
-			makePlane( j, i );
-			makeDesert( j, i );
-			makeMountain( j, i );
-			makeRiver( j, i );
+
+void GroundMaker::makeGroundModel( ) {
+	int model_chip_width  = _ground->getWidth( )  + 1;
+	int model_chip_height = _ground->getHeight( ) + 1;
+
+	_mountain_map.clear( );
+	_plain_map.clear( );
+	_desert_map.clear( );
+	_river_map.clear( );
+	for ( int i = 0; i < model_chip_width; i++ ) {
+		for ( int j = 0; j < model_chip_height; j++ ) {
+			_mountain_map.push_back( makeModelChip( i, j, GROUND_CHIP_TYPE_MOUNTAIN ) );
+			_plain_map.push_back   ( makeModelChip( i, j, GROUND_CHIP_TYPE_PLAIN    ) );
+			_desert_map.push_back  ( makeModelChip( i, j, GROUND_CHIP_TYPE_DESERT   ) );
+			_river_map.push_back   ( makeModelChip( i, j, GROUND_CHIP_TYPE_RIVER    ) );
 		}
 	}
+}
+
+unsigned char GroundMaker::makeModelChip( int mx, int my, GROUND_CHIP_TYPE type ) {
+	unsigned char num = 0;
+	for ( int i = 0; i < 4; i++ ) {
+		num <<= 1;
+
+		int x = mx - 1 + i % 2;
+		int y = my - 1 + i / 2;
+		GROUND_CHIP_TYPE type = _ground->getType( x, y );
+		if ( _ground->getType( x, y ) == type ) {
+			num += 1;
+		}
+	}
+
+	return num;
 }
 
 void GroundMaker::mdlMake( ) {
@@ -150,37 +179,22 @@ void GroundMaker::mdlMake( ) {
 }
 
 void GroundMaker::save( ) {
-	FILE* fp;
-	std::string file_name = DIRECTORY;
-	file_name += "map.grd";
-	fopen_s( &fp, file_name.c_str( ), "w" );
-	fprintf( fp, "%d\n", _width );
-	fprintf( fp, "%d\n", _height );
-	for ( int i = 0; i < _width * _height; i++ ) {
-		fprintf( fp, "%d\n", _data[ i ] );
-	}
-	fclose( fp );
-	_model_make->saveModel( ); 
-}
+	// grd保存
+	BinaryPtr binary = _ground->makeBinary( );
+	std::string file = DIRECTORY + _file_name + ".grd";
+	FrameworkPtr fw = Framework::getInstance( );
+	fw->saveBinary( file.c_str( ), binary );
 
-void GroundMaker::makeMountain( int mx, int my ) {
-	int num = 0;
-	for ( int i = 0; i < 4; i++ ) {
-		num = num << 1;
-		GROUND_CHIP_TYPE chip = getType( mx + DIR[ i ].first, my + DIR[ i ].second );
-		if ( chip == GROUND_CHIP_TYPE_MOUNTAIN ) {
-			num += 1;
-		}
-	}
-	_mountain_map.push_back( num );
+	// mdl保存
+	_model_make->saveModel( ); 
 }
 
 void GroundMaker::makeRiver( int mx, int my ) {
 	int num = 0;
 	for ( int i = 0; i < 4; i++ ) {
 		num = num << 1;
-		GROUND_CHIP_TYPE chip = getType( mx + DIR[ i ].first, my + DIR[ i ].second );
-		if ( chip == GROUND_CHIP_TYPE_RIVER ) {
+		GROUND_CHIP_TYPE type = _ground->getType( mx + DIR[ i ].first, my + DIR[ i ].second );
+		if ( type == GROUND_CHIP_TYPE_RIVER ) {
 			num += 1;
 		}
 	}
@@ -191,8 +205,8 @@ void GroundMaker::makePlane( int mx, int my ) {
 	int num = 0;
 	for ( int i = 0; i < 4; i++ ) {
 		num = num << 1;
-		GROUND_CHIP_TYPE chip = getType( mx + DIR[ i ].first, my + DIR[ i ].second );
-		if ( chip == GROUND_CHIP_TYPE_PLAIN ) {
+		GROUND_CHIP_TYPE type = _ground->getType( mx + DIR[ i ].first, my + DIR[ i ].second );
+		if ( type == GROUND_CHIP_TYPE_PLAIN ) {
 			num += 1;
 		}
 	}
@@ -203,8 +217,8 @@ void GroundMaker::makeDesert( int mx, int my ) {
 	int num = 0;
 	for ( int i = 0; i < 4; i++ ) {
 		num = num << 1;
-		GROUND_CHIP_TYPE chip = getType( mx + DIR[ i ].first, my + DIR[ i ].second );
-		if ( chip == GROUND_CHIP_TYPE_DESERT ) {
+		GROUND_CHIP_TYPE type = _ground->getType( mx + DIR[ i ].first, my + DIR[ i ].second );
+		if ( type == GROUND_CHIP_TYPE_DESERT ) {
 			num += 1;
 		}
 	}
@@ -215,16 +229,16 @@ MAP_TYPE GroundMaker::getMapType( int mx, int my, GROUND_CHIP_TYPE type ) {
 	int idx = my * _map_width + mx;
 	MAP_TYPE result;
 	switch ( type ) {
-		case GROUND_CHIP_TYPE_PLAIN:
+	case GROUND_CHIP_TYPE_PLAIN:
 		result = _plane_map[ idx ];
 		break;
-		case GROUND_CHIP_TYPE_DESERT:
+	case GROUND_CHIP_TYPE_DESERT:
 		result = _desert_map[ idx ];
 		break;
-		case GROUND_CHIP_TYPE_MOUNTAIN:
+	case GROUND_CHIP_TYPE_MOUNTAIN:
 		result = _mountain_map[ idx ];
 		break;
-		case GROUND_CHIP_TYPE_RIVER:
+	case GROUND_CHIP_TYPE_RIVER:
 		result = _river_map[ idx ];
 		break;
 	}

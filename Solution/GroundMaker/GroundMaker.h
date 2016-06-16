@@ -4,6 +4,7 @@
 #include "GroundChip.h"
 #include "MapChip.h"
 #include <string>
+#include <vector>
 
 PTR( GroundMaker );
 PTR( ModelMake );
@@ -34,14 +35,10 @@ public:
 private:
 	bool inputFileName( );
 	void loadToCSV( );
-	void mapMake( );
+	void makeGroundModel( );
 	void mdlMake( );
 	void save( );
-
-	void makeMountain( int mx, int my );
-	void makeRiver( int mx, int my );
-	void makePlane( int mx, int my );
-	void makeDesert( int mx, int my );
+	unsigned char makeModelChip( int mx, int my, GROUND_CHIP_TYPE type );
 private:
 	std::string _file_name;
 	STATE _state;
@@ -49,11 +46,9 @@ private:
 	ViewerPtr _viewer;
 	GroundPtr _ground;
 
-	int _map_width;
-	int _map_height;
-	std::vector< MAP_TYPE > _plane_map;
-	std::vector< MAP_TYPE > _desert_map;
-	std::vector< MAP_TYPE > _mountain_map;
-	std::vector< MAP_TYPE > _river_map;
+	std::vector< unsigned char > _plain_map;
+	std::vector< unsigned char > _desert_map;
+	std::vector< unsigned char > _mountain_map;
+	std::vector< unsigned char > _river_map;
 };
 
