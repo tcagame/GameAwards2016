@@ -147,7 +147,7 @@ void GroundMaker::makeMountain( int mx, int my ) {
 	int num = 0;
 	for ( int i = 0; i < 4; i++ ) {
 		num = num << 1;
-		GROUND_CHIP_TYPE chip = getGroundChip( mx + DIR[ i ].first, my + DIR[ i ].second );
+		GROUND_CHIP_TYPE chip = getType( mx + DIR[ i ].first, my + DIR[ i ].second );
 		if ( chip == GROUND_CHIP_TYPE_MOUNTAIN ) {
 			num += 1;
 		}
@@ -159,7 +159,7 @@ void GroundMaker::makeRiver( int mx, int my ) {
 	int num = 0;
 	for ( int i = 0; i < 4; i++ ) {
 		num = num << 1;
-		GROUND_CHIP_TYPE chip = getGroundChip( mx + DIR[ i ].first, my + DIR[ i ].second );
+		GROUND_CHIP_TYPE chip = getType( mx + DIR[ i ].first, my + DIR[ i ].second );
 		if ( chip == GROUND_CHIP_TYPE_RIVER ) {
 			num += 1;
 		}
@@ -171,7 +171,7 @@ void GroundMaker::makePlane( int mx, int my ) {
 	int num = 0;
 	for ( int i = 0; i < 4; i++ ) {
 		num = num << 1;
-		GROUND_CHIP_TYPE chip = getGroundChip( mx + DIR[ i ].first, my + DIR[ i ].second );
+		GROUND_CHIP_TYPE chip = getType( mx + DIR[ i ].first, my + DIR[ i ].second );
 		if ( chip == GROUND_CHIP_TYPE_PLAIN ) {
 			num += 1;
 		}
@@ -183,7 +183,7 @@ void GroundMaker::makeDesert( int mx, int my ) {
 	int num = 0;
 	for ( int i = 0; i < 4; i++ ) {
 		num = num << 1;
-		GROUND_CHIP_TYPE chip = getGroundChip( mx + DIR[ i ].first, my + DIR[ i ].second );
+		GROUND_CHIP_TYPE chip = getType( mx + DIR[ i ].first, my + DIR[ i ].second );
 		if ( chip == GROUND_CHIP_TYPE_DESERT ) {
 			num += 1;
 		}

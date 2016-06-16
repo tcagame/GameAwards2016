@@ -199,7 +199,7 @@ void Viewer::drawGround( ) {
 	for ( int i = 0; i < ground->getHeight( ); i++ ) {
 		for ( int j = 0; j < ground->getWidth( ); j++ ) {
 			RES resource;
-			GROUND_CHIP_TYPE chip = ground->getGroundChip( i * ground->getWidth( ) + j );
+			GROUND_CHIP_TYPE chip = ground->getType( i * ground->getWidth( ) + j );
 			switch( chip ) {
 			case GROUND_CHIP_TYPE_PLAIN:
 					resource = RES_PLAIN;

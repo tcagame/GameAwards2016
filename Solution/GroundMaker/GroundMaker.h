@@ -18,7 +18,7 @@ enum STATE {
 	STATE_MAX,
 };
 
-class GroundMaker : public Ground ,public Task {
+class GroundMaker : public Ground, public Task {
 public:
 	static GroundMakerPtr getTask( );
 	static std::string getTag( ) { return "GROUND_MAKER"; }
