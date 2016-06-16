@@ -2,6 +2,7 @@
 #include "GroundMaker.h"
 #include "ModelMake.h"
 #include "Viewer.h"
+#include "Ground.h"
 #include "DxLib.h"
 #include <assert.h>
 
@@ -23,8 +24,6 @@ GroundMakerPtr GroundMaker::getTask( ) {
 }
 
 GroundMaker::GroundMaker( ) {
-	_height = 0;
-	_width = 0;
 	_state = STATE_INPUT;
 	_model_make = ModelMakePtr( new ModelMake( ) );
 	_viewer = ViewerPtr( new Viewer( ) );
@@ -40,21 +39,21 @@ void GroundMaker::update( ) {
 			_state = STATE_LOAD;
 		}
 		break;
-		case STATE_LOAD:
+	case STATE_LOAD:
 		loadToCSV( );
 		_state = STATE_MAKE;
 		break;
-		case STATE_MAKE:
+	case STATE_MAKE:
 		mapMake( );
 		mdlMake( );
 		_state = STATE_SAVE;
 		break;
-		case STATE_SAVE:
+	case STATE_SAVE:
 		save( );
 		_viewer->setModel( );
 		_state = STATE_END;
 		break;
-		case STATE_END:
+	case STATE_END:
 		_viewer->draw( );
 		break;
 	}
@@ -74,11 +73,6 @@ bool GroundMaker::inputFileName( ) {
 }
 
 void GroundMaker::loadToCSV( ) {
-	if ( !_data.empty( ) ) {
-		_width = 0;
-		_height = 0;
-		_data.clear( );
-	}
 	//ファイルの読み込み
 	if ( _file_name.find( ".csv" ) == std::string::npos  ) {
 		_file_name += ".csv";
@@ -91,24 +85,50 @@ void GroundMaker::loadToCSV( ) {
 		assert( NotFile );
 		return;
 	}
-    //csvファイルを1行ずつ読み込む
+
+    //　カウントする
+	int width = 0;
+	int height = 0;
 	char buf[ 2048 ];
 	while ( fgets( buf, 2048, fp ) != NULL ) {
+		int w = 0;
 		std::string str = buf;
 		while ( true ) {
-			if ( _height == 0 ) {
-				_width++;
-			}
+			width++;
 			std::string::size_type index = str.find( "," );
 			if ( index == std::string::npos ) {
-				_data.push_back( atoi( str.c_str( ) ) );
 				break;
 			}
 			std::string substr = str.substr( 0, index );
-			_data.push_back( atoi( substr.c_str( ) ) );
 			str = str.substr( index + 1 );
 		}
-		_height++;
+
+		if ( height == 0 ) {
+			width = w;
+		}
+		assert( width == w );
+
+		height++;
+	}
+
+	_ground = GroundPtr( new Ground( width, height ) );
+
+	// 読み込む
+	char buf[ 2048 ];
+	int idx = 0;
+	while ( fgets( buf, 2048, fp ) != NULL ) {
+		int x = 0;
+		std::string str = buf;
+		while ( true ) {
+			std::string::size_type index = str.find( "," );
+			if ( index == std::string::npos ) {
+				setGroundTypeFromCSV( idx, str.c_str( ) );
+				break;
+			}
+			setGroundTypeFromCSV( idx, str.c_str( ) );
+			std::string substr = str.substr( 0, index );
+			str = str.substr( index + 1 );
+		}
 	}
 }
 

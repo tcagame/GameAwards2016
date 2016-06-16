@@ -2,7 +2,7 @@
 #include "Binary.h"
 #include <assert.h>
 
-Ground::Ground( int widht, int height ) :
+Ground::Ground( int width, int height ) :
 _array_type( NULL ),
 _width ( width ),
 _height( height ) {
@@ -62,26 +62,4 @@ int Ground::getIdx( int mx, int my ) const {
 	assert( my < _height );
 
 	return mx + my * _width;
-}
-
-void Ground::load( ) {
-	const char * filename = "../resource2D/map.grd";
-
-	init( );
-
-	int size = FileRead_size( filename );
-	assert( size > 0 );
-
-	FILE* fp;
-	errno_t err = fopen_s( &fp,, "r" );
-	assert( err == 0 );
-
-	fscanf_s( fp, "%d", &_width );
-	fscanf_s( fp, "%d", &_height );
-	for ( int i = 0; i < _width * _height; i++ ) {
-		int data;
-		fscanf_s( fp, "%d", &data );
-		( data );
-	}
-	fclose( fp );
 }

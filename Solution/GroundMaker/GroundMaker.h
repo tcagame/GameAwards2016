@@ -1,5 +1,5 @@
 #pragma once
-#include "Ground.h"
+
 #include "Task.h"
 #include "GroundChip.h"
 #include "MapChip.h"
@@ -8,6 +8,7 @@
 PTR( GroundMaker );
 PTR( ModelMake );
 PTR( Viewer );
+PTR( Ground );
 
 enum STATE {
 	STATE_INPUT,
@@ -18,7 +19,7 @@ enum STATE {
 	STATE_MAX,
 };
 
-class GroundMaker : public Ground, public Task {
+class GroundMaker : public Task {
 public:
 	static GroundMakerPtr getTask( );
 	static std::string getTag( ) { return "GROUND_MAKER"; }
@@ -46,6 +47,7 @@ private:
 	STATE _state;
 	ModelMakePtr _model_make;
 	ViewerPtr _viewer;
+	GroundPtr _ground;
 
 	int _map_width;
 	int _map_height;

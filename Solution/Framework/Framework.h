@@ -5,6 +5,7 @@
 #include "Task.h"
 
 PTR( Framework );
+PTR( Binary );
 
 class Framework {
 public:
@@ -20,7 +21,8 @@ public:
 	TaskPtr getTask( std::string tag );
 	int getWindowWidth( ) const;
 	int getWindowHeight( ) const;
-
+	void loadBinary( const char * filename, BinaryPtr binary );
+	void saveBinary( const char * filename, BinaryPtr binary );
 public:
 	static FrameworkPtr _instance;
 private:

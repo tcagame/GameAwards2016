@@ -4,7 +4,7 @@
 #include <vector>
 
 PTR( Ground );
-PTR( Binary )p;
+PTR( Binary );
 
 class Ground {
 public:

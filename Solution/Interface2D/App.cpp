@@ -26,6 +26,7 @@
 #include "Keyboard.h"
 #include "Coord.h"
 #include "Chip.h"
+#include "Binary.h"
 #include <assert.h>
 
 static const int POWERPLANT_POS_X = 10;
@@ -53,7 +54,13 @@ App::App( ) {
 	_enemies    = EnemiesPtr   ( new Enemies   ( _unit_map, _map, _bulletins, _refineries ) );
 	_guardians  = GuardiansPtr ( new Guardians ( _unit_map, _enemies, _map ) );
 	_bases      = BasesPtr     ( new Bases     ( _enemies, _guardians ) );
-	_ground		= GroundPtr    ( new Ground( ) );
+	
+	BinaryPtr binary = BinaryPtr( new Binary );
+	FrameworkPtr fw = Framework::getInstance( );
+	fw->loadBinary( "resource/ground/sample.grd", binary );
+
+	_ground		= GroundPtr    ( new Ground( binary ) );
+
 	_chargers->initialize( _map );
 	_bases->initialize( _map );
 	_refineries->initialize( _map );
