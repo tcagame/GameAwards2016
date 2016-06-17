@@ -129,11 +129,13 @@ void GroundMaker::loadToCSV( ) {
 		while ( true ) {
 			std::string::size_type index = str.find( "," );
 			if ( index == std::string::npos ) {
-				_ground->setType( idx++, CONVERT[ atoi( str.c_str( ) ) ] );
+				_ground->setType( idx % width, idx / width, CONVERT[ atoi( str.c_str( ) ) ] );
+				idx++;
 				break;
 			}
 			std::string substr = str.substr( 0, index );
-			_ground->setType( idx++, CONVERT[ atoi( substr.c_str( ) ) ]  );
+			_ground->setType( idx % width, idx / width, CONVERT[ atoi( substr.c_str( ) ) ]  );
+			idx++;
 			str = str.substr( index + 1 );
 		}
 	}
@@ -189,48 +191,12 @@ void GroundMaker::save( ) {
 	_model_make->saveModel( ); 
 }
 
-void GroundMaker::makeRiver( int mx, int my ) {
-	int num = 0;
-	for ( int i = 0; i < 4; i++ ) {
-		num = num << 1;
-		GROUND_CHIP_TYPE type = _ground->getType( mx + DIR[ i ].first, my + DIR[ i ].second );
-		if ( type == GROUND_CHIP_TYPE_RIVER ) {
-			num += 1;
-		}
-	}
-	_river_map.push_back( num );
-}
-
-void GroundMaker::makePlane( int mx, int my ) {
-	int num = 0;
-	for ( int i = 0; i < 4; i++ ) {
-		num = num << 1;
-		GROUND_CHIP_TYPE type = _ground->getType( mx + DIR[ i ].first, my + DIR[ i ].second );
-		if ( type == GROUND_CHIP_TYPE_PLAIN ) {
-			num += 1;
-		}
-	}
-	_plane_map.push_back( num );
-}
-
-void GroundMaker::makeDesert( int mx, int my ) {
-	int num = 0;
-	for ( int i = 0; i < 4; i++ ) {
-		num = num << 1;
-		GROUND_CHIP_TYPE type = _ground->getType( mx + DIR[ i ].first, my + DIR[ i ].second );
-		if ( type == GROUND_CHIP_TYPE_DESERT ) {
-			num += 1;
-		}
-	}
-	_desert_map.push_back( num );
-}
-
 MAP_TYPE GroundMaker::getMapType( int mx, int my, GROUND_CHIP_TYPE type ) {
-	int idx = my * _map_width + mx;
+	int idx = my * getMapWidth( ) + mx;
 	MAP_TYPE result;
 	switch ( type ) {
 	case GROUND_CHIP_TYPE_PLAIN:
-		result = _plane_map[ idx ];
+		result = _plain_map[ idx ];
 		break;
 	case GROUND_CHIP_TYPE_DESERT:
 		result = _desert_map[ idx ];
@@ -246,9 +212,9 @@ MAP_TYPE GroundMaker::getMapType( int mx, int my, GROUND_CHIP_TYPE type ) {
 }
 
 int GroundMaker::getMapWidth( ) {
-	return _map_width;
+	return _ground->getWidth( ) + 1;
 }
 
 int GroundMaker::getMapHeight( ) {
-	return _map_height;
+	return _ground->getHeight( ) + 1;
 }

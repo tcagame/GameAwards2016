@@ -166,6 +166,11 @@ void Framework::saveBinary( const char * filename, BinaryPtr binary ) {
 	fclose( fp );
 }
 
-bool Framework::inputString( int sx, int sy, char *buf, int size ) {
-	return KeyInputString( sx, sy, size, buf, TRUE ) == TRUE;
+std::string Framework::inputString( int sx, int sy ) {
+	char buf[ 2048 ];
+	std::string str;
+	if ( KeyInputString( sx, sy, 2048, buf, TRUE ) == TRUE ) {
+		str = buf;
+	}
+	return str;
 }

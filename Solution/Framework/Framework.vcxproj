@@ -27,7 +27,6 @@
     <ClInclude Include="Framework.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="mathConst.h" />
-    <ClInclude Include="mathmatics.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelManager.h" />
     <ClInclude Include="Mouse.h" />

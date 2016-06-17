@@ -1,17 +1,9 @@
 #pragma once
+
 #include "Task.h"
-#include "ModelManager.h"
 #include <string>
 
 PTR( ModelMaker );
-
-enum STATE {
-	STATE_INPUT,
-	STATE_LOAD,
-	STATE_SAVE,
-	STATE_END,
-	STATE_MAX
-};
 
 class ModelMaker : public Task {
 public:
@@ -23,10 +15,18 @@ public:
 public:
 	void update( );
 private:
-	bool inputFileName( );
+	enum STATE {
+		STATE_VIEWER,
+		STATE_LOAD,
+		STATE_SAVE,
+		STATE_MAX
+	};
+
 private:
-	ModelManagerPtr _model_manager;
+	void load( );
+	void save( );
+private:
 	STATE _state;
-	std::string _file_name;
+	ModePtr _model;
 };
 

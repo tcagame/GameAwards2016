@@ -196,10 +196,10 @@ void Viewer::drawGround( ) {
 	DrawerPtr drawer = Drawer::getTask( );
 	GroundPtr ground = app->getGround( );
 
-	for ( int i = 0; i < ground->getHeight( ); i++ ) {
-		for ( int j = 0; j < ground->getWidth( ); j++ ) {
+	for ( int i = 0; i < ground->getWidth( ); i++ ) {
+		for ( int j = 0; j < ground->getHeight( ); j++ ) {
 			RES resource;
-			GROUND_CHIP_TYPE chip = ground->getType( i * ground->getWidth( ) + j );
+			GROUND_CHIP_TYPE chip = ground->getType( i, j );
 			switch( chip ) {
 			case GROUND_CHIP_TYPE_PLAIN:
 					resource = RES_PLAIN;
@@ -213,7 +213,7 @@ void Viewer::drawGround( ) {
 			case GROUND_CHIP_TYPE_DESERT:
 					resource = RES_DESERT;
 					break;
-				}
+			}
 			Drawer::Sprite sprite( Drawer::Transform( j * CHIP_SIZE - CHIP_SIZE, i * CHIP_SIZE ), resource );
 			drawer->set( sprite );
 		}

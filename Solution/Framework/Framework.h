@@ -1,8 +1,9 @@
 #pragma once
-#include <string>
-#include <map>
+
 #include "smart_ptr.h"
 #include "Task.h"
+#include <string>
+#include <map>
 
 PTR( Framework );
 PTR( Binary );
@@ -23,7 +24,7 @@ public:
 	int getWindowHeight( ) const;
 	void loadBinary( const char * filename, BinaryPtr binary );
 	void saveBinary( const char * filename, BinaryPtr binary );
-	bool inputString( int sx, int sy, char *buf, int size );
+	std::string inputString( int sx, int sy );
 public:
 	static FrameworkPtr _instance;
 private:
