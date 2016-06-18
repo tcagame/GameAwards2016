@@ -33,7 +33,6 @@ public:
 	int getMapWidth( );
 	int getMapHeight( );
 private:
-	bool inputFileName( );
 	void loadToCSV( );
 	void makeGroundModel( );
 	void mdlMake( );

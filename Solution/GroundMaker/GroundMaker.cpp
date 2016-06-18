@@ -71,18 +71,6 @@ void GroundMaker::update( ) {
 	}
 }
 
-bool GroundMaker::inputFileName( ) {
-	FrameworkPtr fw = Framework::getInstance( );
-	char buf[ MAX_STRING ];
-	if ( !fw->inputString( INPUT_X, INPUT_Y, buf, MAX_STRING ) ) {
-		return false;
-	}
-
-	_file_name = buf;
-
-	return true;
-}
-
 void GroundMaker::loadToCSV( ) {
 	//ƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
 	std::string file = DIRECTORY + _file_name + ".csv";

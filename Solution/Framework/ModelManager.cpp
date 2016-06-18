@@ -35,7 +35,7 @@ ModelManager::~ModelManager( ) {
 		int point_num = 0;
 	
 		int nomals_index_num = 0;
-		int nomals_point_num = 0;
+		int normal_num = 0;
 		int texture_num = 0;
 		int mat_num = 0;
 		MODE mode = MODE_SEECK_SEARCH;
@@ -102,7 +102,7 @@ ModelManager::~ModelManager( ) {
 					if ( _index_num == _settingCounter ) {
 						FileRead_gets( buf, 1024, fh );
 						FileRead_gets( buf, 1024, fh );
-						sscanf_s( buf, "%d,", &nomals_point_num );
+						sscanf_s( buf, "%d,", &normal_num );
 						mode = MODE_READ_NORMALS_POINT;
 						_settingCounter = 0;
 					}
@@ -117,7 +117,7 @@ ModelManager::~ModelManager( ) {
 					sscanf_s( buf, "%lf;%lf;%lf;,", &x, &y, &z );
 					_nomals_point_array[ _settingCounter ] = Vector( x, y, z );
 					_settingCounter++;
-					if ( _settingCounter == nomals_point_num ) {
+					if ( _settingCounter == normal_num ) {
 						FileRead_gets( buf, 1024, fh );
 						sscanf_s( buf, "%d,", &nomals_index_num );
 						mode = MODE_READ_NORMALS_INDEX;
@@ -132,10 +132,10 @@ ModelManager::~ModelManager( ) {
 					int point_2;
 					int point_3;
 					sscanf_s( buf, "%d;%d,%d,%d;,", &polygon, &point_1, &point_2, &point_3 );
-					_nomals_index_array[ _settingCounter ].polygon = polygon;
-					_nomals_index_array[ _settingCounter ].index[ 0 ] = point_1;
-					_nomals_index_array[ _settingCounter ].index[ 1 ] = point_2;
-					_nomals_index_array[ _settingCounter ].index[ 2 ] = point_3;
+					normal_array[ _settingCounter ].polygon = polygon;
+					normal_array[ _settingCounter ].index[ 0 ] = point_1;
+					normal_array[ _settingCounter ].index[ 1 ] = point_2;
+					normal_array[ _settingCounter ].index[ 2 ] = point_3;
 					_settingCounter++;
 					if (  nomals_index_num == _settingCounter ) {
 						FileRead_gets( buf, 1024, fh );

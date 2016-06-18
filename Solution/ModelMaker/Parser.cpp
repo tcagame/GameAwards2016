@@ -1,6 +1,9 @@
 #include "Parser.h"
 #include "Model.h"
 #include "DxLib.h"
+#include <vector>
+#include <array>
+#include <assert.h>
 
 Parser::Parser( ) {
 }
@@ -26,15 +29,26 @@ bool Parser::load( std::string filename ) {
 		return false;
 	}
 
-	int _settingCounter = 0;
-
-	int point_num = 0;
-	
-	int nomals_index_num = 0;
-	int nomals_point_num = 0;
 	int texture_num = 0;
 	int mat_num = 0;
 	MODE mode = MODE_SEECK_SEARCH;
+	Matrix matrix;
+
+	int point_num = 0;
+	std::vector< Vector > point_array;
+
+	struct Index {
+		std::array< unsigned int, 3 > idx;
+	};
+
+	int point_index_num = 0;
+	std::vector< Index > point_index_array;
+
+	int normal_num = 0;
+	std::vector< Vector > normal_array;
+	
+	int normal_index_num;
+	std::vector< Index > normal_index_array;
 
 	while ( FileRead_eof( fh ) == 0 ) {
 		char buf[ 1024 ];
@@ -55,10 +69,10 @@ bool Parser::load( std::string filename ) {
 				if ( mat_num < 4 ) {
 					sscanf_s( buf, "%lf,%lf,%lf,%lf,", &dat_1, &dat_2, &dat_3, &dat_4 );
 				}
-				_matrix.data[ mat_num ][0] = dat_1;
-				_matrix.data[ mat_num ][1] = dat_2;
-				_matrix.data[ mat_num ][2] = dat_3;
-				_matrix.data[ mat_num ][3] = dat_4;
+				matrix.data[ mat_num ][0] = dat_1;
+				matrix.data[ mat_num ][1] = dat_2;
+				matrix.data[ mat_num ][2] = dat_3;
+				matrix.data[ mat_num ][3] = dat_4;
 
 				mat_num++;
 				if ( str.find( "Mesh" ) != -1 ) {
@@ -67,71 +81,63 @@ bool Parser::load( std::string filename ) {
 					mode = MODE_READ_POINT;
 				}
 				break;
-			case MODE_READ_POINT: 
-			{
+			case MODE_READ_POINT: {
 				double x;
 				double y;
 				double z;
 				sscanf_s( buf, "%lf;%lf;%lf;,", &x, &y, &z );
-				_point_array[ _settingCounter ] = Vector( x, y, z );
-				_settingCounter++;
-				if ( _settingCounter == point_num ) {
+				point_array.push_back( Vector( x, y, z ) );
+				if ( point_array.size( ) == point_num ) {
 					FileRead_gets( buf, 1024, fh );
 					mode = MODE_READ_INDEX;
-					sscanf_s( buf, "%d;", &_index_num );
-					_settingCounter = 0;
-				}
+					sscanf_s( buf, "%d;", &point_index_num );
 				}
 				break;
-			case MODE_READ_INDEX:
-				{
+			}
+			case MODE_READ_INDEX: {
 				int polygon;
 				int point_1;
 				int point_2;
 				int point_3;
 				sscanf_s( buf, "%d;%d,%d,%d;,", &polygon, &point_1, &point_2, &point_3 );
-				_index_array[ _settingCounter ].polygon = polygon;
-				_index_array[ _settingCounter ].index[ 0 ] = point_1;
-				_index_array[ _settingCounter ].index[ 1 ] = point_2;
-				_index_array[ _settingCounter ].index[ 2 ] = point_3;
-				_settingCounter++;
-				if ( _index_num == _settingCounter ) {
+				assert( polygon == 3 );
+				Index index;
+				index.idx[ 0 ] = point_1;
+				index.idx[ 1 ] = point_2;
+				index.idx[ 2 ] = point_3;
+				point_index_array.push_back( index );
+				if ( point_index_num == point_index_array.size( ) ) {
 					FileRead_gets( buf, 1024, fh );
 					FileRead_gets( buf, 1024, fh );
-					sscanf_s( buf, "%d,", &nomals_point_num );
+					sscanf_s( buf, "%d,", &normal_num );
 					mode = MODE_READ_NORMALS_POINT;
-					_settingCounter = 0;
-				}
 				}
 				break;
-			
-			case MODE_READ_NORMALS_POINT:
-				{
+			}
+			case MODE_READ_NORMALS_POINT: {
 				double x;
 				double y;
 				double z;
 				sscanf_s( buf, "%lf;%lf;%lf;,", &x, &y, &z );
-				_nomals_point_array[ _settingCounter ] = Vector( x, y, z );
+				normals_array.push_back( Vector( x, y, z ) );
 				_settingCounter++;
-				if ( _settingCounter == nomals_point_num ) {
+				if ( normals_array.size( ) == normal_num ) {
 					FileRead_gets( buf, 1024, fh );
 					sscanf_s( buf, "%d,", &nomals_index_num );
 					mode = MODE_READ_NORMALS_INDEX;
-					_settingCounter = 0;
-				}
 				}
 				break;
-			case MODE_READ_NORMALS_INDEX:
-				{
+			}
+			case MODE_READ_NORMALS_INDEX: {
 				int polygon;
 				int point_1;
 				int point_2;
 				int point_3;
 				sscanf_s( buf, "%d;%d,%d,%d;,", &polygon, &point_1, &point_2, &point_3 );
-				_nomals_index_array[ _settingCounter ].polygon = polygon;
-				_nomals_index_array[ _settingCounter ].index[ 0 ] = point_1;
-				_nomals_index_array[ _settingCounter ].index[ 1 ] = point_2;
-				_nomals_index_array[ _settingCounter ].index[ 2 ] = point_3;
+				assert( polygon == 3 );
+				normal_index_array[ _settingCounter ].index[ 0 ] = point_1;
+				normal_index_array[ _settingCounter ].index[ 1 ] = point_2;
+				normal_index_array[ _settingCounter ].index[ 2 ] = point_3;
 				_settingCounter++;
 				if (  nomals_index_num == _settingCounter ) {
 					FileRead_gets( buf, 1024, fh );

@@ -4,6 +4,7 @@
 #include <string>
 
 PTR( ModelMaker );
+PTR( Model );
 
 class ModelMaker : public Task {
 public:
@@ -27,6 +28,6 @@ private:
 	void save( );
 private:
 	STATE _state;
-	ModePtr _model;
+	ModelPtr _model;
 };
 
