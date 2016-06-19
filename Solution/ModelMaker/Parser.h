@@ -11,7 +11,5 @@ public:
 	Parser();
 	virtual ~Parser();
 public:
-	bool load( std::string filename );
-	ModelPtr makeModel( );
+	ModelPtr makeModel( std::string filename );
 };
-

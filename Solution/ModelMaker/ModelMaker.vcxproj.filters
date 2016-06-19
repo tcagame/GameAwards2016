@@ -4,9 +4,11 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ModelMaker.cpp" />
     <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="Camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModelMaker.h" />
     <ClInclude Include="Parser.h" />
+    <ClInclude Include="Camera.h" />
   </ItemGroup>
 </Project>

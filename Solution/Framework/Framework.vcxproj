@@ -11,7 +11,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Drawer.cpp" />
     <ClCompile Include="Framework.cpp" />
     <ClCompile Include="Keyboard.cpp" />
@@ -22,7 +21,6 @@
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
     <ClInclude Include="Drawer.h" />
     <ClInclude Include="Framework.h" />
     <ClInclude Include="Keyboard.h" />

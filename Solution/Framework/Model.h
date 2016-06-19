@@ -28,6 +28,7 @@ public:
 	};
 public:
 	void draw( int texture, bool trans = false ) const;
+	void multiply( Matrix matrix );
 public:
 	void alloc( int polygon_num );
 	void translate( Vector move );

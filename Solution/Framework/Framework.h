@@ -2,6 +2,7 @@
 
 #include "smart_ptr.h"
 #include "Task.h"
+#include "mathmatics.h"
 #include <string>
 #include <map>
 
@@ -26,11 +27,14 @@ public:
 	void saveBinary( const char * filename, BinaryPtr binary );
 	std::string inputString( int sx, int sy );
 	void terminate( );
+	void setCameraUp( const Vector& up );
+	void setCamera( const Vector& pos, const Vector& target );
 private:
 	static FrameworkPtr _instance;
 	int _screen_width;
 	int _screen_height;
 	std::map< std::string, TaskPtr > _task_list;
 	bool _terminating;
+	Vector _camera_up;
 };
 

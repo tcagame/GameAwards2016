@@ -12,7 +12,7 @@ Parser::Parser( ) {
 Parser::~Parser( ) {
 }
 
-bool Parser::load( std::string filename ) {
+ModelPtr Parser::makeModel( std::string filename ) {
 	enum MODE {
 		MODE_SEECK_SEARCH,
 		MODE_READ_MATRIX,
@@ -26,7 +26,7 @@ bool Parser::load( std::string filename ) {
 
 	int fh = FileRead_open( filename.c_str( ) );
 	if ( fh == -1 ) {
-		return false;
+		return ModelPtr( );
 	}
 
 	int texture_num = 0;
@@ -70,19 +70,19 @@ bool Parser::load( std::string filename ) {
 				}
 				break;
 			case MODE_READ_MATRIX:
-				double dat_1;
-				double dat_2;
-				double dat_3;
-				double dat_4;
 				if ( mat_num < 4 ) {
+					double dat_1;
+					double dat_2;
+					double dat_3;
+					double dat_4;
 					sscanf_s( buf, "%lf,%lf,%lf,%lf,", &dat_1, &dat_2, &dat_3, &dat_4 );
-				}
-				matrix.data[ mat_num ][0] = dat_1;
-				matrix.data[ mat_num ][1] = dat_2;
-				matrix.data[ mat_num ][2] = dat_3;
-				matrix.data[ mat_num ][3] = dat_4;
+					matrix.data[ mat_num ][0] = dat_1;
+					matrix.data[ mat_num ][1] = dat_2;
+					matrix.data[ mat_num ][2] = dat_3;
+					matrix.data[ mat_num ][3] = dat_4;
 
-				mat_num++;
+					mat_num++;
+				}
 				if ( str.find( "Mesh" ) != -1 ) {
 					FileRead_gets( buf, 1024, fh );
 					sscanf_s( buf, "%d,", &point_num );
@@ -187,12 +187,20 @@ bool Parser::load( std::string filename ) {
 
 	FileRead_close( fh );
 
-	return true;	
-}
-
-ModelPtr Parser::makeModel( ) {
-	ModelPtr model;
-
-	return model;
+	//‚±‚±‚Åƒ‚ƒfƒ‹‚ðì‚éB
+	ModelPtr model( new Model );
+	model->alloc( point_index_num );
+	for ( int i = 0; i < point_index_num; i++ ) {
+		for ( int j = 0; j < 3; j++ ) {
+			int idx = point_index_array[ i ].idx[ j ];
+			Vector point = point_array[ idx ];
+			Model::VERTEX vertex;
+			vertex.pos = matrix.multiply( point );
+			vertex.u = texture_array[ idx ].u;
+			vertex.v = texture_array[ idx ].v;
+			model->set( i * 3 + j, vertex );
+		}
+	}
+	return model;	
 }
 

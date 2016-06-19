@@ -181,3 +181,14 @@ std::string Framework::inputString( int sx, int sy ) {
 void Framework::terminate( ) {
 	_terminating = true;
 }
+
+void Framework::setCameraUp( const Vector& up ) {
+	_camera_up = up;
+}
+
+void Framework::setCamera( const Vector& pos, const Vector& target ) {
+	DxLib::VECTOR dx_pos = VGet( float( pos.x ), float( pos.y ), float( pos.z ) );
+	DxLib::VECTOR dx_target = VGet( float( target.x ), float( target.y ), float( target.z ) );
+	DxLib::VECTOR dx_up = VGet( float( _camera_up.x ), float( _camera_up.y ), float( _camera_up.z ) );
+	SetCameraPositionAndTargetAndUpVec( dx_pos, dx_target, dx_up );
+}

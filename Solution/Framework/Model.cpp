@@ -69,10 +69,10 @@ void Model::load( std::string filename ) {
 
 	unsigned int polygon_num;
 	FileRead_read( &polygon_num, sizeof( unsigned int ), fh );
-
+	
 	alloc( polygon_num );
 
-	FileRead_read( &_impl->_vertex, sizeof( DxLib::VERTEX3D ) * polygon_num, fh );
+	FileRead_read( _impl->_vertex, sizeof( DxLib::VERTEX3D ) * ( polygon_num * 3 ), fh );
 
 	FileRead_close( fh );
 }
@@ -83,9 +83,21 @@ void Model::save( std::string filename ) {
 	if ( err != 0 ) {
 		return;
 	}
-
+	
 	fwrite( &_impl->_polygon_num, sizeof( unsigned int ), 1, fp );
-	fwrite( &_impl->_vertex, sizeof( DxLib::VERTEX3D ) * _impl->_polygon_num, 1, fp );
+	fwrite( _impl->_vertex, sizeof( DxLib::VERTEX3D ) * ( _impl->_polygon_num * 3 ), 1, fp );
 
 	fclose( fp );
+}
+
+void Model::multiply( Matrix matrix ) {
+	int count = ( int )_impl->_polygon_num * 3;
+	for ( int i = 0; i < count; i++ ) {
+		Vector pos(
+			_impl->_vertex[ i ].pos.x,
+			_impl->_vertex[ i ].pos.y,
+			_impl->_vertex[ i ].pos.z );
+		pos = matrix.multiply( pos );
+		_impl->_vertex[ i ].pos = VGet( ( float )pos.x, ( float )pos.y, ( float )pos.z );
+	}
 }
