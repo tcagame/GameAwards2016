@@ -1,6 +1,8 @@
 #include "ModelMaker.h"
 #include "Framework.h"
+#include "Keyboard.h"
 #include "Parser.h"
+#include "Model.h"
 
 const int INPUT_X = 100;
 const int INPUT_Y = 100;
@@ -26,6 +28,7 @@ void ModelMaker::update( ) {
 		save( );
 		break;
 	case STATE_VIEWER:
+		view( );
 		break;
 	}
 
@@ -69,5 +72,12 @@ void ModelMaker::load( ) {
 	if ( filename.find( ".mdl" ) != std::string::npos ) {
 		_model = ModelPtr( new Model );
 		_model->load( filename );
+	}
+}
+
+void ModelMaker::view( ) {
+	KeyboardPtr keyboad = Keyboard::getTask( );
+	if ( keyboad->isPushKey( "F1" ) ) {
+		//_sta
 	}
 }

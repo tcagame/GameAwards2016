@@ -41,6 +41,11 @@ bool Parser::load( std::string filename ) {
 		std::array< unsigned int, 3 > idx;
 	};
 
+	struct UV {
+		float u;
+		float v;
+	};
+
 	int point_index_num = 0;
 	std::vector< Index > point_index_array;
 
@@ -49,6 +54,9 @@ bool Parser::load( std::string filename ) {
 	
 	int normal_index_num;
 	std::vector< Index > normal_index_array;
+
+	std::vector< int > material_array;
+	std::vector< UV > texture_array;
 
 	while ( FileRead_eof( fh ) == 0 ) {
 		char buf[ 1024 ];
@@ -119,11 +127,10 @@ bool Parser::load( std::string filename ) {
 				double y;
 				double z;
 				sscanf_s( buf, "%lf;%lf;%lf;,", &x, &y, &z );
-				normals_array.push_back( Vector( x, y, z ) );
-				_settingCounter++;
-				if ( normals_array.size( ) == normal_num ) {
+				normal_array.push_back( Vector( x, y, z ) );
+				if ( normal_array.size( ) == normal_num ) {
 					FileRead_gets( buf, 1024, fh );
-					sscanf_s( buf, "%d,", &nomals_index_num );
+					sscanf_s( buf, "%d,", &normal_index_num );
 					mode = MODE_READ_NORMALS_INDEX;
 				}
 				break;
@@ -135,55 +142,54 @@ bool Parser::load( std::string filename ) {
 				int point_3;
 				sscanf_s( buf, "%d;%d,%d,%d;,", &polygon, &point_1, &point_2, &point_3 );
 				assert( polygon == 3 );
-				normal_index_array[ _settingCounter ].index[ 0 ] = point_1;
-				normal_index_array[ _settingCounter ].index[ 1 ] = point_2;
-				normal_index_array[ _settingCounter ].index[ 2 ] = point_3;
-				_settingCounter++;
-				if (  nomals_index_num == _settingCounter ) {
+				Index index;
+				index.idx[ 0 ] = point_1;
+				index.idx[ 1 ] = point_2;
+				index.idx[ 2 ] = point_3;
+				normal_index_array.push_back( index );
+				if (  normal_index_num == normal_index_array.size( ) ) {
 					FileRead_gets( buf, 1024, fh );
 					FileRead_gets( buf, 1024, fh );
 					FileRead_gets( buf, 1024, fh );
 					sscanf_s( buf, "%d,", &texture_num );
 					mode = MODE_READ_TEXTURE;
-					_settingCounter = 0;
 				}
 				}
 				break;
-			case MODE_READ_TEXTURE:
-				{
+			case MODE_READ_TEXTURE: {
 				float u;
 				float v;
 				sscanf_s( buf, "%f;%f;,", &u, &v );
-				_texture_array[ _settingCounter ].u = u;
-				_texture_array[ _settingCounter ].v = v;
-				_settingCounter++;
-				if (  _settingCounter == texture_num ) {
+				UV uv;
+				uv.u = u;
+				uv.v = v;
+				texture_array.push_back( uv );
+				if (  texture_array.size( ) == texture_num ) {
 					FileRead_gets( buf, 1024, fh );
 					FileRead_gets( buf, 1024, fh );
 					mode = MODE_READ_MATERIAL;
-					_settingCounter = 0;
-				}
 				}
 				break;
-			case MODE_READ_MATERIAL:
-				{
+			}
+			case MODE_READ_MATERIAL: {
 				int material;
 				sscanf_s( buf, "%d;,", &material );
-				_material_array[ _settingCounter ] = material;
-				_settingCounter++;
+				material_array.push_back( material );
 				if (  str.find( "}" ) != -1 ) {
 					FileRead_gets( buf, 1024, fh );
 					mode = MODE_READ_MATERIAL;
-					_settingCounter = 0;
-				}
 				}
 				break;
+			}
 		}
 	
 	}
 
 	FileRead_close( fh );
+
+	return true;	
 }
+
 ModelPtr Parser::makeModel( ) {
 	ModelPtr model;
 

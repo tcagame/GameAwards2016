@@ -26,6 +26,7 @@ private:
 private:
 	void load( );
 	void save( );
+	void view( );
 private:
 	STATE _state;
 	ModelPtr _model;

@@ -4,8 +4,7 @@
 class ModelImpl {
 public:
 	VERTEX3D *_vertex;
-	int _polygon_num;
-	int _texture;
+	unsigned int _polygon_num;
 };
 
 Model::Model( ) {
@@ -21,10 +20,6 @@ Model::~Model( ) {
 	}
 }
 
-void Model::setTexture( int id ) {
-	_impl->_texture = id;
-}
-
 void Model::alloc( int polygon_num ) {
 	_impl->_polygon_num = polygon_num;
 	if ( _impl->_vertex != NULL ) {
@@ -37,13 +32,14 @@ void Model::setPolygonNum( int num ) {
 	_impl->_polygon_num = num;
 }
 
-void Model::draw( bool trans ) const {
+void Model::draw( int texture, bool trans ) const {
 
-	int check = DrawPolygon3D( _impl->_vertex, _impl->_polygon_num, _impl->_texture, trans ? TRUE : FALSE );
+	int check = DrawPolygon3D( _impl->_vertex, _impl->_polygon_num, texture, trans ? TRUE : FALSE );
 }
 
 void Model::translate( Vector move ) {
-	for ( int i = 0; i < _impl->_polygon_num * 3; i++ ) {
+	int count = ( int )_impl->_polygon_num * 3;
+	for ( int i = 0; i < count; i++ ) {
 		_impl->_vertex[ i ].pos.x += ( float )move.x;
 		_impl->_vertex[ i ].pos.y += ( float )move.y;
 		_impl->_vertex[ i ].pos.z += ( float )move.z;
@@ -63,4 +59,33 @@ void Model::set( int n, VERTEX vertex ) {
 	vtx.sv   = 0.0f;
 
 	_impl->_vertex[ n ] = vtx;
+}
+
+void Model::load( std::string filename ) {
+	int fh = FileRead_open( filename.c_str( ) );
+	if ( fh <= 0 ) {
+		return;
+	}
+
+	unsigned int polygon_num;
+	FileRead_read( &polygon_num, sizeof( unsigned int ), fh );
+
+	alloc( polygon_num );
+
+	FileRead_read( &_impl->_vertex, sizeof( DxLib::VERTEX3D ) * polygon_num, fh );
+
+	FileRead_close( fh );
+}
+
+void Model::save( std::string filename ) {
+	FILE *fp;
+	errno_t err = fopen_s( &fp, filename.c_str( ), "wb" );
+	if ( err != 0 ) {
+		return;
+	}
+
+	fwrite( &_impl->_polygon_num, sizeof( unsigned int ), 1, fp );
+	fwrite( &_impl->_vertex, sizeof( DxLib::VERTEX3D ) * _impl->_polygon_num, 1, fp );
+
+	fclose( fp );
 }
