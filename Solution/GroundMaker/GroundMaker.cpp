@@ -20,8 +20,6 @@ const GROUND_CHIP_TYPE CONVERT[ 4 ] = {
 
 const int INPUT_X = 100;
 const int INPUT_Y = 100;
-const int MAX_STRING = 1024;
-const char DIRECTORY[] = "../resource2D/";
 
 const std::pair< int, int > DIR[ 4 ] = {
 	std::make_pair( 1, 1 ),
@@ -46,7 +44,7 @@ GroundMaker::~GroundMaker( ) {
 
 void GroundMaker::update( ) {
 	switch ( _state ) {
-		case STATE_INPUT:
+	case STATE_INPUT:
 		if ( inputFileName( ) ) {
 			_state = STATE_LOAD;
 		}
@@ -63,17 +61,31 @@ void GroundMaker::update( ) {
 	case STATE_SAVE:
 		save( );
 		_viewer->setModel( );
-		_state = STATE_END;
+		_state = STATE_VIEWER;
 		break;
-	case STATE_END:
-		_viewer->draw( );
+	case STATE_VIEWER:
+		viewer( );
 		break;
 	}
 }
 
+void GroundMaker::viewer( ) {
+	_viewer->draw( );
+}
+
+bool GroundMaker::inputFileName( ) {
+	FrameworkPtr fw = Framework::getInstance( );
+	_file_name = fw->inputString( INPUT_X, INPUT_Y );
+	if ( _file_name.empty( ) ) {
+		fw->terminate( );
+		return false;
+	}
+	return true;
+}
+
 void GroundMaker::loadToCSV( ) {
 	//ƒtƒ@ƒCƒ‹‚Ì“Ç‚Ýž‚Ý
-	std::string file = DIRECTORY + _file_name + ".csv";
+	std::string file = _file_name + ".csv";
 	FILE* fp;
 	errno_t err = fopen_s( &fp, file.c_str( ), "r" );
 	if ( err != 0 ) {
@@ -171,7 +183,7 @@ void GroundMaker::mdlMake( ) {
 void GroundMaker::save( ) {
 	// grd•Û‘¶
 	BinaryPtr binary = _ground->makeBinary( );
-	std::string file = DIRECTORY + _file_name + ".grd";
+	std::string file = _file_name + ".grd";
 	FrameworkPtr fw = Framework::getInstance( );
 	fw->saveBinary( file.c_str( ), binary );
 

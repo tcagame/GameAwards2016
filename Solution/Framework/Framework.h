@@ -25,12 +25,12 @@ public:
 	void loadBinary( const char * filename, BinaryPtr binary );
 	void saveBinary( const char * filename, BinaryPtr binary );
 	std::string inputString( int sx, int sy );
-public:
-	static FrameworkPtr _instance;
+	void terminate( );
 private:
+	static FrameworkPtr _instance;
 	int _screen_width;
 	int _screen_height;
-public:
 	std::map< std::string, TaskPtr > _task_list;
+	bool _terminating;
 };
 

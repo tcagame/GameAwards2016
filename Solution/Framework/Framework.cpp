@@ -41,7 +41,7 @@ Framework::Framework( ) {
 	SetUseBackCulling( TRUE ) ;
     SetTextureAddressModeUV( DX_TEXADDRESS_WRAP, DX_TEXADDRESS_WRAP );
 
-
+	_terminating = false;
 }
 
 Framework::~Framework( ) {
@@ -77,6 +77,9 @@ void Framework::run( ) {
 
 	// ÉÅÉCÉìÉãÅ[Év
 	while ( true ) {
+		if ( _terminating ) {
+			break;
+		}
 		if ( ProcessMessage( ) != 0 ) {
 			break;
 		}
@@ -173,4 +176,8 @@ std::string Framework::inputString( int sx, int sy ) {
 		str = buf;
 	}
 	return str;
+}
+
+void Framework::terminate( ) {
+	_terminating = true;
 }

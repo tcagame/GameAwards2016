@@ -1,7 +1,7 @@
 #include "ModelMake.h"
 #include "GroundChip.h"
 #include "MapChip.h"
-#include "ModelManager.h"
+#include "Model.h"
 #include "GroundMaker.h"
 
 const int CHIP_SIZE = 10;
@@ -11,7 +11,7 @@ const int MODEL_DIFF = CHIP_SIZE / 2;
 const char * FILE_NAME = "../resource3D/model(dummy)/texture.png";
 
 ModelMake::ModelMake( ) {
-	_model_manager = ModelManagerPtr( new ModelManager( ) );
+
 }
 
 ModelMake::~ModelMake() {
@@ -32,8 +32,11 @@ void ModelMake::setModel( ){
 }
 
 void ModelMake::saveModel( ) {
-	_model_manager->saveModelData( "../resource3D/model(dummy)/Map.mdl" );
+
+	_model_ground->save( "../resource3D/model(dummy)/Map.mdl" );
 }
+
+
 
 void ModelMake::setMountainModel( int mx, int my ) {
 	GroundMakerPtr ground_maker = GroundMaker::getTask( );
@@ -44,8 +47,8 @@ void ModelMake::setMountainModel( int mx, int my ) {
 	int sx = mx * CHIP_SIZE;
 	int sz = -my * CHIP_SIZE;
 	std::string name = getModelFile( idx, GROUND_CHIP_TYPE_MOUNTAIN );
-	_model_manager->loadModelData( name.c_str( ) );
-	_model_manager->setModelPos( sx + MODEL_DIFF, sz - MODEL_DIFF );
+	_model_ground->load( name.c_str( ) );
+	_model_ground->setModelPos( sx + MODEL_DIFF, sz - MODEL_DIFF );
 }
  
 void ModelMake::setPlainModel( int mx, int my ) {
@@ -106,7 +109,7 @@ void ModelMake::setRiverModel( int mx, int my ) {
 }
 
 std::string ModelMake::getModelFile( int idx, unsigned char type ) {
-	std::string filename = "../resource3D/model(dummy)/";
+	std::string filename;
 	switch( type ){
 	case GROUND_CHIP_TYPE_PLAIN:
 		filename += "p_";

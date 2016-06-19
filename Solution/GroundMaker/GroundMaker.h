@@ -16,7 +16,7 @@ enum STATE {
 	STATE_LOAD,
 	STATE_MAKE,
 	STATE_SAVE,
-	STATE_END,
+	STATE_VIEWER,
 	STATE_MAX,
 };
 
@@ -33,18 +33,19 @@ public:
 	int getMapWidth( );
 	int getMapHeight( );
 private:
+	bool inputFileName( );
 	void loadToCSV( );
 	void makeGroundModel( );
 	void mdlMake( );
 	void save( );
 	unsigned char makeModelChip( int mx, int my, GROUND_CHIP_TYPE type );
+	void viewer( );
 private:
 	std::string _file_name;
 	STATE _state;
 	ModelMakePtr _model_make;
 	ViewerPtr _viewer;
 	GroundPtr _ground;
-
 	std::vector< unsigned char > _plain_map;
 	std::vector< unsigned char > _desert_map;
 	std::vector< unsigned char > _mountain_map;

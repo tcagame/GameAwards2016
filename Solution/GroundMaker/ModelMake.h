@@ -1,9 +1,10 @@
 #pragma once
+
 #include "smart_ptr.h"
 #include <string>
 
 PTR( ModelMake );
-PTR( ModelManager );
+PTR( Model );
 
 class ModelMake{
 public:
@@ -13,6 +14,7 @@ public:
 	void setModel( );
 	void saveModel( );
 private:
+
 	void setMountainModel( int mx, int my );
 	void setPlainModel( int mx, int my );
 	void setDesertModel( int mx, int my );
@@ -20,6 +22,11 @@ private:
 	std::string getModelFile( int idx, unsigned char type );
 	void setQuadranglePolygon( int sx, int sz, int u, int v );
 private:
-	ModelManagerPtr _model_manager;
+	ModelPtr _model_moutain[ 16 ];
+	ModelPtr _model_river[ 16 ];
+	ModelPtr _model_desert[ 16 ];
+	ModelPtr _model_plain[ 16 ];
+
+	ModelPtr _model_ground;
 };
 

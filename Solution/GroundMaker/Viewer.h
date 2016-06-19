@@ -3,7 +3,6 @@
 #include <string>
 
 PTR( Viewer );
-PTR( ModelManager );
 PTR( Camera );
 PTR( Model );
 
@@ -15,8 +14,8 @@ public:
 	void draw( );
 	void setModel( );
 private:
-	ModelManagerPtr _model_manager;
 	ModelPtr _model;
 	CameraPtr _camera;
+	int _texture;
 };
 
