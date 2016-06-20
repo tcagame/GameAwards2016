@@ -65,12 +65,12 @@ void Camera::update( ) {
 	}
 
 	if ( keyboard->isPushKey( "Y" ) ) {
-		Matrix matrix = Matrix::makeTransformRotation( Vector( 0, 1, 0 ), PI2 / 4 ); // XŽ²‚É90“x‰ñ“]
+		Matrix matrix = Matrix::makeTransformRotation( Vector( 0, 1, 0 ), PI2 / 4 ); // YŽ²‚É90“x‰ñ“]
 		model_maker->transferModel( matrix );
 	}
 
 	if ( keyboard->isPushKey( "Z" ) ) {
-		Matrix matrix = Matrix::makeTransformRotation( Vector( 0, 0, 1 ), PI2 / 4 ); // XŽ²‚É90“x‰ñ“]
+		Matrix matrix = Matrix::makeTransformRotation( Vector( 0, 0, 1 ), PI2 / 4 ); // ZŽ²‚É90“x‰ñ“]
 		model_maker->transferModel( matrix );
 	}
 

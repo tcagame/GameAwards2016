@@ -25,7 +25,7 @@ ModelPtr Parser::makeModel( std::string filename ) {
 	};
 
 	int fh = FileRead_open( filename.c_str( ) );
-	if ( fh == -1 ) {
+	if ( fh == 0 ) {
 		return ModelPtr( );
 	}
 

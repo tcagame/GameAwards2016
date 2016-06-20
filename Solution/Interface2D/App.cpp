@@ -49,7 +49,7 @@ App::App( ) {
 	_forests	= ForestsPtr   ( new Forests   ( _map ) );
 	_miners		= MinersPtr	   ( new Miners	   ( _unit_map ) );
 	_pioneers	= PioneersPtr  ( new Pioneers( _unit_map ) );
-	_refineries = RefineriesPtr( new Refineries( _gold_mines, _miners ) );
+	_refineries = RefineriesPtr( new Refineries( _gold_mines, _miners\GameAwards2016 ) );
 	_bulletins  = BulletinsPtr ( new Bulletins ( _forests, _pioneers ) );
 	_enemies    = EnemiesPtr   ( new Enemies   ( _unit_map, _map, _bulletins, _refineries ) );
 	_guardians  = GuardiansPtr ( new Guardians ( _unit_map, _enemies, _map ) );
