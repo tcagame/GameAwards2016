@@ -14,7 +14,7 @@ public:
 	void setModel( );
 	void saveModel( );
 private:
-
+	void allLoadModel( );
 	void setMountainModel( int mx, int my );
 	void setPlainModel( int mx, int my );
 	void setDesertModel( int mx, int my );

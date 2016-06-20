@@ -36,6 +36,9 @@ public:
 	void set( int n, VERTEX vertex ); // n * 3
 	void load( std::string filename );
 	void save( std::string filename );
+	void addPolygon( VERTEX vertex1, VERTEX vertex2, VERTEX vertex3 );
+	void mergeModel( ModelConstPtr model );
+	ModelImplConstPtr getModelImpl( ) const;
 private:
 	ModelImplPtr _impl;
 };

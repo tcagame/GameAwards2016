@@ -33,7 +33,6 @@ void Model::setPolygonNum( int num ) {
 }
 
 void Model::draw( int texture, bool trans ) const {
-
 	int check = DrawPolygon3D( _impl->_vertex, _impl->_polygon_num, texture, trans ? TRUE : FALSE );
 }
 
@@ -100,4 +99,31 @@ void Model::multiply( Matrix matrix ) {
 		pos = matrix.multiply( pos );
 		_impl->_vertex[ i ].pos = VGet( ( float )pos.x, ( float )pos.y, ( float )pos.z );
 	}
+}
+
+void Model::addPolygon( VERTEX vertex1, VERTEX vertex2, VERTEX vertex3 ) {
+	int idx = _impl->_polygon_num * 3;
+	int vertex_num =  ( _impl->_polygon_num + 1 ) * 3;
+	_impl->_polygon_num++;
+	_impl->_vertex = ( VERTEX3D* )realloc( _impl->_vertex, sizeof( VERTEX3D ) );
+
+	set( idx + 0, vertex1 );
+	set( idx + 1, vertex2 );
+	set( idx + 2, vertex3 );
+}
+
+void Model::mergeModel( ModelConstPtr model ) {
+	ModelImplConstPtr merge_impl = model->getModelImpl( );
+	_impl->_polygon_num += _impl->_polygon_num;
+	_impl->_vertex = ( VERTEX3D* )realloc( _impl->_vertex, sizeof( VERTEX3D ) * ( _impl->_polygon_num * 3 ) );
+	
+	int idx = _impl->_polygon_num;
+	int count = merge_impl->_polygon_num;
+	for ( int i = 0; i < count; i++ ) {
+		_impl->_vertex[ idx + i ] = merge_impl->_vertex[ i ];
+	}
+}
+
+ModelImplConstPtr Model::getModelImpl( ) const {
+	return _impl;
 }

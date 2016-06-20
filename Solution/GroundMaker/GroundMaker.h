@@ -16,7 +16,7 @@ enum STATE {
 	STATE_LOAD,
 	STATE_MAKE,
 	STATE_SAVE,
-	STATE_VIEWER,
+	STATE_VIEW,
 	STATE_MAX,
 };
 
@@ -39,7 +39,7 @@ private:
 	void mdlMake( );
 	void save( );
 	unsigned char makeModelChip( int mx, int my, GROUND_CHIP_TYPE type );
-	void viewer( );
+	void view( );
 private:
 	std::string _file_name;
 	STATE _state;

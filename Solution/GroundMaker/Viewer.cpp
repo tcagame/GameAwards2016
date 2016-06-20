@@ -1,11 +1,9 @@
 #include "Viewer.h"
 #include "Framework.h"
 #include "Model.h"
-#include "Camera.h"
 #include "DxLib.h"
 
 Viewer::Viewer( ) {
-	_camera = CameraPtr( new Camera( ) );
 	_model = ModelPtr( new Model( ) );
 	_texture = LoadGraph( "GroudTexture.png" );
 }
@@ -18,7 +16,6 @@ void Viewer::setModel( ) {
 }
 
 void Viewer::draw( ) {
-	_camera->update( );
 	_model->draw( _texture );
 	ScreenFlip( );
 	ClearDrawScreen( );

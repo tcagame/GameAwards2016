@@ -8,13 +8,12 @@ const int CHIP_SIZE = 10;
 const int TEXTURE_SIZE = 1024;
 const int TEXTURE_CHIP_SIZE = TEXTURE_SIZE / 8;
 const int MODEL_DIFF = CHIP_SIZE / 2;
-const char * FILE_NAME = "../resource3D/model(dummy)/texture.png";
 
 ModelMake::ModelMake( ) {
-
+	allLoadModel( );
 }
 
-ModelMake::~ModelMake() {
+ModelMake::~ModelMake( ) {
 }
 
 void ModelMake::setModel( ){
@@ -32,11 +31,8 @@ void ModelMake::setModel( ){
 }
 
 void ModelMake::saveModel( ) {
-
-	_model_ground->save( "../resource3D/model(dummy)/Map.mdl" );
+	_model_ground->save( "Map.mdl" );
 }
-
-
 
 void ModelMake::setMountainModel( int mx, int my ) {
 	GroundMakerPtr ground_maker = GroundMaker::getTask( );
@@ -48,7 +44,7 @@ void ModelMake::setMountainModel( int mx, int my ) {
 	int sz = -my * CHIP_SIZE;
 	std::string name = getModelFile( idx, GROUND_CHIP_TYPE_MOUNTAIN );
 	_model_ground->load( name.c_str( ) );
-	_model_ground->setModelPos( sx + MODEL_DIFF, sz - MODEL_DIFF );
+	//_model_ground->setModelPos( sx + MODEL_DIFF, sz - MODEL_DIFF );
 }
  
 void ModelMake::setPlainModel( int mx, int my ) {
@@ -104,8 +100,8 @@ void ModelMake::setRiverModel( int mx, int my ) {
 	int sx = mx * CHIP_SIZE;
 	int sz = -my * CHIP_SIZE;
 	std::string name = getModelFile( idx, GROUND_CHIP_TYPE_RIVER );
-	_model_manager->loadModelData( name.c_str( ) );
-	_model_manager->setModelPos( sx + MODEL_DIFF, sz - MODEL_DIFF );
+	_model_ground->load( name );
+	//_model_ground->setModelPos( sx + MODEL_DIFF, sz - MODEL_DIFF );
 }
 
 std::string ModelMake::getModelFile( int idx, unsigned char type ) {
@@ -193,15 +189,20 @@ void ModelMake::setQuadranglePolygon( int sx, int sz, int u, int v ) {
 		vertex[ i ].v = ( double )( v + i / 2 * ( TEXTURE_CHIP_SIZE / 2 ) ) / TEXTURE_SIZE;
 	}
 
-	Model::VERTEX quad_vertex[ 6 ] = {
-		vertex[ 0 ],
-		vertex[ 1 ],
-		vertex[ 3 ],
-		vertex[ 0 ],
-		vertex[ 3 ],
-		vertex[ 2 ]
+	Model::VERTEX quad_vertex[ 2 ][ 3 ] = {
+		{ vertex[ 0 ], vertex[ 1 ], vertex[ 3 ] },
+		{ vertex[ 0 ], vertex[ 3 ], vertex[ 2 ] }
 	};
-	for ( int i = 0; i < 6; i++ ) {
-		_model_manager->setVertex( quad_vertex[ i ] );
+	for ( int i = 0; i < 2; i++ ) {
+		_model_ground->addPolygon( quad_vertex[ i ][ 0 ], quad_vertex[ i ][ 1 ], quad_vertex[ i ][ 2 ] );
+	}
+}
+
+void ModelMake::allLoadModel( ) {
+	for( int i = 0; i < 16; i++ ) {
+		_model_moutain[ i ]->load( getModelFile( i, GROUND_CHIP_TYPE_MOUNTAIN ) );
+		_model_river[ i ]->load( getModelFile( i, GROUND_CHIP_TYPE_RIVER ) );
+		_model_desert[ i ];
+		_model_plain[ i ];
 	}
 }

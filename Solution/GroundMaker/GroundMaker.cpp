@@ -37,6 +37,7 @@ GroundMaker::GroundMaker( ) {
 	_state = STATE_INPUT;
 	_model_make = ModelMakePtr( new ModelMake( ) );
 	_viewer = ViewerPtr( new Viewer( ) );
+
 }
 
 GroundMaker::~GroundMaker( ) {
@@ -61,15 +62,15 @@ void GroundMaker::update( ) {
 	case STATE_SAVE:
 		save( );
 		_viewer->setModel( );
-		_state = STATE_VIEWER;
+		_state = STATE_VIEW;
 		break;
-	case STATE_VIEWER:
-		viewer( );
+	case STATE_VIEW:
+		view( );
 		break;
 	}
 }
 
-void GroundMaker::viewer( ) {
+void GroundMaker::view( ) {
 	_viewer->draw( );
 }
 
@@ -140,7 +141,6 @@ void GroundMaker::loadToCSV( ) {
 		}
 	}
 }
-
 
 void GroundMaker::makeGroundModel( ) {
 	int model_chip_width  = _ground->getWidth( )  + 1;
