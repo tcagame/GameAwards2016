@@ -33,7 +33,6 @@ void Model::setPolygonNum( int num ) {
 }
 
 void Model::draw( int texture, bool trans ) const {
-
 	int check = DrawPolygon3D( _impl->_vertex, _impl->_polygon_num, texture, trans ? TRUE : FALSE );
 }
 
