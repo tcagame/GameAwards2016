@@ -198,11 +198,12 @@ void ModelMake::setQuadranglePolygon( int sx, int sz, int u, int v ) {
 	}
 }
 
+
 void ModelMake::allLoadModel( ) {
 	for( int i = 0; i < 16; i++ ) {
 		_model_moutain[ i ]->load( getModelFile( i, GROUND_CHIP_TYPE_MOUNTAIN ) );
 		_model_river[ i ]->load( getModelFile( i, GROUND_CHIP_TYPE_RIVER ) );
-		_model_desert[ i ];
-		_model_plain[ i ];
+		//_model_desert[ i ] = CreateDesertModel( i );
+		//_model_plain[ i ] = CreatePlaneModel( i );
 	}
 }
