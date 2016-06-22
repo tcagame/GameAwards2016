@@ -174,31 +174,6 @@ std::string ModelMake::getModelFile( int idx, unsigned char type ) {
 	return filename;
 }
 
-void ModelMake::setQuadranglePolygon( int sx, int sz, int u, int v ) {
-	Model::VERTEX vertex[ 4 ];
-	Vector quad_point[ 4 ] = {
-		Vector( 0, 0, 0 ),
-		Vector( 1, 0, 0 ),
-		Vector( 0, 0, -1 ),
-		Vector( 1, 0, -1 ),
-	};
-
-	for ( int i = 0; i < 4; i++ ) {
-		vertex[ i ].pos = Vector( ( double )sx, 0.0, ( double ) sz ) + quad_point[ i ] * ( CHIP_SIZE / 2 );
-		vertex[ i ].u = ( double )( u + i % 2 * ( TEXTURE_CHIP_SIZE / 2 ) ) / TEXTURE_SIZE;
-		vertex[ i ].v = ( double )( v + i / 2 * ( TEXTURE_CHIP_SIZE / 2 ) ) / TEXTURE_SIZE;
-	}
-
-	Model::VERTEX quad_vertex[ 2 ][ 3 ] = {
-		{ vertex[ 0 ], vertex[ 1 ], vertex[ 3 ] },
-		{ vertex[ 0 ], vertex[ 3 ], vertex[ 2 ] }
-	};
-	for ( int i = 0; i < 2; i++ ) {
-		_model_ground->addPolygon( quad_vertex[ i ][ 0 ], quad_vertex[ i ][ 1 ], quad_vertex[ i ][ 2 ] );
-	}
-}
-
-
 void ModelMake::allLoadModel( ) {
 	for( int i = 0; i < 16; i++ ) {
 		_model_moutain[ i ]->load( getModelFile( i, GROUND_CHIP_TYPE_MOUNTAIN ) );

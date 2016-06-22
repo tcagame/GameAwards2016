@@ -98,7 +98,6 @@ void ModelMaker::view( ) {
 }
 
 void ModelMaker::loadTexture( ) {
-
 	_state = STATE_VIEWER;
 	if ( _texture != DX_NONE_GRAPH ) {
 		DeleteGraph( _texture );
