@@ -74,7 +74,9 @@ void ModelMaker::load( ) {
 	
 	if ( filename.find( ".mdl" ) != std::string::npos ) {
 		_model = ModelPtr( new Model );
-		_model->load( filename );
+		if ( !_model->load( filename ) ) {
+			_model.reset( );
+		}
 	}
 }
 

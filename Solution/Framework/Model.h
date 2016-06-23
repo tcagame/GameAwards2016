@@ -34,7 +34,7 @@ public:
 	void translate( Vector move );
 	void setPolygonNum( int num );
 	void set( int n, VERTEX vertex ); // n * 3
-	void load( std::string filename );
+	bool load( std::string filename );
 	void save( std::string filename );
 	void addPolygon( VERTEX vertex1, VERTEX vertex2, VERTEX vertex3 );
 	void mergeModel( ModelConstPtr model );

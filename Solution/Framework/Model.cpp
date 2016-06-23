@@ -60,10 +60,10 @@ void Model::set( int n, VERTEX vertex ) {
 	_impl->_vertex[ n ] = vtx;
 }
 
-void Model::load( std::string filename ) {
+bool Model::load( std::string filename ) {
 	int fh = FileRead_open( filename.c_str( ) );
 	if ( fh <= 0 ) {
-		return;
+		return false;
 	}
 
 	unsigned int polygon_num;
@@ -74,6 +74,7 @@ void Model::load( std::string filename ) {
 	FileRead_read( _impl->_vertex, sizeof( DxLib::VERTEX3D ) * ( polygon_num * 3 ), fh );
 
 	FileRead_close( fh );
+	return true;
 }
 
 void Model::save( std::string filename ) {
