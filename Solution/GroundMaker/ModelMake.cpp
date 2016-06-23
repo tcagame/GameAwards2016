@@ -48,47 +48,9 @@ void ModelMake::setMountainModel( int mx, int my ) {
 }
  
 void ModelMake::setPlainModel( int mx, int my ) {
-	GroundMakerPtr ground_maker = GroundMaker::getTask( );
-	int idx = ground_maker->getMapType( mx, my, GROUND_CHIP_TYPE_PLAIN );
-	if ( idx == MAP_TYPE_FFFF ) {
-		return;
-	}
-	int x = mx * CHIP_SIZE;
-	int z = -my * CHIP_SIZE;
-	unsigned char key = 0x01;
-	for ( int i = 0 ;i < 4; i++ ) {
-		if ( ( idx & key ) > 0 ) {
-			int sx = x + i % 2 * ( CHIP_SIZE / 2 );
-			int sz = z - i / 2 * ( CHIP_SIZE / 2 );
-			int u = i % 2 * ( TEXTURE_CHIP_SIZE / 2 );
-			int v = i / 2 * ( TEXTURE_CHIP_SIZE / 2 );
-			setQuadranglePolygon( sx, sz, u, v );
-		}
-		key = key << 1;
-	}
 }
 
 void ModelMake::setDesertModel( int mx, int my ) {
-	GroundMakerPtr ground_maker = GroundMaker::getTask( );
-	int idx = ground_maker->getMapType( mx, my, GROUND_CHIP_TYPE_DESERT );
-	if ( idx == MAP_TYPE_FFFF ) {
-		return;
-	}
-	int x = mx * CHIP_SIZE;
-	int z = -my * CHIP_SIZE;
-	int tx = idx % 8 * TEXTURE_CHIP_SIZE;
-	int ty = ( GROUND_CHIP_TYPE_DESERT * 2 + idx / 8 ) * TEXTURE_CHIP_SIZE;
-	unsigned char key = 0x01;
-	for ( int i = 0 ;i < 4; i++ ) {
-		if ( ( idx & key ) > 0 ) {
-			int sx = x + i % 2 * ( CHIP_SIZE / 2 );
-			int sz = z - i / 2 * ( CHIP_SIZE / 2 );
-			int u = tx + i % 2 * ( TEXTURE_CHIP_SIZE / 2 );
-			int v = ty + i / 2 * ( TEXTURE_CHIP_SIZE / 2 );
-			setQuadranglePolygon( sx, sz, u, v );
-		}
-		key = key << 1;
-	}
 }
 
 void ModelMake::setRiverModel( int mx, int my ) {
