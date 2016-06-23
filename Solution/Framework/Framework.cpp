@@ -127,19 +127,17 @@ int Framework::getWindowHeight( ) const  {
 	return _screen_height;
 }
 
-void Framework::loadBinary( const char * filename, BinaryPtr binary ) {
-	std::string str = filename;
-
-	int size = ( int )FileRead_size( filename );
+void Framework::loadBinary( std::string  filename, BinaryPtr binary ) {
+	int size = ( int )FileRead_size( filename.c_str( ) );
 	if ( size == -1 ) {
-		str = "../" + str;
-		size = ( int )FileRead_size( filename );
+		filename = "../" + filename;
+		size = ( int )FileRead_size( filename.c_str( ) );
 		if ( size == -1 ) {
 			return;
 		}
 	}
 
-	int handle = FileRead_open( str.c_str( ) );
+	int handle = FileRead_open( filename.c_str( ) );
 	if ( handle == -1 ) {
 		return;
 	}
@@ -152,7 +150,7 @@ void Framework::loadBinary( const char * filename, BinaryPtr binary ) {
 }
 
 
-void Framework::saveBinary( const char * filename, BinaryPtr binary ) {
+void Framework::saveBinary( std::string filename, BinaryPtr binary ) {
 
 	int size = binary->getSize( );
 	if ( size <= 0 ) {
@@ -160,7 +158,7 @@ void Framework::saveBinary( const char * filename, BinaryPtr binary ) {
 	}
 	
 	FILE *fp;
-	errno_t err = fopen_s( &fp, filename, "wb" );
+	errno_t err = fopen_s( &fp, filename.c_str( ), "wb" );
 	if ( err != 0 ) {
 		return;
 	}

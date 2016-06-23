@@ -214,7 +214,7 @@ void Viewer::drawGround( ) {
 					resource = RES_DESERT;
 					break;
 			}
-			Drawer::Sprite sprite( Drawer::Transform( j * CHIP_SIZE - CHIP_SIZE, i * CHIP_SIZE ), resource );
+			Drawer::Sprite sprite( Drawer::Transform( i * CHIP_SIZE, j * CHIP_SIZE ), resource );
 			drawer->set( sprite );
 		}
 	}

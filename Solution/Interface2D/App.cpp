@@ -49,7 +49,7 @@ App::App( ) {
 	_forests	= ForestsPtr   ( new Forests   ( _map ) );
 	_miners		= MinersPtr	   ( new Miners	   ( _unit_map ) );
 	_pioneers	= PioneersPtr  ( new Pioneers( _unit_map ) );
-	_refineries = RefineriesPtr( new Refineries( _gold_mines, _miners\GameAwards2016 ) );
+	_refineries = RefineriesPtr( new Refineries( _gold_mines, _miners ) );
 	_bulletins  = BulletinsPtr ( new Bulletins ( _forests, _pioneers ) );
 	_enemies    = EnemiesPtr   ( new Enemies   ( _unit_map, _map, _bulletins, _refineries ) );
 	_guardians  = GuardiansPtr ( new Guardians ( _unit_map, _enemies, _map ) );
@@ -57,7 +57,7 @@ App::App( ) {
 	
 	BinaryPtr binary = BinaryPtr( new Binary );
 	FrameworkPtr fw = Framework::getInstance( );
-	fw->loadBinary( "resource/ground/sample.grd", binary );
+	fw->loadBinary( "resource2D/map.grd", binary );
 
 	_ground		= GroundPtr    ( new Ground( binary ) );
 

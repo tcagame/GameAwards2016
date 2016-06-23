@@ -36,15 +36,6 @@ void Model::draw( int texture, bool trans ) const {
 	int check = DrawPolygon3D( _impl->_vertex, _impl->_polygon_num, texture, trans ? TRUE : FALSE );
 }
 
-void Model::translate( Vector move ) {
-	int count = ( int )_impl->_polygon_num * 3;
-	for ( int i = 0; i < count; i++ ) {
-		_impl->_vertex[ i ].pos.x += ( float )move.x;
-		_impl->_vertex[ i ].pos.y += ( float )move.y;
-		_impl->_vertex[ i ].pos.z += ( float )move.z;
-	}
-}
-
 void Model::set( int n, VERTEX vertex ) {
 
 	VERTEX3D vtx;
@@ -113,15 +104,29 @@ void Model::addPolygon( VERTEX vertex1, VERTEX vertex2, VERTEX vertex3 ) {
 }
 
 void Model::mergeModel( ModelConstPtr model ) {
-	ModelImplConstPtr merge_impl = model->getModelImpl( );
-	_impl->_polygon_num += _impl->_polygon_num;
-	_impl->_vertex = ( VERTEX3D* )realloc( _impl->_vertex, sizeof( VERTEX3D ) * ( _impl->_polygon_num * 3 ) );
-	
-	int idx = _impl->_polygon_num;
-	int count = merge_impl->_polygon_num;
-	for ( int i = 0; i < count; i++ ) {
-		_impl->_vertex[ idx + i ] = merge_impl->_vertex[ i ];
+	if ( model == NULL ) {
+		return;
 	}
+
+	ModelImplConstPtr merge_impl = model->getModelImpl( );
+	int polygon_num = _impl->_polygon_num + merge_impl->_polygon_num;
+	VERTEX3D* vertex = new VERTEX3D[ sizeof( VERTEX3D ) * polygon_num * 3 ];
+
+	// this のモデルをコピー
+	for ( int i = 0; i < ( int )_impl->_polygon_num * 3; i++ ) {
+		vertex[ i ] = _impl->_vertex[ i ];
+	}
+	// modelのモデルをコピー
+	for ( int i = 0; i < ( int )merge_impl->_polygon_num * 3; i++ ) {
+		int idx = _impl->_polygon_num * 3 + i;
+		vertex[ idx ] = merge_impl->_vertex[ i ];
+	}
+
+	if ( _impl->_vertex ) {
+		delete [] _impl->_vertex;
+	}
+	_impl->_vertex = vertex;
+	_impl->_polygon_num = polygon_num;
 }
 
 ModelImplConstPtr Model::getModelImpl( ) const {

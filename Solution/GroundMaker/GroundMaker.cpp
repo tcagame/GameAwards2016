@@ -1,10 +1,12 @@
 #include "Framework.h"
+#include "Model.h"
 #include "GroundMaker.h"
-#include "ModelMake.h"
-#include "Viewer.h"
 #include "Ground.h"
 #include "Binary.h"
 #include <assert.h>
+
+const int CHIP_SIZE = 10;
+const int MODEL_DIFF = CHIP_SIZE / 2;
 
 const int CSV_PLAIN    = 0;
 const int CSV_DESERT   = 1;
@@ -34,64 +36,49 @@ GroundMakerPtr GroundMaker::getTask( ) {
 }
 
 GroundMaker::GroundMaker( ) {
-	_state = STATE_INPUT;
-	_model_make = ModelMakePtr( new ModelMake( ) );
-	_viewer = ViewerPtr( new Viewer( ) );
-
 }
 
 GroundMaker::~GroundMaker( ) {
 }
 
 void GroundMaker::update( ) {
-	switch ( _state ) {
-	case STATE_INPUT:
-		if ( inputFileName( ) ) {
-			_state = STATE_LOAD;
+
+	while ( true ) {
+		if ( !inputFileName( ) ) {
+			continue;
 		}
-		break;
-	case STATE_LOAD:
-		loadToCSV( );
-		_state = STATE_MAKE;
-		break;
-	case STATE_MAKE:
-		makeGroundModel( );
-		mdlMake( );
-		_state = STATE_SAVE;
-		break;
-	case STATE_SAVE:
-		save( );
-		_viewer->setModel( );
-		_state = STATE_VIEW;
-		break;
-	case STATE_VIEW:
-		view( );
+
+		if ( !makeGround( ) )  {
+			continue;
+		}
+
+		if ( !makeModel( ) ) {
+			continue;
+		}
+
 		break;
 	}
-}
-
-void GroundMaker::view( ) {
-	_viewer->draw( );
+	
+	FrameworkPtr fw = Framework::getInstance( );
+	fw->terminate( );
 }
 
 bool GroundMaker::inputFileName( ) {
 	FrameworkPtr fw = Framework::getInstance( );
 	_file_name = fw->inputString( INPUT_X, INPUT_Y );
 	if ( _file_name.empty( ) ) {
-		fw->terminate( );
 		return false;
 	}
 	return true;
 }
 
-void GroundMaker::loadToCSV( ) {
+bool GroundMaker::makeGround( ) {
 	//ファイルの読み込み
 	std::string file = _file_name + ".csv";
 	FILE* fp;
 	errno_t err = fopen_s( &fp, file.c_str( ), "r" );
 	if ( err != 0 ) {
-		assert( false );
-		return;
+		return false;
 	}
 	
 	char buf[ 2048 ];
@@ -115,7 +102,9 @@ void GroundMaker::loadToCSV( ) {
 		if ( height == 0 ) {
 			width = w;
 		}
-		assert( width == w );
+		if ( width != w ) {
+			return false;
+		}
 
 		height++;
 	}
@@ -140,24 +129,72 @@ void GroundMaker::loadToCSV( ) {
 			str = str.substr( index + 1 );
 		}
 	}
+
+	// grd保存
+	BinaryPtr binary = _ground->makeBinary( );
+	std::string file_grd = _file_name + ".grd";
+	FrameworkPtr fw = Framework::getInstance( );
+	fw->saveBinary( file_grd, binary );
+	return true;
 }
 
-void GroundMaker::makeGroundModel( ) {
+bool GroundMaker::makeModel( ) {
+	//モデル読み込み
+
+	ModelPtr model_moutain[ 16 ];
+	ModelPtr model_river[ 16 ];
+	ModelPtr model_desert[ 16 ];
+	ModelPtr model_plain[ 16 ];
+
+	for ( int i = 0; i < 16; i++ ) {
+		model_moutain[ i ] = ModelPtr( new Model( ) );
+		model_river[ i ] = ModelPtr( new Model( ) );
+		model_desert[ i ] = ModelPtr( new Model( ) );
+		model_plain[ i ] = ModelPtr( new Model( ) );
+	}
+
+	for( int i = 1; i < 16; i++ ) {
+		model_moutain[ i ]->load( getModelFile( i, GROUND_CHIP_TYPE_MOUNTAIN ) );
+		model_river[ i ]->load( getModelFile( i, GROUND_CHIP_TYPE_RIVER ) );
+		model_desert[ i ]->load( getModelFile( i, GROUND_CHIP_TYPE_DESERT ) );
+		model_plain[ i ]->load( getModelFile( i, GROUND_CHIP_TYPE_PLAIN ) );
+	}
+
+	//各地形モデルの配置
 	int model_chip_width  = _ground->getWidth( )  + 1;
 	int model_chip_height = _ground->getHeight( ) + 1;
-
-	_mountain_map.clear( );
-	_plain_map.clear( );
-	_desert_map.clear( );
-	_river_map.clear( );
-	for ( int i = 0; i < model_chip_width; i++ ) {
-		for ( int j = 0; j < model_chip_height; j++ ) {
-			_mountain_map.push_back( makeModelChip( i, j, GROUND_CHIP_TYPE_MOUNTAIN ) );
-			_plain_map.push_back   ( makeModelChip( i, j, GROUND_CHIP_TYPE_PLAIN    ) );
-			_desert_map.push_back  ( makeModelChip( i, j, GROUND_CHIP_TYPE_DESERT   ) );
-			_river_map.push_back   ( makeModelChip( i, j, GROUND_CHIP_TYPE_RIVER    ) );
+	std::vector< int > plain_map;
+	std::vector< int > desert_map;
+	std::vector< int > mountain_map;
+	std::vector< int > river_map;
+	for ( int j = 0; j < model_chip_height; j++ ) {
+		for ( int i = 0; i < model_chip_width; i++ ) {
+			mountain_map.push_back( makeModelChip( i, j, GROUND_CHIP_TYPE_MOUNTAIN ) );
+			plain_map.push_back   ( makeModelChip( i, j, GROUND_CHIP_TYPE_PLAIN    ) );
+			desert_map.push_back  ( makeModelChip( i, j, GROUND_CHIP_TYPE_DESERT   ) );
+			river_map.push_back   ( makeModelChip( i, j, GROUND_CHIP_TYPE_RIVER    ) );
 		}
 	}
+	
+	//地形モデル作成
+	ModelPtr model_ground = ModelPtr( new Model( ) );
+	for ( int j = 0; j < model_chip_height; j++ ) {
+		for ( int i = 0; i < model_chip_width; i++ ) {
+			ModelPtr model = ModelPtr( new Model( ) );
+			int chip = mountain_map[ i + j * model_chip_width ];
+			if ( chip > 0 ) {
+				model->mergeModel( model_moutain[ chip ] );
+			}
+			//1チップモデルの配置
+			Matrix mat = Matrix::makeTransformTranslation( Vector( i * CHIP_SIZE, j * CHIP_SIZE ) );
+			model->multiply( mat );
+			//1チップモデルの追加
+			model_ground->mergeModel( model );
+		}
+	}
+	model_ground->save( "Map.mdl" );
+
+	return true;
 }
 
 unsigned char GroundMaker::makeModelChip( int mx, int my, GROUND_CHIP_TYPE type ) {
@@ -176,45 +213,80 @@ unsigned char GroundMaker::makeModelChip( int mx, int my, GROUND_CHIP_TYPE type 
 	return num;
 }
 
-void GroundMaker::mdlMake( ) {
-	_model_make->setModel( );
-}
-
-void GroundMaker::save( ) {
-	// grd保存
-	BinaryPtr binary = _ground->makeBinary( );
-	std::string file = _file_name + ".grd";
-	FrameworkPtr fw = Framework::getInstance( );
-	fw->saveBinary( file.c_str( ), binary );
-
-	// mdl保存
-	_model_make->saveModel( ); 
-}
-
-MAP_TYPE GroundMaker::getMapType( int mx, int my, GROUND_CHIP_TYPE type ) {
-	int idx = my * getMapWidth( ) + mx;
-	MAP_TYPE result;
-	switch ( type ) {
-	case GROUND_CHIP_TYPE_PLAIN:
-		result = _plain_map[ idx ];
-		break;
-	case GROUND_CHIP_TYPE_DESERT:
-		result = _desert_map[ idx ];
-		break;
-	case GROUND_CHIP_TYPE_MOUNTAIN:
-		result = _mountain_map[ idx ];
-		break;
-	case GROUND_CHIP_TYPE_RIVER:
-		result = _river_map[ idx ];
-		break;
-	}
-	return result;
-}
-
 int GroundMaker::getMapWidth( ) {
 	return _ground->getWidth( ) + 1;
 }
 
 int GroundMaker::getMapHeight( ) {
 	return _ground->getHeight( ) + 1;
+}
+
+std::string GroundMaker::getModelFile( int idx, unsigned char type ) {
+	std::string filename;
+	switch( type ){
+	case GROUND_CHIP_TYPE_PLAIN:
+		filename += "p_";
+		break;
+	case GROUND_CHIP_TYPE_DESERT: 
+		filename += "d_";
+		break;
+	case GROUND_CHIP_TYPE_MOUNTAIN:
+		filename += "g_";
+		break;
+	case GROUND_CHIP_TYPE_RIVER:
+		filename += "w_";
+		break;
+	default:
+		break;
+	}
+	switch( idx ) {
+	case MAP_TYPE_FFFT:
+		filename += "01.mdl";
+		break;
+	case MAP_TYPE_FFTF:
+		filename += "02.mdl";
+		break;
+	case MAP_TYPE_FFTT:
+		filename += "03.mdl";
+		break;
+	case MAP_TYPE_FTFF:
+		filename += "04.mdl";
+		break;
+	case MAP_TYPE_FTFT:
+		filename += "05.mdl";
+		break;
+	case MAP_TYPE_FTTF:
+		filename += "06.mdl";
+		break;
+	case MAP_TYPE_FTTT:
+		filename += "07.mdl";
+		break;
+	case MAP_TYPE_TFFF:
+		filename += "08.mdl";
+		break;
+	case MAP_TYPE_TFFT:
+		filename += "09.mdl";
+		break;
+	case MAP_TYPE_TFTF:
+		filename += "10.mdl";
+		break;
+	case MAP_TYPE_TFTT:
+		filename += "11.mdl";
+		break;
+	case MAP_TYPE_TTFF:
+		filename += "12.mdl";
+		break;
+	case MAP_TYPE_TTFT:
+		filename += "13.mdl";
+		break;
+	case MAP_TYPE_TTTF:
+		filename += "14.mdl";
+		break;
+	case MAP_TYPE_TTTT:
+		filename += "15.mdl";
+		break;
+	default:
+		break;
+	} 
+	return filename;
 }

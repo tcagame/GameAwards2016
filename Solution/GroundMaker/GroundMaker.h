@@ -7,18 +7,9 @@
 #include <vector>
 
 PTR( GroundMaker );
-PTR( ModelMake );
-PTR( Viewer );
+PTR( Model );
 PTR( Ground );
 
-enum STATE {
-	STATE_INPUT,
-	STATE_LOAD,
-	STATE_MAKE,
-	STATE_SAVE,
-	STATE_VIEW,
-	STATE_MAX,
-};
 
 class GroundMaker : public Task {
 public:
@@ -34,21 +25,12 @@ public:
 	int getMapHeight( );
 private:
 	bool inputFileName( );
-	void loadToCSV( );
-	void makeGroundModel( );
-	void mdlMake( );
-	void save( );
+	bool makeGround( );
+	bool makeModel( );
+	std::string getModelFile( int idx, unsigned char type );
 	unsigned char makeModelChip( int mx, int my, GROUND_CHIP_TYPE type );
-	void view( );
 private:
 	std::string _file_name;
-	STATE _state;
-	ModelMakePtr _model_make;
-	ViewerPtr _viewer;
 	GroundPtr _ground;
-	std::vector< unsigned char > _plain_map;
-	std::vector< unsigned char > _desert_map;
-	std::vector< unsigned char > _mountain_map;
-	std::vector< unsigned char > _river_map;
 };
 

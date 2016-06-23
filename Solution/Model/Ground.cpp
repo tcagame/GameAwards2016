@@ -57,6 +57,7 @@ int Ground::getIdx( int mx, int my ) const {
 BinaryPtr Ground::makeBinary( ) {
 	BinaryPtr binary( new Binary );
 
+	binary->ensure( sizeof( GROUND_CHIP_TYPE ) * _width * _height + sizeof( unsigned int ) * 2 );
 	binary->write( &_width, sizeof( unsigned int ) );
 	binary->write( &_height, sizeof( unsigned int ) );
 	binary->write( _array_type, sizeof( GROUND_CHIP_TYPE ) * _width * _height );

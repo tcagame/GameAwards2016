@@ -31,7 +31,6 @@ public:
 	void multiply( Matrix matrix );
 public:
 	void alloc( int polygon_num );
-	void translate( Vector move );
 	void setPolygonNum( int num );
 	void set( int n, VERTEX vertex ); // n * 3
 	void load( std::string filename );
