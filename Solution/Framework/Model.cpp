@@ -133,3 +133,22 @@ void Model::mergeModel( ModelConstPtr model ) {
 ModelImplConstPtr Model::getModelImpl( ) const {
 	return _impl;
 }
+
+Vector Model::getMaxPoint( ) const {
+	Vector max;
+	int count = ( int )_impl->_polygon_num * 3;
+	for ( int i = 0; i < count; i++ ) {
+		DxLib::VECTOR pos = _impl->_vertex->pos;
+		if ( max.x < abs( pos.x ) ) {
+			max.x = abs( pos.x );
+		}
+		if ( max.y < abs( pos.y ) ) {
+			max.y = abs( pos.y );
+		}
+		if ( max.z < abs( pos.z ) ) {
+			max.z = abs( pos.z );
+		}
+	}
+
+	return max;
+}

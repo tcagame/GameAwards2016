@@ -16,7 +16,6 @@ public:
 	virtual ~ModelMaker( );
 public:
 	void update( );
-	void transferModel( Matrix matrix );
 private:
 	enum STATE {
 		STATE_VIEWER,

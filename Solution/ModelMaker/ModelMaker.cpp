@@ -81,22 +81,51 @@ void ModelMaker::load( ) {
 }
 
 void ModelMaker::view( ) {
-	KeyboardPtr keyboad = Keyboard::getTask( );
-	if ( keyboad->isPushKey( "F1" ) ) {
+	KeyboardPtr keyboard = Keyboard::getTask( );
+
+	if ( keyboard->isPushKey( "F1" ) ) {
 		_state = STATE_LOAD;
 	}
-	if ( keyboad->isPushKey( "F2" ) ) {
+	if ( keyboard->isPushKey( "F2" ) ) {
 		_state = STATE_TEXTURE;
 	}
-	if ( keyboad->isPushKey( "F5" ) ) {
+	if ( keyboard->isPushKey( "F5" ) ) {
 		_state = STATE_SAVE;
 	}
+	
+	if ( keyboard->isPushKey( "X" ) ) {
+		Matrix matrix = Matrix::makeTransformRotation( Vector( 1, 0, 0 ), PI2 / 4 ); // XŽ²‚É90“x‰ñ“]
+		_model->multiply( matrix );
+	}
 
+	if ( keyboard->isPushKey( "Y" ) ) {
+		Matrix matrix = Matrix::makeTransformRotation( Vector( 0, 1, 0 ), PI2 / 4 ); // YŽ²‚É90“x‰ñ“]
+		_model->multiply( matrix );
+	}
+
+	if ( keyboard->isPushKey( "Z" ) ) {
+		Matrix matrix = Matrix::makeTransformRotation( Vector( 0, 0, 1 ), PI2 / 4 ); // ZŽ²‚É90“x‰ñ“]
+		_model->multiply( matrix );
+	}
+	
+	if ( keyboard->isPushKey( "A" ) ) {
+		Vector max = _model->getMaxPoint( );
+		double length = max.x;
+		if ( length < max.y ) {
+			length = max.y;
+		}
+		double scale = 0.5 / length;
+		Matrix matrix = Matrix::makeTransformScaling( Vector( scale, scale, scale ) ); // ZŽ²‚É90“x‰ñ“]
+		_model->multiply( matrix );
+	}
+
+
+
+	ScreenFlip( );
+	ClearDrawScreen( );
 	if ( _model ) {
 		_model->draw( _texture );
 	}
-	ScreenFlip( );
-	ClearDrawScreen( );
 }
 
 void ModelMaker::loadTexture( ) {
@@ -115,8 +144,4 @@ void ModelMaker::loadTexture( ) {
 	if ( _texture < 0 ) {
 		_texture = DX_NONE_GRAPH;
 	}
-}
-
-void ModelMaker::transferModel( Matrix matrix ) {
-	_model->multiply( matrix );
 }
