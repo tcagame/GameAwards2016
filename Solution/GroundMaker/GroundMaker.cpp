@@ -243,7 +243,7 @@ std::string GroundMaker::getModelFile( int idx, unsigned char type ) {
 		filename += "desert_";
 		break;
 	case GROUND_CHIP_TYPE_MOUNTAIN:
-		filename += "mountain_";
+		filename += "g_";
 		break;
 	case GROUND_CHIP_TYPE_RIVER:
 		filename += "river_";
