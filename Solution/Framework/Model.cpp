@@ -93,17 +93,6 @@ void Model::multiply( Matrix matrix ) {
 	}
 }
 
-void Model::addPolygon( VERTEX vertex1, VERTEX vertex2, VERTEX vertex3 ) {
-	int idx = _impl->_polygon_num * 3;
-	int vertex_num =  ( _impl->_polygon_num + 1 ) * 3;
-	_impl->_polygon_num++;
-	_impl->_vertex = ( VERTEX3D* )realloc( _impl->_vertex, sizeof( VERTEX3D ) );
-
-	set( idx + 0, vertex1 );
-	set( idx + 1, vertex2 );
-	set( idx + 2, vertex3 );
-}
-
 void Model::mergeModel( ModelConstPtr model ) {
 	if ( model == NULL ) {
 		return;
@@ -134,21 +123,14 @@ ModelImplConstPtr Model::getModelImpl( ) const {
 	return _impl;
 }
 
-Vector Model::getMaxPoint( ) const {
-	Vector max;
-	int count = ( int )_impl->_polygon_num * 3;
-	for ( int i = 0; i < count; i++ ) {
-		DxLib::VECTOR pos = _impl->_vertex->pos;
-		if ( max.x < abs( pos.x ) ) {
-			max.x = abs( pos.x );
-		}
-		if ( max.y < abs( pos.y ) ) {
-			max.y = abs( pos.y );
-		}
-		if ( max.z < abs( pos.z ) ) {
-			max.z = abs( pos.z );
-		}
-	}
 
-	return max;
+Vector Model::getPoint( int idx ) const {
+	return Vector(
+		_impl->_vertex[ idx ].pos.x,
+		_impl->_vertex[ idx ].pos.y,
+		_impl->_vertex[ idx ].pos.z );
+}
+
+int Model::getPolygonNum( ) const {
+	return _impl->_polygon_num;
 }

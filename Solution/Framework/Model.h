@@ -29,15 +29,14 @@ public:
 public:
 	void draw( int texture, bool trans = false ) const;
 	void multiply( Matrix matrix );
-	Vector getMaxPoint( ) const;
-public:
 	void alloc( int polygon_num );
 	void setPolygonNum( int num );
+	int  getPolygonNum( ) const;
 	void set( int n, VERTEX vertex ); // n * 3
 	bool load( std::string filename );
 	void save( std::string filename );
-	void addPolygon( VERTEX vertex1, VERTEX vertex2, VERTEX vertex3 );
 	void mergeModel( ModelConstPtr model );
+	Vector getPoint( int idx ) const;
 	ModelImplConstPtr getModelImpl( ) const;
 private:
 	ModelImplPtr _impl;

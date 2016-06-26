@@ -5,7 +5,7 @@
 #include "Binary.h"
 #include <assert.h>
 
-const int CHIP_SIZE = 10;
+const int CHIP_SIZE = 1;
 const int MODEL_DIFF = CHIP_SIZE / 2;
 
 const int CSV_PLAIN    = 0;
@@ -181,9 +181,21 @@ bool GroundMaker::makeModel( ) {
 	for ( int j = 0; j < model_chip_height; j++ ) {
 		for ( int i = 0; i < model_chip_width; i++ ) {
 			ModelPtr model = ModelPtr( new Model( ) );
-			int chip = mountain_map[ i + j * model_chip_width ];
+			int chip = plain_map[ i + j * model_chip_width ];
+			if ( chip > 0 ) {
+				model->mergeModel( model_plain[ chip ] );
+			}
+			chip = desert_map[ i + j * model_chip_width ];
+			if ( chip > 0 ) {
+				model->mergeModel( model_desert[ chip ] );
+			}
+			chip = mountain_map[ i + j * model_chip_width ];
 			if ( chip > 0 ) {
 				model->mergeModel( model_moutain[ chip ] );
+			}
+			chip = river_map[ i + j * model_chip_width ];
+			if ( chip > 0 ) {
+				model->mergeModel( model_river[ chip ] );
 			}
 			//1チップモデルの配置
 			Matrix mat = Matrix::makeTransformTranslation( Vector( i * CHIP_SIZE, j * CHIP_SIZE ) );
@@ -202,10 +214,10 @@ unsigned char GroundMaker::makeModelChip( int mx, int my, GROUND_CHIP_TYPE type 
 	for ( int i = 0; i < 4; i++ ) {
 		num <<= 1;
 
-		int x = mx - 1 + i % 2;
-		int y = my - 1 + i / 2;
-		GROUND_CHIP_TYPE type = _ground->getType( x, y );
-		if ( _ground->getType( x, y ) == type ) {
+		int x = mx - i % 2;
+		int y = my - i / 2;
+		GROUND_CHIP_TYPE chip_type = _ground->getType( x, y );
+		if ( chip_type == type ) {
 			num += 1;
 		}
 	}
@@ -225,16 +237,16 @@ std::string GroundMaker::getModelFile( int idx, unsigned char type ) {
 	std::string filename;
 	switch( type ){
 	case GROUND_CHIP_TYPE_PLAIN:
-		filename += "p_";
+		filename += "plain_";
 		break;
 	case GROUND_CHIP_TYPE_DESERT: 
-		filename += "d_";
+		filename += "desert_";
 		break;
 	case GROUND_CHIP_TYPE_MOUNTAIN:
-		filename += "g_";
+		filename += "mountain_";
 		break;
 	case GROUND_CHIP_TYPE_RIVER:
-		filename += "w_";
+		filename += "river_";
 		break;
 	default:
 		break;

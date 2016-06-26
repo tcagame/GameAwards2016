@@ -109,13 +109,31 @@ void ModelMaker::view( ) {
 	}
 	
 	if ( keyboard->isPushKey( "A" ) ) {
-		Vector max = _model->getMaxPoint( );
+		int count = _model->getPolygonNum( ) * 3;
+		Vector max;
+		for ( int i = 0; i < count; i++ ) {
+			Vector pos = _model->getPoint( i );
+			if ( ( int )( pos.z * 1000 ) != 0 ) {
+				continue;
+			}
+
+			if ( max.x < abs( pos.x ) ) {
+				max.x = abs( pos.x );
+			}
+			if ( max.y < abs( pos.y ) ) {
+				max.y = abs( pos.y );
+			}
+			if ( max.z < abs( pos.z ) ) {
+				max.z = abs( pos.z );
+			}
+		}
+
 		double length = max.x;
 		if ( length < max.y ) {
 			length = max.y;
 		}
 		double scale = 0.5 / length;
-		Matrix matrix = Matrix::makeTransformScaling( Vector( scale, scale, scale ) ); // ZŽ²‚É90“x‰ñ“]
+		Matrix matrix = Matrix::makeTransformScaling( Vector( scale, scale, scale ) );
 		_model->multiply( matrix );
 	}
 
