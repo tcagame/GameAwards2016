@@ -26,12 +26,27 @@ Ground::~Ground( ) {
 	delete [ ] _array_type;
 }
 
+GROUND_CHIP_TYPE Ground::getTypeTerrain( int mx, int my ) const {
+	if ( mx < 0 || mx >= _width ||
+		 my < 0 || my >= _height ) {
+			return GROUND_CHIP_TYPE_RIVER;
+	}
+	GROUND_CHIP_TYPE chip = _array_type[ getIdx( mx, my ) ];
+	if ( chip == GROUND_CHIP_TYPE_TREE ) {
+		chip = GROUND_CHIP_TYPE_DESERT;
+	}
+
+	return chip;
+}
+
 GROUND_CHIP_TYPE Ground::getType( int mx, int my ) const {
 	if ( mx < 0 || mx >= _width ||
 		 my < 0 || my >= _height ) {
 			return GROUND_CHIP_TYPE_RIVER;
 	}
-	return _array_type[ getIdx( mx, my ) ];
+	GROUND_CHIP_TYPE chip = _array_type[ getIdx( mx, my ) ];
+
+	return chip;
 }
 
 int Ground::getWidth( ) const {
@@ -64,4 +79,28 @@ BinaryPtr Ground::makeBinary( ) {
 
 	return binary;
 }
+
+void Ground::toThinningTrees( ) {
+	for ( int i = 0; i < _width; i++ ) {
+		for ( int j = 0; j < _height; j++ ) {
+			GROUND_CHIP_TYPE chip = getType( i, j );
+			if ( chip != GROUND_CHIP_TYPE_TREE ) {
+				continue;
+			}
+			// ŽüˆÍ‚É–Ø‚ª‚ ‚Á‚½‚çíœ
+			for ( int k = 0; k < 5 * 5; k++ ) {
+				int mx = i - 2 + k % 5;
+				int my = j - 2 + k / 5;
+				if ( mx == i && my == j ) {
+					continue;
+				}
+				GROUND_CHIP_TYPE target = getType( mx, my );
+				if ( target == GROUND_CHIP_TYPE_TREE ) {
+					setType( mx, my, GROUND_CHIP_TYPE_PLAIN );
+				}
+			}
+		}
+	}
+}
+
 

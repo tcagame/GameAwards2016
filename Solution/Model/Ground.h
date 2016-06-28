@@ -15,10 +15,12 @@ public:
 	virtual ~Ground( );
 public:
 	void setType( int mx, int my, GROUND_CHIP_TYPE type );
+	GROUND_CHIP_TYPE getTypeTerrain( int mx, int my ) const;
 	GROUND_CHIP_TYPE getType( int mx, int my ) const;
 	int getWidth( ) const;
 	int getHeight( ) const;
 	BinaryPtr makeBinary( );
+	void toThinningTrees( );
 private:
 	int getIdx( int mx, int my ) const;
 	void init( );
