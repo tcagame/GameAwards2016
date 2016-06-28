@@ -16,7 +16,8 @@ public:
 public:
 	void update( );
 private:
-	Vector _pos;
+	Vector _to_pos;
+	Vector _target; // pos = _target + _to_pos;
 	Vector _before_mouse_pos;
 };
 

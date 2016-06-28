@@ -4,6 +4,7 @@
 #include "Ground.h"
 #include "Binary.h"
 #include <assert.h>
+#include "DxLib.h"
 
 const int CHIP_SIZE = 1;
 const int MODEL_DIFF = CHIP_SIZE / 2;
@@ -45,15 +46,15 @@ void GroundMaker::update( ) {
 
 	while ( true ) {
 		if ( !inputFileName( ) ) {
-			continue;
+			break;
 		}
 
 		if ( !makeGround( ) )  {
-			continue;
+			break;
 		}
 
 		if ( !makeModel( ) ) {
-			continue;
+			break;
 		}
 
 		break;
@@ -202,6 +203,11 @@ bool GroundMaker::makeModel( ) {
 			model->multiply( mat );
 			//1チップモデルの追加
 			model_ground->mergeModel( model );
+
+			ScreenFlip( );
+			ClearDrawScreen( );
+			int percent = ( j * model_chip_width + i ) * 100 / ( model_chip_width * model_chip_height );
+			DrawFormatString( 0, 0, GetColor( 255, 255, 255 ), "%d %%", percent );
 		}
 	}
 	model_ground->save( "Map.mdl" );
@@ -243,7 +249,7 @@ std::string GroundMaker::getModelFile( int idx, unsigned char type ) {
 		filename += "desert_";
 		break;
 	case GROUND_CHIP_TYPE_MOUNTAIN:
-		filename += "g_";
+		filename += "mountain_";
 		break;
 	case GROUND_CHIP_TYPE_RIVER:
 		filename += "river_";
