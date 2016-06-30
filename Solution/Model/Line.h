@@ -91,7 +91,7 @@ private:
 	bool setConnectFacility( const Coord& coord );
 	bool destroyLineDir( CHIP_TYPE type, const Coord& coord );
 	void updatePackets( );
-	bool isGuidingLength( const Coord& coord );
+//	bool isGuidingLength( const Coord& coord );
 	void initPackets( );
 private:
 	MapPtr _map;

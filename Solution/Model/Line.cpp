@@ -204,18 +204,7 @@ void Line::startGuide( const Coord& coord ) {
 	if ( chip.type == CHIP_TYPE_NONE  ) {
 		return;
 	}
-	FacilityConstPtr facility = getFacilityOnMapChip( chip );
 
-	if ( facility != NULL ) {
-		Coord left = facility->getLineFixationLeft( );
-		left.x++;
-		Coord right = facility->getLineFixationRight( );
-		right.x--;
-		if ( left.getIdx( )  != coord.getIdx( ) &&
-			 right.getIdx( ) != coord.getIdx( ) ) {
-			return;
-		}
-	}
 	_guide_mode = true;
 	_old_coord = coord;
 	_guide_store_from_dir = DIR_NONE;
@@ -232,25 +221,10 @@ bool Line::setGuideAlongMouse( const Coord& coord ) {
 		return false;
 	}
 
-	Map::Chip chip = _map->getChip( target );
-
-	// ファシリティーだったら
-	if ( ( chip.type & 0xf0 ) == CHIP_TYPE_FACILITY ) {
-		FacilityConstPtr fasility = getFacilityOnMapChip( chip );
-		target = fasility->getLineFixationRight( );
-		target.x--;
-	}
-
-	// ラインを範囲内まで延ばした
-	if ( !isGuidingLength( target ) ) {
-		return true;
-	}
-
 	int diff_x = target.x - _guide_line_coord.x;
 	int diff_y = target.y - _guide_line_coord.y;
 	Coord diff_target_coord = _guide_line_coord;
 	
-
 	while( diff_y != 0 ){
 		if ( diff_y < 0 ) {
 			diff_target_coord.y--;
@@ -274,13 +248,14 @@ bool Line::setGuideAlongMouse( const Coord& coord ) {
 	
 	_guide_line_coord = diff_target_coord;
 	if( _guide_line_coord.getIdx( ) != _guide_start_coord.getIdx( ) ){
+		Map::Chip chip = _map->getChip( target );
 		return chip.type == CHIP_TYPE_NONE;
 	} else {
 		return true;
 	}
 }
 
-
+/*
 bool Line::isGuidingLength( const Coord& coord ) {
 	int x = abs( _guide_line_coord.x - coord.x );
 	int y = abs( _guide_line_coord.y - coord.y );
@@ -288,7 +263,7 @@ bool Line::isGuidingLength( const Coord& coord ) {
 		return false;
 	}
 	return true;
-}
+}*/
 
 void Line::setGuide( const Coord& coord ) {
 	// ガイドしない

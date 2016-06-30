@@ -72,7 +72,6 @@ App::App( ) {
 	_mode = MODE_LINE;
 	_bases->install( Coord( 10, 10 ) );
 	//_gold = 0;
-	_line_guide_flag = false;
 }
 
 App::~App( ) {
@@ -226,17 +225,12 @@ void App::doLinePlacementOperation( ) {
 		_line->startGuide( coord );
 	}
 
-	if ( _line_guide_flag ) {
-		if ( !_line->setGuideAlongMouse( coord ) ) {
-			_line_guide_flag = !_line_guide_flag;
-			_line->cancelGuide( );
-		}
+	if ( !_line->setGuideAlongMouse( coord ) ) {
+		_line->cancelGuide( );
 	}
 
 	if ( click_left == Viewer::CLICK_RELEASE ) {
-		if( _line_guide_flag ) {
-			_line->cancelGuide( );
-		}
+		_line->cancelGuide( );
 		if( _click_push_coord.getIdx( ) != coord.getIdx( ) ){
 			return;
 		}
@@ -244,8 +238,6 @@ void App::doLinePlacementOperation( ) {
 			_mode = MODE_DELETE_LINE;
 		}
 
-		
-		_line_guide_flag = !_line_guide_flag;
 	}
 	
 }

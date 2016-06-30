@@ -98,5 +98,4 @@ private:
 	unsigned char _relocation_idx;
 	Coord _before_coord;
 	//int _gold;
-	bool _line_guide_flag;
 };
