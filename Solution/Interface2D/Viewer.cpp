@@ -68,6 +68,7 @@ enum RES {
 	RES_MOUNTAIN,
 	RES_DESERT,
 	RES_TREE,
+	RES_FLOWER,
 	MAX_RES,
 };
 
@@ -107,6 +108,8 @@ void Viewer::initialize( ) {
 	drawer->load( RES_MOUNTAIN		 , "Mountain.png" );
 	drawer->load( RES_DESERT		 , "Desert.png" );
 	drawer->load( RES_TREE		     , "tree.png" );
+	drawer->load( RES_FLOWER		 , "flower.png" );
+
 	_click_left = CLICK_NONE;
 	_click_right = CLICK_NONE;
 	_count = 0;
@@ -231,6 +234,18 @@ void Viewer::drawGround( ) {
 			}
 
 			Drawer::Sprite sprite( Drawer::Transform( i * CHIP_SIZE - CHIP_SIZE, j * CHIP_SIZE - CHIP_SIZE ), RES_TREE );
+			drawer->set( sprite );
+		}
+	}
+	// ‰Ô
+	for ( int i = 0; i < ground->getWidth( ); i++ ) {
+		for ( int j = 0; j < ground->getHeight( ); j++ ) {
+			GROUND_CHIP_TYPE chip = ground->getType( i, j );
+			if ( chip != GROUND_CHIP_TYPE_FLOWER ) {
+				continue;
+			}
+
+			Drawer::Sprite sprite( Drawer::Transform( i * CHIP_SIZE - CHIP_SIZE, j * CHIP_SIZE - CHIP_SIZE ), RES_FLOWER );
 			drawer->set( sprite );
 		}
 	}

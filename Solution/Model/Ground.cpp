@@ -35,6 +35,9 @@ GROUND_CHIP_TYPE Ground::getTypeTerrain( int mx, int my ) const {
 	if ( chip == GROUND_CHIP_TYPE_TREE ) {
 		chip = GROUND_CHIP_TYPE_DESERT;
 	}
+	if ( chip == GROUND_CHIP_TYPE_FLOWER ) {
+		chip = GROUND_CHIP_TYPE_PLAIN;
+	}
 	if ( chip == GROUND_CHIP_TYPE_POWERPLANT ) {
 		chip = GROUND_CHIP_TYPE_DESERT;
 	}
@@ -105,15 +108,35 @@ void Ground::toThinningTrees( ) {
 		}
 	}
 }
+void Ground::toFlatFlower( ) {
+	for ( int i = 0; i < _width; i++ ) {
+		for ( int j = 0; j < _height; j++ ) {
+			GROUND_CHIP_TYPE chip = getType( i, j );
+			if ( chip != GROUND_CHIP_TYPE_FLOWER ) {
+				continue;
+			}
+			//”ÍˆÍ“à‚ð•½’n‚É‚·‚é
+			for ( int k = 0; k < 3 * 3; k++ ) {
+				int mx = i + k % 3;
+				int my = j + k / 3;
+				if ( mx == i && my == j ) {
+					continue;
+				}
+				GROUND_CHIP_TYPE target = getType( mx, my );
+				setType( mx, my, GROUND_CHIP_TYPE_PLAIN );
+			}
+		}
+	}
+}
 
-void Ground::toThinningPowerPlant( ) {
+void Ground::toFlatPowerPlant( ) {
 	for ( int i = 0; i < _width; i++ ) {
 		for ( int j = 0; j < _height; j++ ) {
 			GROUND_CHIP_TYPE chip = getType( i, j );
 			if ( chip != GROUND_CHIP_TYPE_POWERPLANT ) {
 				continue;
 			}
-			//”ÍˆÍ“à‚Ér’nˆÈŠO‚ª‚ ‚Á‚½‚ç
+			//”ÍˆÍ“à‚ðr’n‚É‚·‚é
 			for ( int k = 0; k < 5 * 5; k++ ) {
 				int mx = i + k % 5;
 				int my = j + k / 5;

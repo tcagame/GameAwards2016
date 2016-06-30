@@ -21,7 +21,8 @@ public:
 	int getHeight( ) const;
 	BinaryPtr makeBinary( );
 	void toThinningTrees( );
-	void toThinningPowerPlant( );
+	void toFlatFlower( );
+	void toFlatPowerPlant( );
 private:
 	int getIdx( int mx, int my ) const;
 	void init( );

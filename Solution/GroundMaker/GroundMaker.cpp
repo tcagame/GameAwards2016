@@ -20,7 +20,8 @@ const GROUND_CHIP_TYPE CONVERT[ ] = {
 	GROUND_CHIP_TYPE_MOUNTAIN	, // 2
 	GROUND_CHIP_TYPE_RIVER		, // 3
 	GROUND_CHIP_TYPE_TREE		, // 4
-	GROUND_CHIP_TYPE_POWERPLANT	, // 5
+	GROUND_CHIP_TYPE_FLOWER		, // 5
+	GROUND_CHIP_TYPE_POWERPLANT	, // 6
 };
 
 const int INPUT_X = 100;
@@ -135,7 +136,7 @@ bool GroundMaker::makeGround( ) {
 
 	// ŠÔˆø‚«‚·‚é
 	_ground->toThinningTrees( );
-	_ground->toThinningPowerPlant( );
+	_ground->toFlatPowerPlant( );
 
 	// grd•Û‘¶
 	BinaryPtr binary = _ground->makeBinary( );
@@ -248,6 +249,7 @@ int GroundMaker::getMapHeight( ) {
 std::string GroundMaker::getModelFile( int idx, unsigned char type ) {
 	std::string filename;
 	switch( type ){
+	case GROUND_CHIP_TYPE_FLOWER:
 	case GROUND_CHIP_TYPE_PLAIN:
 		filename += "plain_";
 		break;
