@@ -335,10 +335,6 @@ void Line::setGuide( const Coord& coord ) {
 	_chips[ coord.getIdx( ) ].form_dir = now_dir;
 	_chips[ coord.getIdx( ) ].guide = true;
 
-
-	
-
-
 	_old_coord = coord;
 }
 

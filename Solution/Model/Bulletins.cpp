@@ -10,8 +10,8 @@ Bulletins::Bulletins( ForestsPtr forests, PioneersPtr pioneers ) {
 Bulletins::~Bulletins( ) {
 }
 
-FacilityPtr Bulletins::createFacility( MapPtr map ) {
-	return BulletinPtr( new Bulletin( map, _forests, _pioneers ) );
+FacilityPtr Bulletins::createFacility( MapPtr map, GroundConstPtr ground ) {
+	return BulletinPtr( new Bulletin( map, ground, _forests, _pioneers ) );
 }
 
 void Bulletins::update( ) {

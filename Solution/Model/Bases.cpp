@@ -1,5 +1,6 @@
 #include "Bases.h"
 #include "Base.h"
+#include "Ground.h"
 #include "Map.h"
 
 Bases::Bases( EnemiesPtr enemies, GuardiansPtr guardians ) {
@@ -10,8 +11,8 @@ Bases::Bases( EnemiesPtr enemies, GuardiansPtr guardians ) {
 Bases::~Bases( ) {
 }
 
-FacilityPtr Bases::createFacility( MapPtr map ) {
-	return BasePtr( new Base( map, _guardians, _enemies ) );
+FacilityPtr Bases::createFacility( MapPtr map, GroundConstPtr ground ) {
+	return BasePtr( new Base( map, ground, _guardians, _enemies ) );
 }
 
 void Bases::update( ) {

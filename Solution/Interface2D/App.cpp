@@ -29,8 +29,8 @@
 #include "Binary.h"
 #include <assert.h>
 
-static const int POWERPLANT_POS_X = 10;
-static const int POWERPLANT_POS_Y = 3;
+static const int POWERPLANT_POS_X = 12;
+static const int POWERPLANT_POS_Y = 9;
 
 AppPtr App::getTask( ) {
 	FrameworkPtr fw = Framework::getInstance( );
@@ -39,10 +39,15 @@ AppPtr App::getTask( ) {
 
 App::App( ) {
 	// リソース読み込み
+	BinaryPtr binary = BinaryPtr( new Binary );
+	FrameworkPtr fw = Framework::getInstance( );
+	fw->loadBinary( "resource2D/map.grd", binary );
+
+	_ground		= GroundPtr    ( new Ground( binary ) );
 
 	_map = MapPtr( new Map( ) );
 	_unit_map = UnitMapPtr( new UnitMap( ) );
-	_powerplant = PowerplantPtr( new Powerplant( _map ) );
+	_powerplant = PowerplantPtr( new Powerplant( _map, _ground ) );
 	_chargers   = ChargersPtr  ( new Chargers  ( ) );
 	
 	_gold_mines = GoldMinesPtr ( new GoldMines ( _map ) );
@@ -55,16 +60,10 @@ App::App( ) {
 	_guardians  = GuardiansPtr ( new Guardians ( _unit_map, _enemies, _map ) );
 	_bases      = BasesPtr     ( new Bases     ( _enemies, _guardians ) );
 	
-	BinaryPtr binary = BinaryPtr( new Binary );
-	FrameworkPtr fw = Framework::getInstance( );
-	fw->loadBinary( "resource2D/map.grd", binary );
-
-	_ground		= GroundPtr    ( new Ground( binary ) );
-
-	_chargers->initialize( _map );
-	_bases->initialize( _map );
-	_refineries->initialize( _map );
-	_bulletins->initialize( _map );
+	_chargers->initialize( _map, _ground );
+	_bases->initialize( _map, _ground );
+	_refineries->initialize( _map, _ground );
+	_bulletins->initialize( _map, _ground );
 
 	// 発電所は最初から設置されている
 	bool result_powerplant_installation = _powerplant->install( Coord( POWERPLANT_POS_X, POWERPLANT_POS_Y ), 0 );

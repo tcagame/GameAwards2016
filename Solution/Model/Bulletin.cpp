@@ -10,8 +10,8 @@ static const int WIDTH  = 4;
 static const int HEIGHT = 3;
 static const int SEARCH_RANGE = 200;
 
-Bulletin::Bulletin( MapPtr map, ForestsConstPtr forests, PioneersPtr pioneers ) :
-Facility( CHIP_TYPE_BULLETIN, WIDTH, HEIGHT, map ) {
+Bulletin::Bulletin( MapPtr map, GroundConstPtr ground, ForestsConstPtr forests, PioneersPtr pioneers ) :
+Facility( CHIP_TYPE_BULLETIN, WIDTH, HEIGHT, map, ground ) {
 	_max = 1;
 	_num = 0;
 	_isAwake = true;
@@ -19,6 +19,7 @@ Facility( CHIP_TYPE_BULLETIN, WIDTH, HEIGHT, map ) {
 	_pioneers = pioneers;
 	_forests = forests;
 	_map = map;
+	_ground = ground;
 }
 
 Bulletin::~Bulletin( ) {

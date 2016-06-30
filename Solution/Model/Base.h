@@ -6,6 +6,7 @@
 
 PTR( Base );
 PTR( Map );
+PTR( Ground );
 PTR( Enemy );
 
 PTR( Guardians );
@@ -13,7 +14,7 @@ PTR( Enemies );
 
 class Base : public Facility {
 public:
-	Base( MapPtr map, GuardiansPtr guardians, EnemiesPtr enemies );
+	Base( MapPtr map, GroundConstPtr ground, GuardiansPtr guardians, EnemiesPtr enemies );
 	virtual ~Base( );
 public:
 	void update( );
@@ -36,5 +37,6 @@ private:
 	GuardiansPtr _guardians;
 	EnemiesPtr _enemies;
 	MapPtr _map;
+	GroundConstPtr _ground;
 };
 

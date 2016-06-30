@@ -13,8 +13,8 @@ static const int HEIGHT = 5;
 static const int SEARCH_RANGE = 7;
 static const int DIV = SEARCH_RANGE * 16;
 
-Base::Base( MapPtr map, GuardiansPtr guardians, EnemiesPtr enemies ) :
-Facility( CHIP_TYPE_BASE, WIDTH, HEIGHT, map ) {
+Base::Base( MapPtr map, GroundConstPtr ground, GuardiansPtr guardians, EnemiesPtr enemies ) :
+Facility( CHIP_TYPE_BASE, WIDTH, HEIGHT, map, ground ) {
 	_max = 1;
 	_num = 0;
 
@@ -22,6 +22,7 @@ Facility( CHIP_TYPE_BASE, WIDTH, HEIGHT, map ) {
 	_guardians = guardians;
 	_enemies = enemies;
 	_map = map;
+	_ground = ground;
 }
 
 Base::~Base( ) {

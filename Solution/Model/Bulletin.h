@@ -4,13 +4,14 @@
 
 PTR( Bulletin );
 PTR( Map );
+PTR( Ground );
 
 PTR( Forests );
 PTR( Pioneers );
 
 class Bulletin : public Facility {
 public:
-	Bulletin( MapPtr map, ForestsConstPtr forests, PioneersPtr pioneers );
+	Bulletin( MapPtr map, GroundConstPtr ground, ForestsConstPtr forests, PioneersPtr pioneers );
 	virtual ~Bulletin( );
 public:
 	void update( );
@@ -29,6 +30,7 @@ private:
 
 	ForestsConstPtr _forests;
 	MapPtr _map;
+	GroundConstPtr _ground;
 	PioneersPtr _pioneers;
 };
 

@@ -15,7 +15,7 @@ public:
 public:
 	void update( );
 private:	
-	FacilityPtr createFacility( MapPtr map );
+	FacilityPtr createFacility( MapPtr map, GroundConstPtr ground );
 private:
 	ForestsPtr _forests;
 	PioneersPtr _pioneers;
