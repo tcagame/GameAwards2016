@@ -15,11 +15,12 @@ const int CSV_MOUNTAIN = 2;
 const int CSV_RIVER    = 3;
 
 const GROUND_CHIP_TYPE CONVERT[ ] = {
-	GROUND_CHIP_TYPE_PLAIN    , // 0
-	GROUND_CHIP_TYPE_DESERT   , // 1
-	GROUND_CHIP_TYPE_MOUNTAIN , // 2
-	GROUND_CHIP_TYPE_RIVER    , // 3
-	GROUND_CHIP_TYPE_TREE     , // 4
+	GROUND_CHIP_TYPE_PLAIN		, // 0
+	GROUND_CHIP_TYPE_DESERT		, // 1
+	GROUND_CHIP_TYPE_MOUNTAIN	, // 2
+	GROUND_CHIP_TYPE_RIVER		, // 3
+	GROUND_CHIP_TYPE_TREE		, // 4
+	GROUND_CHIP_TYPE_POWERPLANT	, // 5
 };
 
 const int INPUT_X = 100;
@@ -134,6 +135,7 @@ bool GroundMaker::makeGround( ) {
 
 	// ŠÔˆø‚«‚·‚é
 	_ground->toThinningTrees( );
+	_ground->toThinningPowerPlant( );
 
 	// grd•Û‘¶
 	BinaryPtr binary = _ground->makeBinary( );
@@ -250,6 +252,7 @@ std::string GroundMaker::getModelFile( int idx, unsigned char type ) {
 		filename += "plain_";
 		break;
 	case GROUND_CHIP_TYPE_TREE: 
+	case GROUND_CHIP_TYPE_POWERPLANT: 
 	case GROUND_CHIP_TYPE_DESERT: 
 		filename += "desert_";
 		break;
