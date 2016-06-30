@@ -65,9 +65,6 @@ App::App( ) {
 	_refineries->initialize( _map, _ground );
 	_bulletins->initialize( _map, _ground );
 
-	// ”­“dŠ‚ÍÅ‰‚©‚çÝ’u‚³‚ê‚Ä‚¢‚é
-	bool result_powerplant_installation = _powerplant->install( Coord( POWERPLANT_POS_X, POWERPLANT_POS_Y ), 0 );
-	assert( result_powerplant_installation );
 	_line = LinePtr( new Line( _map, _powerplant, _chargers, _bases, _refineries, _bulletins ) );
 	_mode = MODE_LINE;
 	_bases->install( Coord( 10, 10 ) );

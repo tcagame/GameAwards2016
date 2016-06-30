@@ -70,7 +70,7 @@ bool Facility::install( const Coord& coord, unsigned char value ) {
 				}
 			}
 
-			if ( ground_type != GROUND_CHIP_TYPE_PLAIN && ground_type != GROUND_CHIP_TYPE_DESERT ) {
+			if ( ground_type != GROUND_CHIP_TYPE_PLAIN && ground_type != GROUND_CHIP_TYPE_DESERT && ground_type != GROUND_CHIP_TYPE_POWERPLANT ) {
 				return false;
 			}
 
