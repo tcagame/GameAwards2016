@@ -10,8 +10,8 @@ static const int WIDTH  = 4;
 static const int HEIGHT = 3;
 static const int SEARCH_RANGE = 200;
 
-Refinery::Refinery( MapPtr map, GoldMinesConstPtr goldmines, MinersPtr miners ) :
-Facility( CHIP_TYPE_REFINERY, WIDTH, HEIGHT, map ) {
+Refinery::Refinery( MapPtr map, GroundConstPtr ground, GoldMinesConstPtr goldmines, MinersPtr miners ) :
+Facility( CHIP_TYPE_REFINERY, WIDTH, HEIGHT, map, ground ) {
 	_max = 1;
 	_num = 0;
 	_isAwake = true;
@@ -19,6 +19,7 @@ Facility( CHIP_TYPE_REFINERY, WIDTH, HEIGHT, map ) {
 	_goldmines = goldmines;
 	_miners = miners;
 	_map = map;
+	_ground = ground;
 }
 
 Refinery::~Refinery( ) {

@@ -7,10 +7,11 @@
 
 PTR( Facility );
 PTR( Map );
+PTR( Ground );
 
 class Facility : public Object {
 public:
-	Facility( CHIP_TYPE type, int width, int height, MapPtr map );
+	Facility( CHIP_TYPE type, int width, int height, MapPtr map, GroundConstPtr ground );
 	virtual ~Facility( );
 public:
 	void update( ) { }
@@ -24,6 +25,7 @@ private:
 	const int _width;
 	const int _height;
 	MapPtr _map;
+	GroundConstPtr _ground;
 	Coord _connect_fixation_left;
 	Coord _connect_fixation_right;
 };

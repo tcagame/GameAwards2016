@@ -15,7 +15,7 @@ public:
 public:
 	void update( );
 private:
-	virtual FacilityPtr createFacility( MapPtr map );
+	virtual FacilityPtr createFacility( MapPtr map, GroundConstPtr ground );
 private:
 	GoldMinesPtr _goldmines;
 	MinersPtr _miners;

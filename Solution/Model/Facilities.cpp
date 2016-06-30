@@ -1,5 +1,6 @@
 #include "Facilities.h"
 #include "Facility.h"
+#include "Ground.h"
 #include "Map.h"
 
 Facilities::Facilities( ) {
@@ -8,9 +9,9 @@ Facilities::Facilities( ) {
 Facilities::~Facilities( ) {
 }
 
-void Facilities::initialize( MapPtr map ) {
+void Facilities::initialize( MapPtr map, GroundConstPtr ground ) {
 	for ( int i = 0; i < NUM; i++ ) {
-		_array[ i ] = createFacility( map );
+		_array[ i ] = createFacility( map, ground );
 	}
 	_idx = 0;
 }

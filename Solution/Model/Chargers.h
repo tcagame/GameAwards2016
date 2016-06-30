@@ -10,6 +10,6 @@ public:
 	Chargers( );
 	virtual ~Chargers( );
 private:
-	virtual FacilityPtr createFacility( MapPtr map );
+	virtual FacilityPtr createFacility( MapPtr map, GroundConstPtr ground );
 };
 

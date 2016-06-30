@@ -8,6 +8,6 @@ Chargers::Chargers( ) {
 Chargers::~Chargers( ) {
 }
 
-FacilityPtr Chargers::createFacility( MapPtr map ) {
-	return ChargerPtr( new Charger( map ) );
+FacilityPtr Chargers::createFacility( MapPtr map, GroundConstPtr ground ) {
+	return ChargerPtr( new Charger( map, ground ) );
 }

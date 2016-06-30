@@ -1,13 +1,15 @@
 #include "Facility.h"
 #include "Object.h"
+#include "Ground.h"
 #include "Map.h"
 #include "Map.h"
 
-Facility::Facility( CHIP_TYPE type, int width, int height, MapPtr map ) :
+Facility::Facility( CHIP_TYPE type, int width, int height, MapPtr map, GroundConstPtr ground ) :
 _chip_type( type ),
 _width( width ),
 _height( height ), 
-_map( map ) {
+_map( map ),
+_ground( ground ) {
 	_connect_fixation_left = Coord( -1, -1 );
 	_connect_fixation_right = Coord( -1, -1 );
 }
@@ -58,6 +60,7 @@ bool Facility::install( const Coord& coord, unsigned char value ) {
 			search_coord.y += j;
 
 			CHIP_TYPE type = _map->getChip( search_coord ).type;
+			GROUND_CHIP_TYPE ground_type = _ground->getType( search_coord.x, search_coord.y );
 			
 			// ƒŒƒbƒhƒ][ƒ“‚ð’²‚×‚é
 			if ( i > -RANGE && i < _width + RANGE - 1 &&
@@ -65,6 +68,10 @@ bool Facility::install( const Coord& coord, unsigned char value ) {
 				if ( type == CHIP_TYPE_LINE ) {
 					return false;
 				}
+			}
+
+			if ( ground_type != GROUND_CHIP_TYPE_PLAIN && ground_type != GROUND_CHIP_TYPE_DESERT ) {
+				return false;
 			}
 
 			if ( ( type & CHIP_TYPE_FACILITY ) != 0 ) {

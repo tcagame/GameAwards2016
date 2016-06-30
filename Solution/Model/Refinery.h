@@ -4,13 +4,14 @@
 
 PTR( Refinery );
 PTR( Map );
+PTR( Ground );
 
 PTR( GoldMines );
 PTR( Miners );
 
 class Refinery : public Facility {
 public:
-	Refinery( MapPtr map, GoldMinesConstPtr goldmines, MinersPtr miner );
+	Refinery( MapPtr map, GroundConstPtr ground, GoldMinesConstPtr goldmines, MinersPtr miner );
 	virtual ~Refinery( );
 public:
 	void update( );
@@ -29,6 +30,7 @@ private:
 
 	GoldMinesConstPtr _goldmines;
 	MapPtr _map;
+	GroundConstPtr _ground;
 	MinersPtr _miners;
 };
 

@@ -8,7 +8,7 @@ PTR( Powerplant );
 
 class Powerplant : public Facility {
 public:
-	Powerplant( MapPtr map );
+	Powerplant( MapPtr map, GroundConstPtr ground );
 	virtual ~Powerplant( );
 };
 

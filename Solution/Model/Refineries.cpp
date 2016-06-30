@@ -10,8 +10,8 @@ Refineries::Refineries( GoldMinesPtr goldmines, MinersPtr miners ) {
 Refineries::~Refineries( ) {
 }
 
-FacilityPtr Refineries::createFacility( MapPtr map ) {
-	return RefineryPtr( new Refinery( map, _goldmines, _miners ) );
+FacilityPtr Refineries::createFacility( MapPtr map, GroundConstPtr ground ) {
+	return RefineryPtr( new Refinery( map, ground, _goldmines, _miners ) );
 }
 
 void Refineries::update( ) {
