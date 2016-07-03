@@ -93,6 +93,7 @@ private:
 	void updatePackets( );
 //	bool isGuidingLength( const Coord& coord );
 	void initPackets( );
+	Coord getFixationCoord( const Map::Chip& chip, const Coord& coord );
 private:
 	MapPtr _map;
 	PowerplantPtr _powerplant;

@@ -214,15 +214,23 @@ void Line::startGuide( const Coord& coord ) {
 }
 
 bool Line::setGuideAlongMouse( const Coord& coord ) {
-	Coord target = coord;
-
 	if ( !_guide_mode ) {
 		return false;
 	}
 
+	Coord target = coord;
+
 	// �͈͊O
 	if ( target.getIdx( ) < 0 ) { 
 		return false;
+	}
+	Map::Chip chip = _map->getChip( target );
+	if ( chip.type != CHIP_TYPE_NONE ) {
+		return true;
+	}
+	Map::Chip old_chip = _map->getChip( _guide_line_coord );
+	if ( ( old_chip.type & CHIP_TYPE_FACILITY ) > 0 ) {
+		_guide_line_coord = getFixationCoord( old_chip, target );
 	}
 
 	int diff_x = target.x - _guide_line_coord.x;
@@ -711,4 +719,34 @@ bool Line::destroyLineDir( CHIP_TYPE type, const Coord& coord ) {
 	}
 	return ret;
 
+}
+
+Coord Line::getFixationCoord( const Map::Chip& chip, const Coord& coord ) {
+	FacilityPtr facility;
+	switch ( chip.type ) {
+	case CHIP_TYPE_POWERPLANT:
+		facility = _powerplant;
+		break;
+	case CHIP_TYPE_CHARGER:
+		facility = _chargers->get( chip.value );
+		break;
+	case CHIP_TYPE_BASE:
+		facility = _bases->get( chip.value );
+		break;
+	case CHIP_TYPE_REFINERY:
+		facility = _refineries->get( chip.value );
+		break;
+	case CHIP_TYPE_BULLETIN:
+		facility = _bulletins->get( chip.value );
+		break;
+	}
+	Coord result = facility->getLineFixationLeft( );
+	Coord left_vec = Coord( facility->getLineFixationLeft( ).x - coord.x, facility->getLineFixationLeft( ).y - coord.y );
+	Coord right_vec = Coord( facility->getLineFixationRight( ).x - coord.x, facility->getLineFixationRight( ).y - coord.y );
+	int left_length = left_vec.x * left_vec.x + left_vec.y * left_vec.y;
+	int right_length = right_vec.x * right_vec.x + right_vec.y * right_vec.y;
+	if ( right_length < left_length ) {
+		result = facility->getLineFixationRight( );
+	}
+	return result;
 }
