@@ -21,7 +21,8 @@ const GROUND_CHIP_TYPE CONVERT[ ] = {
 	GROUND_CHIP_TYPE_RIVER		, // 3
 	GROUND_CHIP_TYPE_TREE		, // 4
 	GROUND_CHIP_TYPE_FLOWER		, // 5
-	GROUND_CHIP_TYPE_POWERPLANT	, // 6
+	GROUND_CHIP_TYPE_BEAR		, // 6
+	GROUND_CHIP_TYPE_POWERPLANT	, // 7
 };
 
 const int INPUT_X = 100;
@@ -249,6 +250,7 @@ int GroundMaker::getMapHeight( ) {
 std::string GroundMaker::getModelFile( int idx, unsigned char type ) {
 	std::string filename;
 	switch( type ){
+	case GROUND_CHIP_TYPE_BEAR:
 	case GROUND_CHIP_TYPE_FLOWER:
 	case GROUND_CHIP_TYPE_PLAIN:
 		filename += "plain_";

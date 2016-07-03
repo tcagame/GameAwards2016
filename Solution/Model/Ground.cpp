@@ -38,6 +38,9 @@ GROUND_CHIP_TYPE Ground::getTypeTerrain( int mx, int my ) const {
 	if ( chip == GROUND_CHIP_TYPE_FLOWER ) {
 		chip = GROUND_CHIP_TYPE_PLAIN;
 	}
+	if ( chip == GROUND_CHIP_TYPE_BEAR ) {
+		chip = GROUND_CHIP_TYPE_PLAIN;
+	}
 	if ( chip == GROUND_CHIP_TYPE_POWERPLANT ) {
 		chip = GROUND_CHIP_TYPE_DESERT;
 	}

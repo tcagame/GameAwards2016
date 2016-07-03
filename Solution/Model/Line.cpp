@@ -216,6 +216,10 @@ void Line::startGuide( const Coord& coord ) {
 bool Line::setGuideAlongMouse( const Coord& coord ) {
 	Coord target = coord;
 
+	if ( !_guide_mode ) {
+		return false;
+	}
+
 	// �͈͊O
 	if ( target.getIdx( ) < 0 ) { 
 		return false;
@@ -225,7 +229,7 @@ bool Line::setGuideAlongMouse( const Coord& coord ) {
 	int diff_y = target.y - _guide_line_coord.y;
 	Coord diff_target_coord = _guide_line_coord;
 	
-	while( diff_y != 0 ){
+	while( diff_y != 0 ) {
 		if ( diff_y < 0 ) {
 			diff_target_coord.y--;
 			diff_y++;
@@ -247,12 +251,8 @@ bool Line::setGuideAlongMouse( const Coord& coord ) {
 	}
 	
 	_guide_line_coord = diff_target_coord;
-	if( _guide_line_coord.getIdx( ) != _guide_start_coord.getIdx( ) ){
-		Map::Chip chip = _map->getChip( target );
-		return chip.type == CHIP_TYPE_NONE;
-	} else {
-		return true;
-	}
+
+	return true;
 }
 
 /*
