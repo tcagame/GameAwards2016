@@ -70,6 +70,7 @@ enum RES {
 	RES_TREE,
 	RES_FLOWER,
 	RES_BEAR,
+	RES_BEE,
 	MAX_RES,
 };
 
@@ -111,6 +112,7 @@ void Viewer::initialize( ) {
 	drawer->load( RES_TREE		     , "tree.png" );
 	drawer->load( RES_FLOWER		 , "flower.png" );
 	drawer->load( RES_BEAR			 , "bear.png" );
+	drawer->load( RES_BEE			 , "bee.png" );
 
 	_click_left = CLICK_NONE;
 	_click_right = CLICK_NONE;
@@ -130,6 +132,8 @@ void Viewer::update( ) {
 	drawForests( );
 	drawLine( ); // ラインが画面に表示されていないのでここも関係ない
 	drawGuidFacility( );
+	drawBear( );
+	drawBee( );
 	drawGuideLine( );
 	drawPacket( );
 	drawEnemies( );
@@ -194,7 +198,7 @@ void Viewer::updateClick( ) {
 	_click_coord = Coord( ( int )pos.x / CHIP_SIZE, ( int )pos.y / CHIP_SIZE );
 }
 
-void Viewer::drawGround( ) {
+void Viewer::drawGround( ) const {
 
 	AppPtr app = App::getTask( );
 	if( !app ) {
@@ -226,31 +230,37 @@ void Viewer::drawGround( ) {
 			drawer->set( sprite );
 		}
 	}
-	
-	// 木
+
+	//オブジェクト
 	for ( int i = 0; i < ground->getWidth( ); i++ ) {
 		for ( int j = 0; j < ground->getHeight( ); j++ ) {
 			GROUND_CHIP_TYPE chip = ground->getType( i, j );
-			if ( chip != GROUND_CHIP_TYPE_TREE ) {
+			RES resource = RES_NONE;
+			switch( chip ) {
+				case GROUND_CHIP_TYPE_FLOWER:
+					resource = RES_FLOWER;
+					break;
+				case GROUND_CHIP_TYPE_TREE:
+					resource = RES_TREE;
+					break;
+			}
+			if( resource == RES_NONE ) {
 				continue;
 			}
-
-			Drawer::Sprite sprite( Drawer::Transform( i * CHIP_SIZE - CHIP_SIZE, j * CHIP_SIZE - CHIP_SIZE ), RES_TREE );
+			Drawer::Sprite sprite( Drawer::Transform( i * CHIP_SIZE - CHIP_SIZE, j * CHIP_SIZE - CHIP_SIZE ), resource );
 			drawer->set( sprite );
 		}
 	}
-	// 花
-	for ( int i = 0; i < ground->getWidth( ); i++ ) {
-		for ( int j = 0; j < ground->getHeight( ); j++ ) {
-			GROUND_CHIP_TYPE chip = ground->getType( i, j );
-			if ( chip != GROUND_CHIP_TYPE_FLOWER ) {
-				continue;
-			}
+}
 
-			Drawer::Sprite sprite( Drawer::Transform( i * CHIP_SIZE - CHIP_SIZE, j * CHIP_SIZE - CHIP_SIZE ), RES_FLOWER );
-			drawer->set( sprite );
-		}
+void Viewer::drawBear( ) const {
+	AppPtr app = App::getTask( );
+	if( !app ) {
+		return;
 	}
+
+	DrawerPtr drawer = Drawer::getTask( );
+	GroundPtr ground = app->getGround( );
 
 	for ( int i = 0; i < ground->getWidth( ); i++ ) {
 		for ( int j = 0; j < ground->getHeight( ); j++ ) {
@@ -258,8 +268,28 @@ void Viewer::drawGround( ) {
 			if ( chip != GROUND_CHIP_TYPE_BEAR ) {
 				continue;
 			}
-
 			Drawer::Sprite sprite( Drawer::Transform( i * CHIP_SIZE - CHIP_SIZE, j * CHIP_SIZE - CHIP_SIZE ), RES_BEAR );
+			drawer->set( sprite );
+		}
+	}
+}
+
+void Viewer::drawBee( ) const {
+	AppPtr app = App::getTask( );
+	if( !app ) {
+		return;
+	}
+
+	DrawerPtr drawer = Drawer::getTask( );
+	GroundPtr ground = app->getGround( );
+
+	for ( int i = 0; i < ground->getWidth( ); i++ ) {
+		for ( int j = 0; j < ground->getHeight( ); j++ ) {
+			GROUND_CHIP_TYPE chip = ground->getType( i, j );
+			if ( chip != GROUND_CHIP_TYPE_BEE ) {
+				continue;
+			}
+			Drawer::Sprite sprite( Drawer::Transform( i * CHIP_SIZE - CHIP_SIZE, j * CHIP_SIZE - CHIP_SIZE ), RES_BEE );
 			drawer->set( sprite );
 		}
 	}

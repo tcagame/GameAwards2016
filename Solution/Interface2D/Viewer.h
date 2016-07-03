@@ -58,7 +58,7 @@ public:
 	CLICK getClickRight( ) const;
 private:
 	void updateClick( );
-	void drawGround( );
+	void drawGround( ) const;
 	void drawPowerplant( ) const;
 	void drawChargers( ) const;
 	void drawBases( ) const;
@@ -74,6 +74,8 @@ private:
 	void drawGuadians( ) const;
 	void drawMiners( ) const;
 	void drawPioneers( ) const;
+	void drawBear( ) const;
+	void drawBee( ) const;
 	unsigned char reverseDir( unsigned char start_dir ) const;
 	int convLineTypeToIdx( unsigned char dir ) const;
 	void reflesh( );
